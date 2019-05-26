@@ -2,16 +2,16 @@ drop database if exists PollWeb;
 create database PollWeb;
 use PollWeb;
 
-create table Responsible (
+create table responsibleUser (
 ID integer unsigned not null primary key auto_increment,
-namer varchar(100) not null,
-surname varchar(100),
+nameR varchar(100) not null,
+surnameR varchar(100),
 fiscalCode varchar(16) unique,
 email varchar(100) not null,
 pwd varchar(16) not null
 );
 
-create table Poll (
+create table poll (
 ID integer unsigned not null primary key auto_increment,
 title varchar(100) unique not null,
 apertureText varchar(500),
@@ -20,26 +20,26 @@ typeP enum('open','reserved') default 'open',
 url varchar(100) not null unique,
 activated enum('0','1') not null default '0',
 idR integer unsigned not null,
-constraint Create_poll foreign key (idR) references Responsible(ID) 
+foreign key (idR) references responsibleUser(ID) 
 );
 
 create table reservedUser(
 ID integer unsigned not null primary key auto_increment,
-nameu varchar(100),
-surname varchar(100),
+nameU varchar(100),
+surnameU varchar(100),
 email varchar(100) not null,
 pwd varchar(16) not null unique, 
 compiled enum('0','1') default '0' not null,
 idP integer unsigned not null,
-constraint Acess_poll foreign key (idP) references Poll(ID) on delete cascade on update cascade
+foreign key (idP) references poll(ID) on delete cascade on update cascade
 );
 
 create table normalUser (
 ID integer unsigned not null primary key auto_increment,
-namen varchar(100)
+nameN varchar(100)
 );
 
-create table OpenQuestion (
+create table openQuestion (
 ID integer unsigned not null primary key auto_increment,
 textO varchar(500) not null unique,
 typeO enum('short text','long text','date','number') not null unique,
@@ -51,10 +51,10 @@ valmax integer,
 obbligated enum('yes','no') not null default 'no',
 positionO integer,
 idP integer unsigned not null,
-constraint Composed_Poll foreign key (idP) references Poll(ID) on delete cascade on update cascade
+foreign key (idP) references poll(ID) on delete cascade on update cascade
 );
 
-create table MultipleChoice(
+create table multipleChoiceQuestion(
 ID integer unsigned not null primary key auto_increment,
 textM varchar(500) not null unique,
 typeM enum('Single choice','Multiple choice') not null,
@@ -64,14 +64,14 @@ note varchar(200),
 obbligated enum('yes','no') not null default 'no',
 positionM integer,
 idP integer unsigned not null,
-constraint comp_Poll foreign key (idP) references Poll(ID) on delete cascade on update cascade
+foreign key (idP) references poll(ID) on delete cascade on update cascade
 );
 
-create table PossibleChoice (
+create table possibleChoice (
 ID integer unsigned not null primary key auto_increment,
 textPC varchar (200),
 idM integer unsigned not null,
-constraint CheckBox_choice foreign key (idM) references MultipleChoice(ID) on delete cascade on update cascade
+foreign key (idM) references multipleChoiceQuestion(ID) on delete cascade on update cascade
 );
 
 create table openAnswer(
@@ -81,16 +81,16 @@ dateA date,
 numA integer,
 idNU integer unsigned not null,
 idRU integer unsigned not null,
-constraint Answer_normal foreign key (idNU) references NormalUser(ID),
-constraint Answer_reserved foreign key (idRU) references ReservedUser(ID)
+foreign key (idNU) references normalUser(ID),
+foreign key (idRU) references reservedUser(ID)
 );
 
-create table MultipleChoiceAnswer (
+create table multipleChoiceAnswer (
 ID integer unsigned not null primary key auto_increment,
 idPC integer unsigned not null,
 idNU integer unsigned not null,
 idRU integer unsigned not null,
-constraint MultipleAnswer_normal foreign key (idNU) references NormalUser(ID),
-constraint MultipleAnswer_reserved foreign key (idRU) references ReservedUser(ID),
-constraint answer_possibleChoice foreign key (idPC) references PossibleChoice(ID) on delete cascade
+foreign key (idNU) references normalUser(ID),
+foreign key (idRU) references reservedUser(ID),
+foreign key (idPC) references possibleChoice(ID) on delete cascade
 );
