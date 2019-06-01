@@ -10,7 +10,8 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SimpleServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/
+        </url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>NewServletProva</servlet-name>
@@ -21,4 +22,11 @@
             30
         </session-timeout>
     </session-config>
+       <!-- 
+    <welcome-file-list>
+        <welcome-file>Homepage.html</welcome-file> 
+    </welcome-file-list>
+    in questo modo inserisco la pagina come iniziale e senza caricamento servlets
+  -->
+    
 </web-app>
