@@ -76,7 +76,7 @@ public class NewServletProva extends HttpServlet {
             data.put("outline_tpl", "");
             
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("index.ftl.html", data, response);
+            res.activate("surveyList.ftl.html", data, response);
         } catch (TemplateManagerException ex) {
             throw new ServletException(ex);
         }
