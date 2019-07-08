@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee                       http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <servlet>
         <servlet-name>SimpleServlet</servlet-name>
         <servlet-class>SimpleServlet</servlet-class>
@@ -9,30 +9,28 @@
         <servlet-class>pollweb.controller.NewServletProva</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>SimpleServlet</servlet-name>
-        <url-pattern>/SimpleServlet
-        </url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>NewServletProva</servlet-name>
         <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SimpleServlet</servlet-name>
+        <url-pattern>/SimpleServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
-     <resource-ref>
+    <resource-ref>
         <res-ref-name>jdbc/PollWeb</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
-       <!-- 
+    <!-- 
     <welcome-file-list>
         <welcome-file>Homepage.html</welcome-file> 
     </welcome-file-list>
     in questo modo inserisco la pagina come iniziale e senza caricamento servlets
   -->
-    
 </web-app>
