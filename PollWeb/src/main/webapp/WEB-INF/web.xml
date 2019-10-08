@@ -8,6 +8,10 @@
         <servlet-name>NewServletProva</servlet-name>
         <servlet-class>pollweb.controller.NewServletProva</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginPage</servlet-name>
+        <servlet-class>pollweb.controller.LoginPage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>NewServletProva</servlet-name>
         <url-pattern>/</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>SimpleServlet</servlet-name>
         <url-pattern>/SimpleServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginPage</servlet-name>
+        <url-pattern>/LoginPage</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
