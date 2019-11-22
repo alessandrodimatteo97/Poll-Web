@@ -2,13 +2,15 @@ drop database if exists PollWeb;
 create database PollWeb;
 use PollWeb;
 
+
 create table responsibleUser (
 ID integer unsigned not null primary key auto_increment,
 nameR varchar(100) not null,
 surnameR varchar(100),
 fiscalCode varchar(16) unique,
 email varchar(100) not null,
-pwd varchar(16) not null
+pwd varchar(16) not null,
+administrator enum('yes', 'no') not null default 'no'
 );
 
 create table poll (
@@ -23,74 +25,41 @@ idR integer unsigned not null,
 foreign key (idR) references responsibleUser(ID) 
 );
 
-create table reservedUser(
+create table participant (
 ID integer unsigned not null primary key auto_increment,
-nameU varchar(100),
-surnameU varchar(100),
-email varchar(100) not null,
-pwd varchar(16) not null unique, 
-compiled enum('0','1') default '0' not null,
-idP integer unsigned not null,
-foreign key (idP) references poll(ID) on delete cascade on update cascade
+IP varchar(100) unique not null,
+nameP varchar (200),
+email varchar (200),
+pwd varchar (200)
 );
 
-create table normalUser (
+create table participation (
 ID integer unsigned not null primary key auto_increment,
-nameN varchar(100)
+ID_poll integer unsigned not null,
+ID_part integer unsigned not null,
+foreign key (ID_poll) references poll(ID) on delete cascade on update cascade,
+foreign key (ID_part) references participant(ID) 
 );
 
-create table openQuestion (
+create table question (
 ID integer unsigned not null primary key auto_increment,
-textO varchar(500) not null unique,
-typeO enum('short text','long text','date','number') not null unique,
+typeq enum('short text', 'long text', 'numeric', 'date' , 'single choice' , 'multiple choice') unique not null,
+textq varchar(500) not null,
 note varchar(200),
-mindate date,
-maxdate date,
-valmin integer,
-valmax integer,
-obbligated enum('yes','no') not null default 'no',
-positionO integer,
-idP integer unsigned not null,
-foreign key (idP) references poll(ID) on delete cascade on update cascade
+obbligation enum('yes', 'no') not null default 'no',
+possible_answer json not null,
+IDP integer unsigned not null,
+foreign key (IDP) references poll(ID)
 );
 
-create table multipleChoiceQuestion(
+create table answer (
 ID integer unsigned not null primary key auto_increment,
-textM varchar(500) not null unique,
-typeM enum('Single choice','Multiple choice') not null,
-minM integer,
-maxM integer,
-note varchar(200),
-obbligated enum('yes','no') not null default 'no',
-positionM integer,
-idP integer unsigned not null,
-foreign key (idP) references poll(ID) on delete cascade on update cascade
+IDQ integer unsigned not null,
+ID_P integer unsigned not null,
+texta json not null,
+foreign key (IDQ) references question(ID) on delete cascade on update cascade,
+foreign key (ID_P) references participant(ID) on delete cascade on update cascade
 );
 
-create table possibleChoice (
-ID integer unsigned not null primary key auto_increment,
-textPC varchar (200),
-idM integer unsigned not null,
-foreign key (idM) references multipleChoiceQuestion(ID) on delete cascade on update cascade
-);
 
-create table openAnswer(
-ID integer unsigned not null primary key auto_increment,
-textA varchar(500),
-dateA date,
-numA integer,
-idNU integer unsigned not null,
-idRU integer unsigned not null,
-foreign key (idNU) references normalUser(ID),
-foreign key (idRU) references reservedUser(ID)
-);
 
-create table multipleChoiceAnswer (
-ID integer unsigned not null primary key auto_increment,
-idPC integer unsigned not null,
-idNU integer unsigned not null,
-idRU integer unsigned not null,
-foreign key (idNU) references normalUser(ID),
-foreign key (idRU) references reservedUser(ID),
-foreign key (idPC) references possibleChoice(ID) on delete cascade
-);
