@@ -27,7 +27,7 @@ foreign key (idR) references responsibleUser(ID)
 
 create table participant (
 ID integer unsigned not null primary key auto_increment,
-IP varchar(100) unique not null,
+apiKey varchar(100) unique not null,
 nameP varchar (200),
 email varchar (200),
 pwd varchar (200)
@@ -47,7 +47,7 @@ typeq enum('short text', 'long text', 'numeric', 'date' , 'single choice' , 'mul
 textq varchar(500) not null,
 note varchar(200),
 obbligation enum('yes', 'no') not null default 'no',
-possible_answer json not null,
+possible_answer json,
 IDP integer unsigned not null,
 foreign key (IDP) references poll(ID)
 );
