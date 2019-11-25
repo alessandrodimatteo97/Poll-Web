@@ -6,7 +6,6 @@
 package pollweb.data.model;
 
 import java.util.List;
-import pollweb.data.impl.QuestionImpl;
 
 /**
  *
@@ -14,29 +13,36 @@ import pollweb.data.impl.QuestionImpl;
  */
 public interface Poll {
 
-    Boolean getActivated();
+     List<Partecipant> getPartecipant();
+    
+     void setPartecipant(List<Partecipant> partecipant);
+    
+    
+    ResponsibleUser getRespUser();
 
+    void setRespUser(ResponsibleUser respUser);
+    
     String getApertureText();
 
     String getCloserText();
 
-    List<QuestionImpl> getQuestion();
-
     String getTitle();
 
-    String getTypeP();
+    String getType();
 
-    void setActivated(Boolean a);
+    String getUrl();
+
+    boolean isActivated();
+
+    void setActivated(boolean activated);
 
     void setApertureText(String apertureText);
 
     void setCloserText(String closerText);
 
-    void setQuestion(List<QuestionImpl> q);
-
     void setTitle(String title);
 
-    void setTypeP(String typeP);
+    void setType(String type);
 
     void setUrl(String url);
     

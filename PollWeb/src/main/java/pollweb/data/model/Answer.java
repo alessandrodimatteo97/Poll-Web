@@ -5,14 +5,15 @@
  */
 package pollweb.data.model;
 
+import org.json.JSONObject;
 /**
  *
  * @author achissimo
  */
-public interface PossibleChoise {
+public interface Answer {
 
-    String getTextPC();
+    JSONObject getTextA();
 
-    void setTextPC(String tpc);
+    void setTextA(JSONObject textA);
     
 }

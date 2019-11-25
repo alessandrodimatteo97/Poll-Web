@@ -5,10 +5,35 @@
  */
 package pollweb.data.impl;
 
+import pollweb.data.model.Answer;
+import org.json.JSONObject;
 /**
  *
  * @author achissimo
  */
-public class AnswerImpl {
+/*
+ID integer unsigned not null primary key auto_increment,
+IDQ integer unsigned not null,
+ID_P integer unsigned not null,
+texta json not null,
+*/
+public class AnswerImpl implements Answer {
+    private JSONObject textA;
     
+    public AnswerImpl(){}
+    public AnswerImpl(JSONObject textA){
+        this.textA = new JSONObject(textA);
+    }
+
+    @Override
+    public JSONObject getTextA() {
+        return textA;
+    }
+
+    @Override
+    public void setTextA(JSONObject textA) {
+        this.textA = new JSONObject(textA);
+    }
+    
+   
 }

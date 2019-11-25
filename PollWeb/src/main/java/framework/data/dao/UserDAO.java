@@ -9,7 +9,7 @@ package framework.data.dao;
 import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
-import pollweb.data.model.User;
+import pollweb.data.model.ResponsibleUser;
 
 /**
  *
@@ -17,30 +17,30 @@ import pollweb.data.model.User;
  */
 public interface UserDAO {
     
-    User createUser();
+    ResponsibleUser createUser();
     
-    User createUser(ResultSet rs) /* throws DataException */;
+    ResponsibleUser createUser(ResultSet rs);
     
-    User createResponsibleUser();
+    ResponsibleUser createResponsibleUser();
     
-    User createResponsibleUser(ResultSet rs) /* throws DataException */;
+    ResponsibleUser createResponsibleUser(ResultSet rs);
     
-    User createPartecipantUser();
+    ResponsibleUser createPartecipantUser();
     
-    User createPartecipantUser(ResultSet rs) /* throws DataException */;
+    ResponsibleUser createPartecipantUser(ResultSet rs);
         
-    boolean deleteUser(User user);
+    boolean deleteUser(ResponsibleUser user);
     
-    boolean changePassword(User user, String pwd); /* controllare la password se deve essere di un altro tipo per questioni di sicurezza*/
+    boolean changePassword(ResponsibleUser user, String pwd); /* controllare la password se deve essere di un altro tipo per questioni di sicurezza*/
     
-    boolean setAdmin(User user);
+    boolean setAdmin(ResponsibleUser user);
     
-    boolean setIP(User user, String IP);
+    boolean setIP(ResponsibleUser user, String IP);
     
-    boolean changeEmail(User user, String email);
+    boolean changeEmail(ResponsibleUser user, String email);
     
-    User getUserById(int userId);
+    ResponsibleUser getUserById(int userId);
     
-    List<User> getUsers();
+    List<ResponsibleUser> getUsers();
        
 }

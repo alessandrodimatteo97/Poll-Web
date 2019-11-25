@@ -9,30 +9,26 @@ package pollweb.data.model;
  *
  * @author achissimo
  */
-public interface User {
-
-    boolean getCompiled();
+public interface ResponsibleUser {
 
     String getEmail();
 
-    String getFiscalcode();
+    String getFiscalCode();
 
-    String getName();
+    String getNameR();
 
-    String getSurname();
+    String getPwd();
 
-    String getType();
-
-    void setCompiled(boolean c);
+    String getSurnameR();
 
     void setEmail(String email);
 
     void setFiscalCode(String fiscalCode);
 
-    void setName(String name);
+    void setNameR(String nameR);
 
-    void setSurname(String surname);
+    void setPwd(String pwd);
 
-    void setType(String type);
+    void setSurnameR(String surnameR);
     
 }

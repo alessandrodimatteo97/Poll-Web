@@ -5,26 +5,33 @@
  */
 package pollweb.data.model;
 
+import java.util.List;
+import javax.json.JsonObject;
+import org.json.JSONObject;
+import pollweb.data.impl.QuestionImpl;
 /**
  *
  * @author achissimo
  */
 public interface Question {
 
-    String getNote(String note);
+    String getNote();
 
-    boolean getObbligated();
 
-    int getPosition();
+    JSONObject getPossibleAnswer();
 
-    String getText(String text);
+    String getTextq();
 
     void setNote(String note);
 
-    void setObbligate(Boolean obbligated);
+    void setPossibleAnswer(JSONObject possibleAnswer);
 
-    void setPosition(int position);
+    void setTextq(String textq);
 
-    void setText(String text);
+     List<Answer> getAnswer();
+
+     void setAnswer(List<Answer> answer);
+
+    
     
 }

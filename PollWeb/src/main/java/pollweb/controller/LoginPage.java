@@ -18,12 +18,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
+import javax.servlet.ServletContext;
+//import org.json.JSONObject;
+import org.json.JSONObject;
+import pollweb.data.impl.*;
 /**
  *
  * @author achissimo
  */
+import pollweb.data.model.Answer;
 public class LoginPage extends HttpServlet {
 
     /**
@@ -38,12 +41,28 @@ public class LoginPage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TemplateManagerException {
             Map data = new HashMap();
+          //  AnswerImpl a = new AnswerImpl();
+        //  AnswerImpl a = new AnswerImpl();
+        //    a.setTextA(new JSONObject("ciao:ciao"));
+         //   System.out.println(a.getTextA().toString());
             //disabilitiamo il template di outline (che è specificato tra i context parameters)
             //disable the outline template (otherwise the TemplateResult uses the template specified in the context parameters)
             data.put("outline_tpl", "");
-            System.out.println("cazzi");
+          //   JSONObject j = new JSONObject(data);
+         // a.setTextA(new JSONObject(data));
+           //   a.getTextA().toString();
+           // JSONObject j = new JSONObject();
+           // j.put("name", "jon doe");
+          //  System.out.println(j.toString());
+          
+            PollImpl p = new PollImpl();
+            p.setActivated(true);
+            System.out.print("ciao");
+            ServletContext context = getServletContext( );
+            context.log("porca puttana evaaaaaaa");
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("LoginPage.ftl.html", request, response);    }
+            res.activate("LoginPage.ftl.html", request, response);   
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

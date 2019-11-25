@@ -5,59 +5,110 @@
  */
 package pollweb.data.impl;
 
-import pollweb.data.model.Question;
-
 /**
  *
  * @author achissimo
  */
+
+import java.util.List;
+import pollweb.data.model.Question;
+import org.json.JSONObject;
+import pollweb.data.model.Answer;
+import pollweb.data.model.Poll;
+
 public class QuestionImpl implements Question {
-    String text, note;
-    boolean obbligated;
-    int position;
+   
+    private enum obbligate {
+        yes, no
+    }
     
-    public QuestionImpl(){};
-    public QuestionImpl(String text, String note, Boolean obbligated, int position){
-        this.text = text;
+    private enum type {
+    shortText,
+    longText, 
+    numeric, 
+    date, 
+    singleChoice , 
+    multipleChoice
+    }
+    
+    private String textq, note;
+    private type typeP;
+    private obbligate obbligated;
+    private JSONObject possibleAnswer;
+    private List<Answer> answer;
+
+   
+    
+    public QuestionImpl() {
+    }
+
+    public QuestionImpl(String textq, String note, type typeP, obbligate obbligated, JSONObject possibleAnswer, List<Answer> answer) {
+        this.textq = textq;
         this.note = note;
+        this.typeP = typeP;
         this.obbligated = obbligated;
-        this.position = position;
+        this.possibleAnswer = possibleAnswer;
+        this.answer = answer;
     }
-    
+
+
+
     @Override
-    public void setText(String text){
-        this.text = text;
+    public String getTextq() {
+        return textq;
     }
-    
+
     @Override
-    public void setNote(String note){
-        this.note = note;
+    public void setTextq(String textq) {
+        this.textq = textq;
     }
+
     @Override
-    public void setObbligate(Boolean obbligated){
-        this.obbligated = obbligated;
-    }
-    
-    @Override
-    public void setPosition(int position ){
-        this.position = position;
-    }
-    
-    @Override
-    public String getText(String text){
-        return text;
-    }
-    
-    @Override
-    public String getNote(String note){
+    public String getNote() {
         return note;
     }
+
     @Override
-    public boolean getObbligated(){
-        return obbligated;
-}
-    @Override
-    public int getPosition(){
-        return position;
+    public void setNote(String note) {
+        this.note = note;
     }
-}
+
+    public type getTypeP() {
+        return typeP;
+    }
+
+    public void setTypeP(type typeP) {
+        this.typeP = typeP;
+    }
+
+    public obbligate getObbligated() {
+        return obbligated;
+    }
+
+    public void setObbligated(obbligate obbligated) {
+        this.obbligated = obbligated;
+    }
+
+    @Override
+    public JSONObject getPossibleAnswer() {
+        return possibleAnswer;
+    }
+
+    @Override
+    public void setPossibleAnswer(JSONObject possibleAnswer) {
+        this.possibleAnswer = new JSONObject(possibleAnswer);
+    }
+    
+    @Override
+     public List<Answer> getAnswer() {
+        return answer;
+    }
+
+    @Override 
+    public void setAnswer(List<Answer> answer) {
+        this.answer = answer;
+    }
+
+    
+    
+} 

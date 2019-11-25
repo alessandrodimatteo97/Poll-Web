@@ -7,20 +7,20 @@
 package framework.data.dao;
 import java.sql.ResultSet;
 import java.util.List;
-import pollweb.data.model.Participation;
+//import pollweb.data.model.Participation;
 /**
  *
  * @author davide
  */
 public interface ParticipationDAO {
     
-    Participation createParticipation();
+  //  Participation createParticipation();
     
-    Participation createParticipation( ResultSet rs);
+  //  Participation createParticipation( ResultSet rs);
     
-    List<Participation> getParticipationByUserId (int userId);
+  //  List<Participation> getParticipationByUserId (int userId);
     
-    List<Participation> getParticipationByPollId (int pollId);
+  //  List<Participation> getParticipationByPollId (int pollId);
     
     boolean deleteParticipationsByUserId(int userId); /** Utile solo se dobbiamo eliminare uno user e tutte le suo partecipazioni */
     

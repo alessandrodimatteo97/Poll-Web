@@ -4,80 +4,130 @@
  * and open the template in the editor.
  */
 package pollweb.data.impl;
+
+import java.util.List;
+import pollweb.data.model.Partecipant;
 import pollweb.data.model.Poll;
-import java.util.*;
+import pollweb.data.model.Question;
+import pollweb.data.model.ResponsibleUser;
 /**
  *
  * @author achissimo
  */
+
 public class PollImpl implements Poll {
-    String title, apertureText, closerText, typeP, url;
-    Boolean activated;
-    List<QuestionImpl> question;
-    public PollImpl(){}
+
     
-    public PollImpl(String title, String apertureText, String closerText, String type, String url, Boolean activated, List<QuestionImpl> q){
+    private  String title, apertureText, closerText, type, url;
+    private boolean activated;
+    private List<Question> questions;
+    private List<Partecipant> partecipant; // inteso come reservedPartecipant
+    private ResponsibleUser respUser;
+
+    public PollImpl(String title, String apertureText, String closerText, String type, String url, boolean activated, List<Question> questions, List<Partecipant> partecipant, ResponsibleUser respUser) {
         this.title = title;
         this.apertureText = apertureText;
         this.closerText = closerText;
-        this.typeP = type;
+        this.type = type;
+        this.url = url;
         this.activated = activated;
-        this.question = q;
-        // aggiungere la lista di domande
+        this.questions = questions;
+        this.partecipant = partecipant;
+        this.respUser = respUser;
+    }
+
+    public PollImpl() {}
+    
+    @Override
+    public List<Partecipant> getPartecipant() {
+        return partecipant;
     }
     
     @Override
-    public void setTitle(String title){
-        this.title = title;
+    public void setPartecipant(List<Partecipant> partecipant) {
+        this.partecipant = partecipant;
     }
+    
     @Override
-    public void setApertureText(String apertureText){
-        this.apertureText = apertureText;
+    public ResponsibleUser getRespUser() {
+        return respUser;
     }
+
     @Override
-    public void setCloserText(String closerText){
-        this.closerText=closerText;
+    public void setRespUser(ResponsibleUser respUser) {
+        this.respUser = respUser;
     }
+    
     @Override
-    public void setTypeP(String typeP){
-        this.typeP = typeP;
-    }
-    @Override
-    public void setUrl(String url){
-        this.url = url;
-    }
-    @Override
-    public void setActivated(Boolean a){
-        this.activated = a;
-    }
-    @Override
-    public void setQuestion(List<QuestionImpl> q){
-        this.question = q;
-    }
-    @Override
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
+
     @Override
-    public String getApertureText(){
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public String getApertureText() {
         return apertureText;
     }
+
     @Override
-    public String getCloserText(){
+    public void setApertureText(String apertureText) {
+        this.apertureText = apertureText;
+    }
+
+    @Override
+    public String getCloserText() {
         return closerText;
     }
+
     @Override
-    public String getTypeP(){
-        return typeP;
+    public void setCloserText(String closerText) {
+        this.closerText = closerText;
     }
+
     @Override
-    public Boolean getActivated(){
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public boolean isActivated() {
         return activated;
     }
-    
+
     @Override
-    public List<QuestionImpl> getQuestion (){
-    return question;
-}
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
     
+    
+  
 }
+
+
