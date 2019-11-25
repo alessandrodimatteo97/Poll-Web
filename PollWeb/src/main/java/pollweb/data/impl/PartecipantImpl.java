@@ -17,7 +17,7 @@ public class PartecipantImpl implements Partecipant {
     private String apiKey, nameP, email, pwd;
     private List<Answer> answer;
     
-    private PartecipantImpl(){};
+    public PartecipantImpl(){};
 
     public PartecipantImpl(String apiKey, String nameP, String email, String pwd, List<Answer> answer) {
         this.apiKey = apiKey;

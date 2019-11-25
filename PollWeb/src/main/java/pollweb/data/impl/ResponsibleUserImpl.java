@@ -24,6 +24,8 @@ public class ResponsibleUserImpl implements ResponsibleUser {
     private String nameR, surnameR, fiscalCode, email, pwd;
     private enum admin{ yes, no };
     private admin administrator;
+    
+    public ResponsibleUserImpl() {}
 
     public ResponsibleUserImpl(String nameR, String surnameR, String fiscalCode, String email, String pwd, admin administrator) {
         this.nameR = nameR;
