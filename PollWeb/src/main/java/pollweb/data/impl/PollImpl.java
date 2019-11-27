@@ -23,8 +23,9 @@ public class PollImpl implements Poll {
     private List<Question> questions;
     private List<Partecipant> partecipant; // inteso come reservedPartecipant
     private ResponsibleUser respUser;
+    private int key;
 
-    public PollImpl(String title, String apertureText, String closerText, String type, String url, boolean activated, List<Question> questions, List<Partecipant> partecipant, ResponsibleUser respUser) {
+    public PollImpl(int key,String title, String apertureText, String closerText, String type, String url, boolean activated, List<Question> questions, List<Partecipant> partecipant, ResponsibleUser respUser) {
         this.title = title;
         this.apertureText = apertureText;
         this.closerText = closerText;
@@ -34,6 +35,7 @@ public class PollImpl implements Poll {
         this.questions = questions;
         this.partecipant = partecipant;
         this.respUser = respUser;
+        this.key = key;
     }
 
     public PollImpl() {}
@@ -124,6 +126,16 @@ public class PollImpl implements Poll {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    @Override
+    public int getKey() {
+        return key;
+    }
+
+    @Override
+    public void setKey(int key) {
+        this.key=key;
     }
     
     

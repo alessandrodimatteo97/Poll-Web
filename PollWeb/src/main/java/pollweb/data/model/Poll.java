@@ -31,6 +31,8 @@ public interface Poll {
     String getType();
 
     String getUrl();
+    
+    int getKey();
 
     boolean isActivated();
 
@@ -45,5 +47,7 @@ public interface Poll {
     void setType(String type);
 
     void setUrl(String url);
+    
+    void setKey(int key);
     
 }

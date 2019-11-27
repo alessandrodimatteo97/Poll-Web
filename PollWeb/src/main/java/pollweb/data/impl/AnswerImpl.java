@@ -19,15 +19,22 @@ texta json not null,
 */
 public class AnswerImpl implements Answer {
     private JSONObject textA;
+    private int key;
     
     public AnswerImpl(){}
-    public AnswerImpl(JSONObject textA){
+    public AnswerImpl(int key,JSONObject textA){
         this.textA = new JSONObject(textA);
+        this.key=key;
     }
 
     @Override
     public JSONObject getTextA() {
         return textA;
+    }
+    
+    @Override 
+    public int getKey(){
+        return key;
     }
 
     @Override
@@ -35,5 +42,9 @@ public class AnswerImpl implements Answer {
         this.textA = new JSONObject(textA);
     }
     
+    @Override 
+    public void setKey(int key){
+        this.key= key;
+    }
    
 }

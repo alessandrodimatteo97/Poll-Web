@@ -21,6 +21,8 @@ public interface Question {
     JSONObject getPossibleAnswer();
 
     String getTextq();
+    
+    int getKey();
 
     void setNote(String note);
 
@@ -31,6 +33,8 @@ public interface Question {
      List<Answer> getAnswer();
 
      void setAnswer(List<Answer> answer);
+     
+     void setKey(int key);
 
     
     

@@ -20,6 +20,8 @@ public interface ResponsibleUser {
     String getPwd();
 
     String getSurnameR();
+    
+    int getKey();
 
     void setEmail(String email);
 
@@ -30,5 +32,7 @@ public interface ResponsibleUser {
     void setPwd(String pwd);
 
     void setSurnameR(String surnameR);
+    
+    void setKey(int key);
     
 }

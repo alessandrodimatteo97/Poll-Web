@@ -28,6 +28,7 @@ import pollweb.data.impl.*;
  */
 import pollweb.data.model.Answer;
 public class LoginPage extends HttpServlet {
+  JSONObject json = new JSONObject();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,8 +48,7 @@ public class LoginPage extends HttpServlet {
          //   System.out.println(a.getTextA().toString());
             //disabilitiamo il template di outline (che è specificato tra i context parameters)
             //disable the outline template (otherwise the TemplateResult uses the template specified in the context parameters)
-            data.put("outline_tpl", "");
-          //   JSONObject j = new JSONObject(data);
+            json.append("ciao", " JSONObject json = new JSONObject();");
          // a.setTextA(new JSONObject(data));
            //   a.getTextA().toString();
            // JSONObject j = new JSONObject();
@@ -59,7 +59,7 @@ public class LoginPage extends HttpServlet {
             p.setActivated(true);
             System.out.print("ciao");
             ServletContext context = getServletContext( );
-            context.log("porca puttana evaaaaaaa");
+            context.log(json.toString());
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("LoginPage.ftl.html", request, response);   
     }

@@ -12,26 +12,27 @@ import pollweb.data.model.ResponsibleUser;
  * @author achissimo
  */
 
-/*
-nameR varchar(100) not null,
-surnameR varchar(100),
-fiscalCode varchar(16) unique,
-email varchar(100) not null,
-pwd varchar(16) not null,
-administrator enum('yes', 'no') not null default 'no'
-*/
 public class ResponsibleUserImpl implements ResponsibleUser {
     private String nameR, surnameR, fiscalCode, email, pwd;
+
+   
     private enum admin{ yes, no };
     private admin administrator;
+<<<<<<< HEAD
+    private int key;
+=======
+    
+    public ResponsibleUserImpl() {}
+>>>>>>> 4fde86d0e1b4b036b35d6700bb94cfe471b6f952
 
-    public ResponsibleUserImpl(String nameR, String surnameR, String fiscalCode, String email, String pwd, admin administrator) {
+    public ResponsibleUserImpl(int key,String nameR, String surnameR, String fiscalCode, String email, String pwd, admin administrator) {
         this.nameR = nameR;
         this.surnameR = surnameR;
         this.fiscalCode = fiscalCode;
         this.email = email;
         this.pwd = pwd;
         this.administrator = administrator;
+        this.key = key;
     }
 
     @Override
@@ -90,6 +91,16 @@ public class ResponsibleUserImpl implements ResponsibleUser {
 
     public void setAdministrator(admin administrator) {
         this.administrator = administrator;
+    }
+    
+     @Override
+    public int getKey() {
+        return key;
+    }
+
+    @Override
+    public void setKey(int key) {
+        this.key= key;
     }
     
     
