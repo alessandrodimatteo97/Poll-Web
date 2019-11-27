@@ -5,8 +5,6 @@
  */
 package pollweb.data.impl;
 
-import java.util.List;
-import pollweb.data.model.Answer;
 import pollweb.data.model.Partecipant;
 
 /**
@@ -15,30 +13,18 @@ import pollweb.data.model.Partecipant;
  */
 public class PartecipantImpl implements Partecipant {
     private String apiKey, nameP, email, pwd;
-    private List<Answer> answer;
+    private int key;
     
     private PartecipantImpl(){};
 
-    public PartecipantImpl(String apiKey, String nameP, String email, String pwd, List<Answer> answer) {
+    public PartecipantImpl(int key,String apiKey, String nameP, String email, String pwd) {
         this.apiKey = apiKey;
         this.nameP = nameP;
         this.email = email;
         this.pwd = pwd;
-        this.answer = answer;
+        this.key= key;
     }
     
-    @Override
-    public List<Answer> getAnswer() {
-        return answer;
-    }
-    
-    @Override
-    public void setAnswer(List<Answer> answer) {
-        this.answer = answer;
-    }
-    
-    
-
     @Override
     public String getApiKey() {
         return apiKey;
@@ -77,6 +63,16 @@ public class PartecipantImpl implements Partecipant {
     @Override
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    @Override
+    public int getKey() {
+        return key;
+    }
+
+    @Override
+    public void setKey(int key) {
+        this.key=key;
     }
     
     

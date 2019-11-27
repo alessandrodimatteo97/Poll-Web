@@ -17,6 +17,8 @@ import pollweb.data.model.Answer;
 import pollweb.data.model.Poll;
 
 public class QuestionImpl implements Question {
+
+   
    
     private enum obbligate {
         yes, no
@@ -36,19 +38,21 @@ public class QuestionImpl implements Question {
     private obbligate obbligated;
     private JSONObject possibleAnswer;
     private List<Answer> answer;
+    private int key;
 
    
     
     public QuestionImpl() {
     }
 
-    public QuestionImpl(String textq, String note, type typeP, obbligate obbligated, JSONObject possibleAnswer, List<Answer> answer) {
+    public QuestionImpl(int key,String textq, String note, type typeP, obbligate obbligated, JSONObject possibleAnswer, List<Answer> answer) {
         this.textq = textq;
         this.note = note;
         this.typeP = typeP;
         this.obbligated = obbligated;
         this.possibleAnswer = possibleAnswer;
         this.answer = answer;
+        this.key= key;
     }
 
 
@@ -107,6 +111,16 @@ public class QuestionImpl implements Question {
     @Override 
     public void setAnswer(List<Answer> answer) {
         this.answer = answer;
+    }
+    
+     @Override
+    public int getKey() {
+        return key;
+    }
+
+    @Override
+    public void setKey(int key) {
+        this.key= key;
     }
 
     

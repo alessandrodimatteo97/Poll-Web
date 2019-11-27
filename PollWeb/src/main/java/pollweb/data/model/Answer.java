@@ -13,7 +13,10 @@ import org.json.JSONObject;
 public interface Answer {
 
     JSONObject getTextA();
+    
+    int getKey();
 
     void setTextA(JSONObject textA);
     
+    void setKey(int key);
 }

@@ -5,7 +5,6 @@
  */
 package pollweb.data.model;
 
-import java.util.List;
 
 /**
  *
@@ -13,9 +12,6 @@ import java.util.List;
  */
 public interface Partecipant {
 
-    List<Answer> getAnswer();
-    
-   void setAnswer(List<Answer> answer);
     
     String getApiKey();
 
@@ -24,6 +20,8 @@ public interface Partecipant {
     String getNameP();
 
     String getPwd();
+    
+    int getKey();
 
     void setApiKey(String apiKey);
 
@@ -32,5 +30,7 @@ public interface Partecipant {
     void setNameP(String nameP);
 
     void setPwd(String pwd);
+    
+    void setKey(int key);
     
 }
