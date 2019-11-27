@@ -9,6 +9,8 @@ import framework.data.DataLayer;
 import java.util.List;
 import pollweb.data.impl.PollImpl;
 import pollweb.data.model.Partecipant;
+import pollweb.data.model.Question;
+import pollweb.data.model.ResponsibleUser;
 
 /**
  *
@@ -30,6 +32,61 @@ public class PollProxy extends PollImpl{
        super.setPartecipant(partecipant);
        this.dirty= true;
    }
+   
+   
+    @Override
+    public void setRespUser(ResponsibleUser respUser) {
+        super.setRespUser(respUser);
+        this.dirty = true;
+    }
+    
+    @Override
+    public void setTitle(String title) {
+        super.setTitle(title);
+        this.dirty= true;
+    }
+    
+     @Override
+    public void setApertureText(String apertureText) {
+        super.setApertureText(apertureText);
+        this.dirty = true;
+    }
+    
+     @Override
+    public void setCloserText(String closerText) {
+        super.setCloserText(closerText);
+        this.dirty= true;
+    }
+    
+     @Override
+    public void setType(String type) {
+        super.setType(type);
+        this.dirty = true;
+    }
+    
+    @Override
+    public void setUrl(String url) {
+        super.setUrl(url);
+        this.dirty= true;
+    }
+    
+     @Override
+    public void setActivated(boolean activated) {
+        super.setActivated(activated);
+        this.dirty= true;
+    }
+    
+    @Override
+    public void setQuestions(List<Question> questions) {
+        super.setQuestions(questions);
+        this.dirty= true;
+    }
+    
+    @Override
+    public void setKey(int key) {
+        super.setKey(key);
+        this.dirty= true;
+    }
     
       //METODI DEL PROXY
     //PROXY-ONLY METHODS

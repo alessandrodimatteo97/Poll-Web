@@ -56,6 +56,12 @@ public class PartecipantProxy extends PartecipantImpl{
         this.dirty= true;
     }
     
+    @Override
+    public void setKey(int key){
+        super.setKey(key);
+        this.dirty= true;
+    }
+    
  //METODI DEL PROXY
     //PROXY-ONLY METHODS
     public void setDirty(boolean dirty) {

@@ -31,6 +31,12 @@ public class AnswerProxy extends AnswerImpl{
       this.dirty= true;
   }
   
+  @Override 
+  public void setKey(int key){
+      super.setKey(key);
+      this.dirty= true;
+  }
+  
   /*METODI DEL PROXY*/
     public void setDirty(boolean dirty) {
         this.dirty = dirty;
