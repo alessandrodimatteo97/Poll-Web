@@ -19,7 +19,7 @@ public class ResponsibleUserImpl implements ResponsibleUser {
     private enum admin{ yes, no };
     private admin administrator;
     private int key;
-    
+
     public ResponsibleUserImpl() {}
 
 

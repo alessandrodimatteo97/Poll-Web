@@ -29,11 +29,11 @@ public class DAO {
         return connection;
     }
 
-    public void init() /* throws DataException */{
+    public void init() throws DataException {
 
     }
 
-    public void destroy() /* throws DataException */ {
+    public void destroy() throws DataException {
 
     }
 }

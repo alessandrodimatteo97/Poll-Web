@@ -5,17 +5,16 @@
  */
 package pollweb.controller;
 
+import framework.data.dao.PollDataLayer;
 import framework.result.FailureResult;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-
+ 
 /**
  *
  * @author achissimo
@@ -34,8 +33,8 @@ public abstract class PollBaseController extends HttpServlet {
         //variables leading to unexpected results. To always have different connections and statements on a per-request
         //(i.e., per-thread) basis, declare them in the doGet, doPost etc. (or in methods called by them) and 
         //(possibly) pass such variables through the request.
-        try (PollDataLayer datalayer = new PollpaperDataLayer(ds)) {
-            datalayer.init();
+        try (PollDataLayer datalayer = new PollDataLayer(ds)) {
+            datalayer.init(); 
             request.setAttribute("datalayer", datalayer);
             processRequest(request, response);
         } catch (Exception ex) {
@@ -56,36 +55,8 @@ public abstract class PollBaseController extends HttpServlet {
             throws ServletException, IOException {
         processBaseRequest(request, response);
     }
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
+   
+     /**
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description

@@ -6,6 +6,7 @@
 
 package framework.data.dao;
 
+import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
 import pollweb.data.model.Poll;
@@ -20,7 +21,7 @@ public interface PollDAO {
     
     Poll createReservedPoll();
     
-    Poll createReservedPoll( ResultSet rs );
+    Poll createReservedPoll( ResultSet rs ) throws DataException;
     
     Poll createOpenPoll();
     
@@ -37,5 +38,7 @@ public interface PollDAO {
     boolean setActivated(Poll poll);
     
     boolean setDeactivated(Poll poll);
+    
+    void storePoll( Poll poll) throws DataException;
     
 }
