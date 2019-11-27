@@ -20,6 +20,7 @@ public class PollProxy extends PollImpl{
     
     protected boolean dirty;
     protected DataLayer dataLayer;
+    protected int RespUserKey;
     
     public PollProxy(DataLayer d){
         super();
@@ -70,6 +71,11 @@ public class PollProxy extends PollImpl{
         this.dirty= true;
     }
     
+    
+    public void setRespUserKey(int userKey) {
+        this.RespUserKey = userKey;
+    }
+    
      @Override
     public void setActivated(boolean activated) {
         super.setActivated(activated);
@@ -97,5 +103,7 @@ public class PollProxy extends PollImpl{
     public boolean isDirty() {
         return dirty;
     }
+
+    
     
 }

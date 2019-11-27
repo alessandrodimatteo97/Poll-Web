@@ -25,7 +25,7 @@ public interface PollDAO {
     
     Poll createOpenPoll();
     
-    Poll createOpenPoll( ResultSet rs );
+    Poll createOpenPoll( ResultSet rs ) throws DataException;
     
     Poll getPollById(int pollId);
     

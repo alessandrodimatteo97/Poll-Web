@@ -82,17 +82,17 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     }
 
     @Override
-    public PollProxy createReservedPoll(ResultSet rs) {
+    public PollProxy createReservedPoll(ResultSet rs) throws DataException {
         PollProxy poll = createPoll();
         try {
             poll.setKey(rs.getInt("ID"));
-            poll.setRespUser(rs.getInt("idR"));
+            poll.setRespUserKey(rs.getInt("idR"));
             poll.setTitle(rs.getString("title"));
             poll.setApertureText(rs.getString("apertureText"));
-            poll.setCloserText(rs.getInt("closerText"));
+            poll.setCloserText(rs.getString("closerText"));
             poll.setType("reserved");
             poll.setUrl(rs.getString("url"));
-            poll.setActivated(rs.getString("activated"));
+            poll.setActivated(true);
             
         } catch (SQLException ex) {
             throw new DataException("Unable to create article object form ResultSet", ex);
@@ -106,9 +106,22 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     }
 
     @Override
-    public Poll createOpenPoll(ResultSet rs) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Poll createOpenPoll(ResultSet rs) throws DataException{
+PollProxy poll = createPoll();
+        try {
+            poll.setKey(rs.getInt("ID"));
+            poll.setRespUserKey(rs.getInt("idR"));
+            poll.setTitle(rs.getString("title"));
+            poll.setApertureText(rs.getString("apertureText"));
+            poll.setCloserText(rs.getString("closerText"));
+            poll.setType("open");
+            poll.setUrl(rs.getString("url"));
+            poll.setActivated(true);
+            
+        } catch (SQLException ex) {
+            throw new DataException("Unable to create article object form ResultSet", ex);
+        }
+        return poll;    }
 
     @Override
     public Poll getPollById(int pollId) {
