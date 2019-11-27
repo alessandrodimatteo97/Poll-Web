@@ -9,6 +9,7 @@ package framework.data.dao;
 import framework.data.DAO;
 import framework.data.DataException;
 import framework.data.DataLayer;
+import framework.data.proxy.PollProxy;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,13 +72,8 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     }
     
     @Override
-    public PollProxy createArticle() {
+    public PollProxy createPoll() {
         return new PollProxy(getDataLayer());
-    }
-
-    @Override
-    public Poll createPoll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -141,6 +137,11 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
 
     @Override
     public boolean setDeactivated(Poll poll) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void storePoll(Poll poll) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
