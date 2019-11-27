@@ -22,12 +22,20 @@ public interface Question {
 
     String getTextq();
     
+    String getTypeP();
+    
+    boolean getObbligated();
+    
     int getKey();
 
+    void setObbligated(boolean obbligated);
+            
     void setNote(String note);
 
     void setPossibleAnswer(JSONObject possibleAnswer);
 
+    void setTypeP(String typeP);
+            
     void setTextq(String textq);
 
      List<Answer> getAnswer();
