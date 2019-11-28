@@ -12,6 +12,7 @@ import framework.data.DataLayer;
 import java.sql.ResultSet;
 import java.util.List;
 import javax.json.Json;
+import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
 
 /**
@@ -70,7 +71,7 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
     }
 
     @Override
-    public List<Question> getQuestionsByPollId(int pollId) throws DataException{
+    public List<Question> getQuestionsByPollId(Poll poll) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

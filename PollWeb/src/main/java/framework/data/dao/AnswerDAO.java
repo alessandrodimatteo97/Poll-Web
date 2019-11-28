@@ -9,6 +9,7 @@ import framework.data.DataException;
 import java.util.List;
 import pollweb.data.model.Answer;
 import java.sql.ResultSet;
+import pollweb.data.model.Question;
 
 /**
  *
@@ -20,7 +21,7 @@ public interface AnswerDAO {
     
     Answer createAnswer( ResultSet rs ) throws DataException;
         
-    List<Answer> getAnswersByQuestionId(int QuestionId) throws DataException;
+    List<Answer> getAnswersByQuestionId(Question question) throws DataException; //cambiato la firma del metodo 
     
     Answer getAnswerById(int AnswerId) throws DataException;
     

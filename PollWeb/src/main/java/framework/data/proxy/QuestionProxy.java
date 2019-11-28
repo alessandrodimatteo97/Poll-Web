@@ -5,8 +5,12 @@
  */
 package framework.data.proxy;
 
+import framework.data.DataException;
 import framework.data.DataLayer;
+import framework.data.dao.AnswerDAO;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONObject;
 import pollweb.data.impl.QuestionImpl;
 import pollweb.data.model.Answer;
@@ -19,11 +23,13 @@ public class QuestionProxy  extends QuestionImpl {
     
     protected boolean dirty;
     protected DataLayer dataLayer;
+    protected int partecipant_key = 0;
     
     public QuestionProxy(DataLayer d){
         super();
         this.dirty= false;
         this.dataLayer= d;
+        this.partecipant_key= 0;
     }
     
      @Override
@@ -62,6 +68,17 @@ public class QuestionProxy  extends QuestionImpl {
         this.dirty = true;
     }
     
+     @Override
+     public List<Answer> getAnswer(){
+         if (super.getAnswer() == null){
+             try {
+                 super.setAnswer(((AnswerDAO) dataLayer.getDAO(Answer.class)).getAnswersByQuestionId(this));
+             } catch (DataException ex) {
+                 Logger.getLogger(QuestionProxy.class.getName()).log(Level.SEVERE, null, ex);
+             }
+         }
+         return super.getAnswer();
+     }
     @Override
     public void setKey(int key) {
         super.setKey(key);
@@ -75,6 +92,10 @@ public class QuestionProxy  extends QuestionImpl {
 
     public boolean isDirty() {
         return dirty;
+    }
+    
+    public void setPartecipantKey(int partecipant_key){
+        this.partecipant_key = partecipant_key;
     }
     
 }

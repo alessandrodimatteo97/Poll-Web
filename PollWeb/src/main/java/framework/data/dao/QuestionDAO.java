@@ -10,6 +10,7 @@ import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
 import javax.json.Json;
+import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
 
 /**
@@ -36,7 +37,7 @@ public interface QuestionDAO {
     
     Question getQuestionById(int questionId) throws DataException;
     
-    List<Question> getQuestionsByPollId(int pollId) throws DataException;
+    List<Question> getQuestionsByPollId(Poll poll) throws DataException; //cambiata la firma del metodo
     
     List<Question> getQuestionsByUserId(int userId) throws DataException;
 

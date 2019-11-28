@@ -9,6 +9,8 @@ package framework.data.proxy;
 import framework.data.DataException;
 import framework.data.DataLayer;
 import framework.data.dao.PartecipantDAO;
+import framework.data.dao.QuestionDAO;
+import framework.data.dao.ResponsibleUserDAO;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,15 +62,17 @@ public class PollProxy extends PollImpl{
         this.dirty = true;
     }
     
-    /*@Override
+    @Override
     public ResponsibleUser getRespUser(){
         if (super.getRespUser() == null && RespUserKey > 0) {
             try {
-                super.setRespUser(((Re)));
-            } catch (Exception e) {
+                super.setRespUser(((ResponsibleUserDAO) dataLayer.getDAO(ResponsibleUser.class)).getResponsibleUser(RespUserKey));
+            } catch (DataException ex) {
+                Logger.getLogger(PollProxy.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }*/
+        return super.getRespUser();
+    }
     
     @Override
     public void setTitle(String title) {
@@ -114,6 +118,17 @@ public class PollProxy extends PollImpl{
         this.dirty= true;
     }
     
+     @Override
+    public List<Question> getQuestions() {
+        if (super.getQuestions() == null){
+            try {
+                super.setQuestions(((QuestionDAO) dataLayer.getDAO(Question.class)).getQuestionsByPollId(this));
+            } catch (DataException ex) {
+                Logger.getLogger(PollProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return super.getQuestions();
+    }
     @Override
     public void setKey(int key) {
         super.setKey(key);
