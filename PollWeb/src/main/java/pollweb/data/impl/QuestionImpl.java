@@ -34,8 +34,8 @@ public class QuestionImpl implements Question {
     }
     
     private String textq, note;
-    private type typeP;
-    private obbligate obbligated;
+    private String typeP;
+    private boolean obbligated;
     private JSONObject possibleAnswer;
     private List<Answer> answer;
     private int key;
@@ -45,7 +45,7 @@ public class QuestionImpl implements Question {
     public QuestionImpl() {
     }
 
-    public QuestionImpl(int key,String textq, String note, type typeP, obbligate obbligated, JSONObject possibleAnswer, List<Answer> answer) {
+    public QuestionImpl(int key,String textq, String note, String typeP, boolean obbligated, JSONObject possibleAnswer, List<Answer> answer) {
         this.textq = textq;
         this.note = note;
         this.typeP = typeP;
@@ -77,19 +77,23 @@ public class QuestionImpl implements Question {
         this.note = note;
     }
 
-    public type getTypeP() {
+    @Override
+    public String getTypeP() {
         return typeP;
     }
 
-    public void setTypeP(type typeP) {
+    @Override
+    public void setTypeP(String typeP) {
         this.typeP = typeP;
     }
 
-    public obbligate getObbligated() {
+    @Override
+    public boolean getObbligated() {
         return obbligated;
     }
-
-    public void setObbligated(obbligate obbligated) {
+    
+    @Override
+    public void setObbligated(boolean obbligated) {
         this.obbligated = obbligated;
     }
 

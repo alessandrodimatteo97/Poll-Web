@@ -119,11 +119,13 @@ public class PollImpl implements Poll {
     public void setActivated(boolean activated) {
         this.activated = activated;
     }
-
+    
+    @Override
     public List<Question> getQuestions() {
         return questions;
     }
 
+    @Override
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }

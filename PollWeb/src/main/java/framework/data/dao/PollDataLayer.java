@@ -29,7 +29,6 @@ public class PollDataLayer extends DataLayer {
     @Override
     public void init() throws DataException {
         registerDAO(Poll.class, new PollDAO_MySQL(this));
-        registerDAO(Answer.class, new AnswerDAO_MySQL (this));
         registerDAO(Partecipant.class, new PartecipantDAO_MySQL(this));
         registerDAO(Question.class, new QuestionDAO_MySQL(this));
         registerDAO(ResponsibleUser.class, ResponsibleUserDAO_MySQL(this));
@@ -42,17 +41,17 @@ public class PollDataLayer extends DataLayer {
     public AnswerDAO getAnswerDAO() {
         return (AnswerDAO) getDAO(Answer.class);
     }
-    
+   /* 
     public PartecipantDAO getPartecipantDAO() {
         return (PartecipantDAO) getDAO(Partecipant.class);
     }
-    
+    */
     public QuestionDAO getQuestionDAO() {
        return (QuestionDAO) getDAO(Question.class);
     }
-    
+    /*
     public ResponsibleUserDAO getResponsibleUserDAO() {
         return (ResponsibleUserDAO) getDAO(ResponsibleUser.class);
     }
-    
+    */
 }
