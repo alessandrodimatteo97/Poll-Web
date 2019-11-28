@@ -31,7 +31,11 @@ public class PollDataLayer extends DataLayer {
         registerDAO(Poll.class, new PollDAO_MySQL(this));
         registerDAO(Partecipant.class, new PartecipantDAO_MySQL(this));
         registerDAO(Question.class, new QuestionDAO_MySQL(this));
-        registerDAO(ResponsibleUser.class, ResponsibleUserDAO_MySQL(this));
+        registerDAO(ResponsibleUser.class, new ResponsibleUserDAO_MySQL(this));
+        registerDAO(Answer.class, new AnswerDAO_MySQL (this));
+      //  registerDAO(Partecipant.class, new PartecipantDAO_MySQL(this));
+      //  registerDAO(Question.class, new QuestionDAO_MySQL(this));
+      //  registerDAO(ResponsibleUser.class, ResponsibleUser_MySQL(this));
     }
     
     public PollDAO getPollDAO() {
