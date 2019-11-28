@@ -5,6 +5,7 @@
  */
 
 package framework.data.dao;
+import framework.data.DataException;
 import java.util.List;
 import pollweb.data.model.Answer;
 import java.sql.ResultSet;
@@ -17,10 +18,10 @@ public interface AnswerDAO {
     
     Answer createAnswer();
     
-    Answer createAnswer( ResultSet rs );
+    Answer createAnswer( ResultSet rs ) throws DataException;
         
-    List<Answer> getAnswersByQuestionId(int QuestionId);
+    List<Answer> getAnswersByQuestionId(int QuestionId) throws DataException;
     
-    Answer getAnswerById(int AnswerId);
+    Answer getAnswerById(int AnswerId) throws DataException;
     
 }

@@ -7,6 +7,7 @@
 package framework.data.dao;
 
 import framework.data.DAO;
+import framework.data.DataException;
 import framework.data.DataLayer;
 import java.sql.ResultSet;
 import java.util.List;
@@ -28,37 +29,42 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
     }
 
     @Override
-    public ResponsibleUser createResponsibleUser(ResultSet rs) {
+    public ResponsibleUser createResponsibleUser(ResultSet rs) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean deleteResponsibleUser(int UserKey) {
+    public boolean deleteResponsibleUser(int UserKey) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean changePassword(ResponsibleUser user, String pwd) {
+    public boolean changePassword(ResponsibleUser user, String pwd) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean setAdminTrue(ResponsibleUser user) {
+    public boolean setAdminTrue(ResponsibleUser user) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean setAdminFalse(ResponsibleUser user) {
+    public boolean setAdminFalse(ResponsibleUser user) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean changeEmail(ResponsibleUser user) {
+    public boolean changeEmail(ResponsibleUser user) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<ResponsibleUser> getResponsibleUsers() {
+    public List<ResponsibleUser> getResponsibleUsers() throws DataException{
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ResponsibleUser getResponsibleUser(int UserKey) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

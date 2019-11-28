@@ -85,7 +85,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
     }
 
     @Override
-    public List<Partecipant> getPartecipants() {
+    public List<Partecipant> getPartecipants() throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

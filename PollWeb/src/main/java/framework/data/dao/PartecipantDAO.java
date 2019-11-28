@@ -34,6 +34,6 @@ public interface PartecipantDAO {
  */
     Partecipant getUserById(int userId) throws DataException;
     
-    List<Partecipant> getPartecipants();
+    List<Partecipant> getPartecipants() throws DataException;
     
 }

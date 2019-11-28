@@ -7,6 +7,7 @@
 package framework.data.dao;
 
 import framework.data.DAO;
+import framework.data.DataException;
 import framework.data.DataLayer;
 import java.sql.ResultSet;
 import java.util.List;
@@ -29,52 +30,52 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
     }
 
     @Override
-    public Question createQuestion(ResultSet rs) {
+    public Question createQuestion(ResultSet rs) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean deleteQuestion(Question question) {
+    public boolean deleteQuestion(Question question) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean setQuestionType(Question question, String type) {
+    public boolean setQuestionType(Question question, String type) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Json setPossibleAnswers(Question question, Json possibleAnswers) {
+    public Json setPossibleAnswers(Question question, Json possibleAnswers) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String setTextQuestion(Question question, String textQuestion) {
+    public String setTextQuestion(Question question, String textQuestion) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String setNoteQuestion(Question question, String noteQuestion) {
+    public String setNoteQuestion(Question question, String noteQuestion) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean setObbligation(Question question, String obl) {
+    public boolean setObbligation(Question question, String obl) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Question getQuestionById(int questionId) {
+    public Question getQuestionById(int questionId) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Question> getQuestionsByPollId(int pollId) {
+    public List<Question> getQuestionsByPollId(int pollId) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Question> getQuestionsByUserId(int userId) {
+    public List<Question> getQuestionsByUserId(int userId) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

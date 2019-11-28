@@ -7,6 +7,7 @@
 package framework.data.dao;
 
 import framework.data.DAO;
+import framework.data.DataException;
 import framework.data.DataLayer;
 import java.sql.ResultSet;
 import java.util.List;
@@ -28,17 +29,17 @@ public class AnswerDAO_MySQL extends DAO implements AnswerDAO {
     }
 
     @Override
-    public Answer createAnswer(ResultSet rs) {
+    public Answer createAnswer(ResultSet rs) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Answer> getAnswersByQuestionId(int QuestionId) {
+    public List<Answer> getAnswersByQuestionId(int QuestionId) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Answer getAnswerById(int AnswerId) {
+    public Answer getAnswerById(int AnswerId) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
