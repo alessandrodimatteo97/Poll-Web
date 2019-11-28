@@ -213,10 +213,18 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public boolean setActivated( ResultSet rs ) throws DataException {
         
+        try {
+            setPollAsActive.setInt(1, rs.getInt("ID"));
+        } catch (SQLException ex) {
+            throw new DataException("Not setted property:  ", ex);
+        }
         
-        
-        return false;
-        
+        try (ResultSet result = setPollAsActive.executeQuery()) {
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+                
     }
 
     @Override

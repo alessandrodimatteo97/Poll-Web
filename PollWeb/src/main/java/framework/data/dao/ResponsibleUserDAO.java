@@ -6,42 +6,29 @@
 
 package framework.data.dao;
 
-import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
-import pollweb.data.model.Partecipant;
 import pollweb.data.model.ResponsibleUser;
 
 /**
  *
  * @author davide
  */
-public interface UserDAO {
-    
-    ResponsibleUser createUser();
-    
-    ResponsibleUser createUser(ResultSet rs);
-    
+public interface ResponsibleUserDAO {
+       
     ResponsibleUser createResponsibleUser();
     
     ResponsibleUser createResponsibleUser(ResultSet rs);
     
-    Partecipant createPartecipant();
-    
-    Partecipant createPartecipant(ResultSet rs);
-        
-    boolean deleteUser(int UserKey);
+    boolean deleteResponsibleUser(int UserKey);
         
     boolean changePassword(ResponsibleUser user, String pwd); /* controllare la password se deve essere di un altro tipo per questioni di sicurezza*/
     
-    boolean setAdmin(ResponsibleUser user);
+    boolean setAdminTrue(ResponsibleUser user);
     
-    boolean setIP(ResponsibleUser user, String IP);
+    boolean setAdminFalse(ResponsibleUser user);
     
-    boolean changeEmail(ResponsibleUser user, String email);
+    boolean changeEmail(ResponsibleUser user);
     
-    ResponsibleUser getUserById(int userId);
-    
-    List<ResponsibleUser> getUsers();
-       
+    List<ResponsibleUser> getResponsibleUsers();
 }
