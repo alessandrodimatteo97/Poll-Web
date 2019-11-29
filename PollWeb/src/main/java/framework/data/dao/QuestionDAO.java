@@ -23,7 +23,7 @@ public interface QuestionDAO {
     
     Question createQuestion(ResultSet rs) throws DataException;
     
-    boolean deleteQuestion(Question question) throws DataException;
+    boolean deleteQuestion(ResultSet rs) throws DataException;
     
     boolean setQuestionType(Question question, String type) throws DataException;
     

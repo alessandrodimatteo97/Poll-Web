@@ -21,7 +21,7 @@ public interface AnswerDAO {
     
     Answer createAnswer( ResultSet rs ) throws DataException;
         
-    List<Answer> getAnswersByQuestionId(Question question) throws DataException; //cambiato la firma del metodo 
+    List<Answer> getAnswersByQuestionId(int questionKey) throws DataException; //cambiato la firma del metodo 
     
     Answer getAnswerById(int AnswerId) throws DataException;
     
