@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.ArrayList;
 import pollweb.data.model.Partecipant;
 
 /**
@@ -39,6 +40,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
             searchPartecipantById = connection.prepareStatement("SELECT * FROM partecipant WHERE ID=?");
             searchPartecipantByPollId = connection.prepareStatement("SELECT * FROM partecipant JOIN partecipation ON partecipant.ID=partecipation.ID_part "
                     + "WHERE partecipation.ID_poll=?");
+            searchPartecipantByApiKey = connection.prepareStatement("SELECT * FROM partecipant WHERE apiKey=?");
             deletePartecipant = connection.prepareStatement("DELETE FROM partecipant WHERE ID=? ");
             createFullPartecipant = connection.prepareStatement("INSERT INTO partecipant (apiKey, nameP, email, pwd) VALUES(?,?,?,?)");
             createHalfPartecipant = connection.prepareStatement("INSERT INTO partecipant (apiKey, nameP) VALUES(?,?)");
@@ -86,12 +88,13 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
 
     @Override
     public List<Partecipant> getPartecipants() throws DataException{
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Partecipant> result = new ArrayList();
+        return null;
     }
 
     @Override
     public Partecipant getUserById(int userId) throws DataException {
-            try {
+        try {
             this.searchPartecipantById.setInt(1, userId);
             
             try ( ResultSet rs = this.searchPartecipantById.executeQuery() ) {
@@ -104,6 +107,38 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
             throw new DataException("Error from DataBase: ", ex);
         }
         
+        return null;
+    }
+
+    @Override
+    public List<Partecipant> getPartecipantsByPollId(int pollId) throws DataException {
+        List<Partecipant> result = new ArrayList();
+        try {
+            this.searchPartecipantByPollId.setInt(1, pollId);
+            try ( ResultSet rs = this.searchPartecipantByPollId.executeQuery() ) {
+                while (rs.next()) {
+                    result.add((Partecipant) getUserById(rs.getInt("ID")));
+                }
+            } 
+            } catch (SQLException ex) {
+                throw new DataException("Error from DataBase: ", ex);
+        }
+        return result;
+    }
+
+    @Override
+    public Partecipant getUserByApiKey(String apiKey) throws DataException {
+        try {
+            this.searchPartecipantByApiKey.setString(1, apiKey);
+            
+            try ( ResultSet rs = this.searchPartecipantByApiKey.executeQuery()) {
+                if( rs.next()) {
+                    return createPartecipant(rs);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Error from database: ", ex);
+        }
         return null;
     }
     
