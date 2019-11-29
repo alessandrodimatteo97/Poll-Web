@@ -23,13 +23,13 @@ public class QuestionProxy  extends QuestionImpl {
     
     protected boolean dirty;
     protected DataLayer dataLayer;
-    protected int partecipant_key = 0;
+    protected int poll_key = 0;
     
     public QuestionProxy(DataLayer d){
         super();
         this.dirty= false;
         this.dataLayer= d;
-        this.partecipant_key= 0;
+        this.poll_key= 0;
     }
     
      @Override
@@ -94,8 +94,8 @@ public class QuestionProxy  extends QuestionImpl {
         return dirty;
     }
     
-    public void setPartecipantKey(int partecipant_key){
-        this.partecipant_key = partecipant_key;
+    public void setPollKey(int poll_key){
+        this.poll_key = poll_key;
     }
     
 }

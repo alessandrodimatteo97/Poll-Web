@@ -93,12 +93,28 @@ public class AnswerDAO_MySQL extends DAO implements AnswerDAO {
                     result.add((Answer) getAnswerById(rs.getInt("ID")));
                 }
             }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to create article object form ResultSet", ex);
         }
+        return result;
     }
 
     @Override
     public Answer getAnswerById(int AnswerId) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            this.searchAnswerById.setInt(1, AnswerId);
+            
+            try ( ResultSet rs = this.searchAnswerById.executeQuery() ) {
+                if (rs.next()) {
+                    return createAnswer(rs);
+                }
+            }
+
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+        
+        return null;
     }
     
 }
