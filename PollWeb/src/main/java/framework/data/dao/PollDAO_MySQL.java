@@ -155,9 +155,9 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             
             try ( ResultSet rs = this.searchPollByPollId.executeQuery() ) {
                 if (rs.next()) {
-                    if(rs.getString("type").equals("open")){
-                        return createOpenPoll(rs);
-                    } else {
+                    if(rs.getString("typeP").equals("open"))
+                     return createOpenPoll(rs);
+                    else {
                         return createReservedPoll(rs);
                     }
                 }
@@ -181,7 +181,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
            
             try (ResultSet rs = searchPollByUserId.executeQuery()) {
                while(rs.next()) {
-                   if(rs.getString("type").equals("open")) {
+                   if(rs.getString("typeP").equals("open")) {
                        result.add((Poll)getPollById(rs.getInt("ID")));
                    } else {
                        result.add((Poll)getPollById(rs.getInt("ID")));
@@ -197,6 +197,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     }
 
     @Override
+
     public List<Poll> getOpenPolls() throws DataException {
         List<Poll> result = new ArrayList();
         
