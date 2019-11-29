@@ -16,19 +16,57 @@
         <param-name>view.outline_template</param-name>
         <param-value>outline.ftl.html</param-value>
     </context-param>
-   
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>pollweb.controller.Home</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReservedPollList</servlet-name>
+        <servlet-class>pollweb.controller.ReservedPollList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OpenPollList</servlet-name>
+        <servlet-class>pollweb.controller.OpenPollList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Poll</servlet-name>
+        <servlet-class>Poll</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BecomeResponsible</servlet-name>
+        <servlet-class>pollweb.controller.BecomeResponsible</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>pollweb.controller.Login</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
     </servlet-mapping>
-        <welcome-file-list>
+    <welcome-file-list>
         <welcome-file>Home</welcome-file>
     </welcome-file-list>
-    
+    <servlet-mapping>
+        <servlet-name>ReservedPollList</servlet-name>
+        <url-pattern>/ReservedPollList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OpenPollList</servlet-name>
+        <url-pattern>/OpenPollList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Poll</servlet-name>
+        <url-pattern>/Poll/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BecomeResponsible</servlet-name>
+        <url-pattern>/BecomeResponsible</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

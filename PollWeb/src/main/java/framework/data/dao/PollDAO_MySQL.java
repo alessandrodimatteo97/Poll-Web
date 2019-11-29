@@ -200,7 +200,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public List<Poll> getReservedPolls() throws DataException {
         List<Poll> result = new ArrayList();
-        try ( ResultSet rs = searchOpenPolls.executeQuery()) {
+        try ( ResultSet rs = searchReservedPolls.executeQuery()) {
             while(rs.next()) {
                 result.add((Poll) getPollById(rs.getInt("ID")));
             }

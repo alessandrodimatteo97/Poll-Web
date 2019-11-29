@@ -11,24 +11,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import framework.result.DataModelFiller;
-import framework.result.TemplateManagerException;
-import framework.result.TemplateResult;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletContext;
-//import org.json.JSONObject;
-import org.json.JSONObject;
-import pollweb.data.impl.*;
+
 /**
  *
  * @author achissimo
  */
-import pollweb.data.model.Answer;
-public class LoginPage extends HttpServlet {
-  JSONObject json = new JSONObject();
+public class BecomeResponsible extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,28 +28,20 @@ public class LoginPage extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, TemplateManagerException {
-            Map data = new HashMap();
-          //  AnswerImpl a = new AnswerImpl();
-        //  AnswerImpl a = new AnswerImpl();
-        //    a.setTextA(new JSONObject("ciao:ciao"));
-         //   System.out.println(a.getTextA().toString());
-            //disabilitiamo il template di outline (che è specificato tra i context parameters)
-            //disable the outline template (otherwise the TemplateResult uses the template specified in the context parameters)
-            json.append("ciao", " JSONObject json = new JSONObject();");
-         // a.setTextA(new JSONObject(data));
-           //   a.getTextA().toString();
-           // JSONObject j = new JSONObject();
-           // j.put("name", "jon doe");
-          //  System.out.println(j.toString());
-          
-            PollImpl p = new PollImpl();
-            p.setActivated(true);
-            System.out.print("ciao");
-            ServletContext context = getServletContext( );
-            context.log(json.toString());
-            TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("home.ftl.html", request, response);    
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet BecomeResponsible</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet BecomeResponsible at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -76,11 +56,7 @@ public class LoginPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (TemplateManagerException ex) {
-            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -94,11 +70,7 @@ public class LoginPage extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (TemplateManagerException ex) {
-            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

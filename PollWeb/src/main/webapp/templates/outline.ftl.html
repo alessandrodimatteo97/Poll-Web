@@ -17,29 +17,57 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="#">PollWeb</a>
+  <a class="navbar-brand" href="/PollWeb">PollWeb</a>
 
   <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+       <#if (page_title == "Home")>
+
+        <li class="nav-item active">
+    <a class="nav-link" href="Home">Home</a>   
+    
+      </li>
+       <#else>
+
+       <li class="nav-item ">
+    <a class="nav-link" href="Home">Home</a>   
+    
+      </li>
+
+    </#if>
+    
+    
+      <#if (page_title == "Open Poll")>
       <li class="nav-item active">
-    <a class="nav-link" href="#">${page_title!"Untitled page"}</a>      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Open Polls</a>
+        <a class="nav-link" href="OpenPollList">Open Polls</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Reserved Polls</a>
+      <#else>
+       <li class="nav-item ">
+        <a class="nav-link" href="OpenPollList">Open Polls</a>
       </li>
+      </#if>
+      
+      <#if (page_title == "Reserved Poll")>
+      <li class="nav-item active">
+        <a class="nav-link" href="ReservedPollList">Reserved Polls</a>
+      </li>
+      
+      <#else>
+      <li class="nav-item">
+        <a class="nav-link" href="ReservedPollList">Reserved Polls</a>
+      </li>
+      </#if>
+      
         <li class="nav-item">
-        <a class="nav-link" href="#">Become a responsible user</a>
+        <a class="nav-link" href="BecomeResponsible">Become a responsible user</a>
       </li>
     </ul>
-       <button type="button" class="btn btn-secondary prova" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-  Login
-</button>
+        <a class="nav-link" href="Login">Login</a>
+  
       
   </div>
 </nav>        
-                </div>
+        </div>
                 
             </div>
 
