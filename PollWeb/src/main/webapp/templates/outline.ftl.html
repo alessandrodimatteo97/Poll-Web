@@ -57,10 +57,18 @@
         <a class="nav-link" href="ReservedPollList">Reserved Polls</a>
       </li>
       </#if>
-      
-        <li class="nav-item">
+      <#if (page_title == "BecomeResponsible")>
+        <li class="nav-item active">
         <a class="nav-link" href="BecomeResponsible">Become a responsible user</a>
       </li>
+      <#else>
+       <li class="nav-item">
+        <a class="nav-link" href="BecomeResponsible">Become a responsible user</a>
+      </li>
+      </#if>
+      
+      
+      
     </ul>
         <a class="nav-link" href="Login">Login</a>
   

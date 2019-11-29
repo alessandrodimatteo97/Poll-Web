@@ -30,7 +30,7 @@
     </servlet>
     <servlet>
         <servlet-name>Poll</servlet-name>
-        <servlet-class>Poll</servlet-class>
+        <servlet-class>pollweb.controller.Poll</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>BecomeResponsible</servlet-name>

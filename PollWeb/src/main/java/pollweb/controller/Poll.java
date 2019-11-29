@@ -1,9 +1,10 @@
+package pollweb.controller;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pollweb.controller;
 
 import framework.data.DataException;
 import framework.data.dao.PollDataLayer;
@@ -11,6 +12,7 @@ import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author achissimo
  */
-public class Login extends PollBaseController {
+public class Poll extends PollBaseController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,7 +33,7 @@ public class Login extends PollBaseController {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private void action_error(HttpServletRequest request, HttpServletResponse response) {
+   private void action_error(HttpServletRequest request, HttpServletResponse response) {
         if (request.getAttribute("exception") != null) {
             (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
         } else {
@@ -41,10 +43,10 @@ public class Login extends PollBaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
             TemplateResult res = new TemplateResult(getServletContext());
-            request.setAttribute("page_title", "Login");
+            request.setAttribute("page_title", "Poll name");
            
-            res.activate("login.ftl.html", request, response);
-        
+            res.activate("poll.ftl.html", request, response);
+       
     }
 
     @Override

@@ -27,6 +27,9 @@ public interface PollDAO {
     
     Poll createOpenPoll( ResultSet rs ) throws DataException;
     
+    Poll createHomePoll( ResultSet rs ) throws DataException;
+
+    
     Poll getPollById(int pollId) throws DataException;
     
     List<Poll> getPollsByUserId(int userId) throws DataException;
@@ -40,5 +43,9 @@ public interface PollDAO {
     boolean setDeactivated(ResultSet rs) throws DataException;
         
     void storePoll( Poll poll) throws DataException;
+    
+      List<Poll> getAllPolls() throws DataException;
+  
+      
     
 }

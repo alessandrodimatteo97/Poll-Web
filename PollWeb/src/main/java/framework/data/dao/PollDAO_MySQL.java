@@ -129,18 +129,14 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
         }
         return poll;    
     }
-
+@Override
     public List<Poll> getAllPolls() throws DataException{
         
         List<Poll> result = new ArrayList();
 
             try (ResultSet rs = getAllPolls.executeQuery()) {
                while(rs.next()) {
-                   if(rs.getString("type").equals("open")) {
-                       result.add((Poll)getPollById(rs.getInt("ID")));
-                   } else {
-                       result.add((Poll)getPollById(rs.getInt("ID")));
-                   }
+                       result.add((Poll)createHomePoll(rs));
                }             
         } catch (SQLException ex) {
             throw new DataException("Error from DataBase: ", ex);
@@ -256,5 +252,31 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     public void storePoll(Poll poll) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public Poll createHomePoll(ResultSet rs) throws DataException {
+            PollProxy poll = createPoll();
+        
+        try {
+            poll.setKey(rs.getInt("ID"));
+            poll.setRespUserKey(rs.getInt("idR"));
+            poll.setTitle(rs.getString("title"));
+            poll.setApertureText(rs.getString("apertureText"));
+            poll.setCloserText(rs.getString("closerText"));
+            if(rs.getString("typeP").equals("open")){
+              poll.setType("open");
+
+            }
+            else {
+              poll.setType("reserved");
+
+            }
+            poll.setUrl(rs.getString("url"));
+            poll.setActivated(true);
+            
+        } catch (SQLException ex) {
+            throw new DataException("Unable to create article object form ResultSet", ex);
+        }
+        return poll;    }
     
 }

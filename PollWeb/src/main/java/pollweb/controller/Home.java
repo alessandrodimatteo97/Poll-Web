@@ -48,11 +48,8 @@ public class Home extends PollBaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("page_title", "Home");
-            request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getOpenPolls());
-            List<Poll> p = new ArrayList<Poll>();
-            p.addAll(((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getOpenPolls());
-            ServletContext context = getServletContext( );
-            context.log(p.toString());
+            request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getAllPolls());
+           
             res.activate("home.ftl.html", request, response);
         } catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());

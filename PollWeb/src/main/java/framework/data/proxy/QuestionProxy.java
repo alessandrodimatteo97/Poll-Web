@@ -72,7 +72,7 @@ public class QuestionProxy  extends QuestionImpl {
      public List<Answer> getAnswer(){
          if (super.getAnswer() == null){
              try {
-                 super.setAnswer(((AnswerDAO) dataLayer.getDAO(Answer.class)).getAnswersByQuestionId(this));
+                 super.setAnswer(((AnswerDAO) dataLayer.getDAO(Answer.class)).getAnswersByQuestionId(this.poll_key));
              } catch (DataException ex) {
                  Logger.getLogger(QuestionProxy.class.getName()).log(Level.SEVERE, null, ex);
              }
