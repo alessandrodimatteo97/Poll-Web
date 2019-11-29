@@ -6,9 +6,11 @@
 
 package framework.data.dao;
 
+import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
 import javax.json.Json;
+import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
 
 /**
@@ -19,24 +21,24 @@ public interface QuestionDAO {
     
     Question createQuestion();
     
-    Question createQuestion(ResultSet rs);
+    Question createQuestion(ResultSet rs) throws DataException;
     
-    boolean deleteQuestion(Question question);
+    boolean deleteQuestion(Question question) throws DataException;
     
-    boolean setQuestionType(Question question, String type);
+    boolean setQuestionType(Question question, String type) throws DataException;
     
-    Json setPossibleAnswers(Question question, Json possibleAnswers);
+    Json setPossibleAnswers(Question question, Json possibleAnswers) throws DataException;
     
-    String setTextQuestion(Question question, String textQuestion);
+    String setTextQuestion(Question question, String textQuestion) throws DataException;
     
-    String setNoteQuestion(Question question, String noteQuestion);
+    String setNoteQuestion(Question question, String noteQuestion) throws DataException;
 
-    boolean setObbligation(Question question, String obl);
+    boolean setObbligation(Question question, String obl) throws DataException;
     
-    Question getQuestionById(int questionId);
+    Question getQuestionById(int questionId) throws DataException;
     
-    List<Question> getQuestionsByPollId(int pollId);
+    List<Question> getQuestionsByPollId(Poll poll) throws DataException; //cambiata la firma del metodo
     
-    List<Question> getQuestionsByUserId(int userId);
+    List<Question> getQuestionsByUserId(int userId) throws DataException;
 
 }

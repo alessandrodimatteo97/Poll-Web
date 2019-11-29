@@ -54,7 +54,7 @@ public class Home extends PollBaseController {
             ServletContext context = getServletContext( );
             context.log(p.toString());
             res.activate("home.ftl.html", request, response);
-        } catch (TemplateManagerException ex) {
+        } catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
             action_error(request, response);
         } 

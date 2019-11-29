@@ -27,18 +27,18 @@ public interface PollDAO {
     
     Poll createOpenPoll( ResultSet rs ) throws DataException;
     
-    Poll getPollById(int pollId);
+    Poll getPollById(int pollId) throws DataException;
     
-    List<Poll> getPollsByUserId(int userId);
+    List<Poll> getPollsByUserId(int userId) throws DataException;
     
-    List<Poll> getOpenPolls();
+    List<Poll> getOpenPolls() throws DataException;
     
-    List<Poll> getReservedPolls();
+    List<Poll> getReservedPolls() throws DataException;
 
-    boolean setActivated(Poll poll);
+    boolean setActivated(ResultSet rs) throws DataException;
     
-    boolean setDeactivated(Poll poll);
-    
+    boolean setDeactivated(ResultSet rs) throws DataException;
+        
     void storePoll( Poll poll) throws DataException;
     
 }

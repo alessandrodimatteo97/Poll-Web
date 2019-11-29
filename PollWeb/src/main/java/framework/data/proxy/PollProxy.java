@@ -5,12 +5,20 @@
  */
 package framework.data.proxy;
 
+
+import framework.data.DataException;
 import framework.data.DataLayer;
+import framework.data.dao.PartecipantDAO;
+import framework.data.dao.QuestionDAO;
+import framework.data.dao.ResponsibleUserDAO;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pollweb.data.impl.PollImpl;
 import pollweb.data.model.Partecipant;
 import pollweb.data.model.Question;
 import pollweb.data.model.ResponsibleUser;
+
 
 /**
  *
@@ -20,12 +28,13 @@ public class PollProxy extends PollImpl{
     
     protected boolean dirty;
     protected DataLayer dataLayer;
-    protected int RespUserKey;
+    protected int RespUserKey = 0;
     
     public PollProxy(DataLayer d){
         super();
         this.dirty=false;
         this.dataLayer= d;
+        this.RespUserKey= 0;
     }
     
     @Override
@@ -34,11 +43,35 @@ public class PollProxy extends PollImpl{
        this.dirty= true;
    }
    
+   @Override
+   public List<Partecipant> getPartecipant(){
+       if (super.getPartecipant() == null){
+           try {
+               super.setPartecipant(((PartecipantDAO) dataLayer.getDAO(Partecipant.class)).getPartecipants());
+           }catch (DataException ex) {
+              Logger.getLogger(PollProxy.class.getName()).log(Level.SEVERE, null, ex);
+           }
+       }
+       return super.getPartecipant();
+   }
+   
    
     @Override
     public void setRespUser(ResponsibleUser respUser) {
         super.setRespUser(respUser);
         this.dirty = true;
+    }
+    
+    @Override
+    public ResponsibleUser getRespUser(){
+        if (super.getRespUser() == null && RespUserKey > 0) {
+            try {
+                super.setRespUser(((ResponsibleUserDAO) dataLayer.getDAO(ResponsibleUser.class)).getResponsibleUser(RespUserKey));
+            } catch (DataException ex) {
+                Logger.getLogger(PollProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return super.getRespUser();
     }
     
     @Override
@@ -72,10 +105,7 @@ public class PollProxy extends PollImpl{
     }
     
     
-    public void setRespUserKey(int userKey) {
-        this.RespUserKey = userKey;
-    }
-    
+ 
      @Override
     public void setActivated(boolean activated) {
         super.setActivated(activated);
@@ -88,6 +118,17 @@ public class PollProxy extends PollImpl{
         this.dirty= true;
     }
     
+     @Override
+    public List<Question> getQuestions() {
+        if (super.getQuestions() == null){
+            try {
+                super.setQuestions(((QuestionDAO) dataLayer.getDAO(Question.class)).getQuestionsByPollId(this));
+            } catch (DataException ex) {
+                Logger.getLogger(PollProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return super.getQuestions();
+    }
     @Override
     public void setKey(int key) {
         super.setKey(key);
@@ -104,6 +145,9 @@ public class PollProxy extends PollImpl{
         return dirty;
     }
 
+       public void setRespUserKey(int userKey) {
+        this.RespUserKey = userKey;
+    }
     
     
 }

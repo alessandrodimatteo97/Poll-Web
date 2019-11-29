@@ -5,9 +5,11 @@
  */
 
 package framework.data.dao;
+import framework.data.DataException;
 import java.util.List;
 import pollweb.data.model.Answer;
 import java.sql.ResultSet;
+import pollweb.data.model.Question;
 
 /**
  *
@@ -17,10 +19,10 @@ public interface AnswerDAO {
     
     Answer createAnswer();
     
-    Answer createAnswer( ResultSet rs );
+    Answer createAnswer( ResultSet rs ) throws DataException;
         
-    List<Answer> getAnswersByQuestionId(int QuestionId);
+    List<Answer> getAnswersByQuestionId(Question question) throws DataException; //cambiato la firma del metodo 
     
-    Answer getAnswerById(int AnswerId);
+    Answer getAnswerById(int AnswerId) throws DataException;
     
 }

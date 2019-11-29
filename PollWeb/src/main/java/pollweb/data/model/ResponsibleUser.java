@@ -21,8 +21,12 @@ public interface ResponsibleUser {
 
     String getSurnameR();
     
+    boolean getAdministrator();
+    
     int getKey();
 
+    void setAdministrator(boolean administrator);
+    
     void setEmail(String email);
 
     void setFiscalCode(String fiscalCode);

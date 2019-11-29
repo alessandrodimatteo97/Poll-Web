@@ -23,6 +23,47 @@ public class ResponsibleUserProxy extends ResponsibleUserImpl{
         this.dataLayer= d;
     }
     
+     @Override
+    public void setNameR(String nameR) {
+        super.setNameR(nameR);
+        this.dirty= true;
+    }
+    
+    @Override
+    public void setSurnameR(String surnameR) {
+        super.setSurnameR(surnameR);
+        this.dirty= true;
+    }
+    
+    @Override
+    public void setFiscalCode(String fiscalCode) {
+        super.setFiscalCode(fiscalCode);
+        this.dirty= true;
+    }
+    
+    @Override
+    public void setEmail(String email) {
+        super.setEmail(email);
+        this.dirty= true;
+    }
+    
+     @Override
+    public void setPwd(String pwd) {
+        super.setPwd(pwd);
+        this.dirty= true;
+    }
+    
+      @Override
+    public void setAdministrator(boolean administrator) {
+        super.setAdministrator(administrator);
+        this.dirty= true;
+    }
+    
+    @Override
+    public void setKey(int key) {
+        super.setKey(key);
+        this.dirty= true;
+    }
        //METODI DEL PROXY
     //PROXY-ONLY METHODS
     public void setDirty(boolean dirty) {

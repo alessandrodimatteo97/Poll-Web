@@ -32,6 +32,8 @@ public interface Poll {
 
     String getUrl();
     
+    List<Question> getQuestions();
+    
     int getKey();
 
     boolean isActivated();
@@ -49,5 +51,7 @@ public interface Poll {
     void setUrl(String url);
     
     void setKey(int key);
+    
+    void setQuestions(List<Question> questions);
     
 }

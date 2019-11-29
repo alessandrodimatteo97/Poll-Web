@@ -87,6 +87,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public PollProxy createReservedPoll(ResultSet rs) throws DataException {
         PollProxy poll = createPoll();
+        
         try {
             poll.setKey(rs.getInt("ID"));
             poll.setRespUserKey(rs.getInt("idR"));
@@ -109,8 +110,9 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     }
 
     @Override
-    public Poll createOpenPoll(ResultSet rs) throws DataException{
-PollProxy poll = createPoll();
+    public Poll createOpenPoll(ResultSet rs) throws DataException {
+        PollProxy poll = createPoll();
+        
         try {
             poll.setKey(rs.getInt("ID"));
             poll.setRespUserKey(rs.getInt("idR"));
@@ -124,49 +126,110 @@ PollProxy poll = createPoll();
         } catch (SQLException ex) {
             throw new DataException("Unable to create article object form ResultSet", ex);
         }
-        return poll;    }
-
-    @Override
-    public Poll getPollById(int pollId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return poll;    
     }
 
     @Override
-    public List<Poll> getPollsByUserId(int userId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Poll> getOpenPolls() {
-        List<Poll> result = new ArrayList();
-        try (ResultSet rs = searchOpenPolls.executeQuery()) {
-            while (rs.next()) {
-                result.add(createOpenPoll(rs));
+    public Poll getPollById(int pollId) throws DataException {
+        try {
+            this.searchPollByPollId.setInt(1, pollId);
+            
+            try ( ResultSet rs = this.searchPollByPollId.executeQuery() ) {
+                if (rs.next()) {
+                    if(rs.getString("typeP").equals("open"))
+                     return createOpenPoll(rs);
+                    else {
+                        return createReservedPoll(rs);
+                    }
+                }
             }
+
         } catch (SQLException ex) {
-            try {
-                throw new DataException("Unable to load poll", ex);
-            } catch (DataException ex1) {
-                Logger.getLogger(PollDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-        } catch (DataException ex) {
-            Logger.getLogger(PollDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataException("Error from DataBase: ", ex);
         }
+        
+        return null;
+    }
+
+    @Override
+    public List<Poll> getPollsByUserId(int userId) throws DataException {
+        
+        List<Poll> result = new ArrayList();
+
+        try {
+            
+            this.searchPollByUserId.setInt(1, userId);
+           
+            try (ResultSet rs = searchPollByUserId.executeQuery()) {
+               while(rs.next()) {
+                   if(rs.getString("typeP").equals("open")) {
+                       result.add((Poll)getPollById(rs.getInt("ID")));
+                   } else {
+                       result.add((Poll)getPollById(rs.getInt("ID")));
+                   }
+               } 
+            } 
+            
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+        
         return result;
     }
 
     @Override
-    public List<Poll> getReservedPolls() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    public List<Poll> getOpenPolls() throws DataException {
+        List<Poll> result = new ArrayList();
+        
+        try (ResultSet rs = searchOpenPolls.executeQuery()) {
+            while (rs.next()) {
+                try {
+                    result.add((Poll) getPollById(rs.getInt("ID")));
+                } catch (DataException ex) {
+                    Logger.getLogger(PollDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PollDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+        return result;
     }
 
     @Override
-    public boolean setActivated(Poll poll) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Poll> getReservedPolls() throws DataException {
+        List<Poll> result = new ArrayList();
+        try ( ResultSet rs = searchOpenPolls.executeQuery()) {
+            while(rs.next()) {
+                result.add((Poll) getPollById(rs.getInt("ID")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+        
+        return result;
     }
 
     @Override
-    public boolean setDeactivated(Poll poll) {
+    public boolean setActivated( ResultSet rs ) throws DataException {
+        
+        try {
+            setPollAsActive.setInt(1, rs.getInt("ID"));
+        } catch (SQLException ex) {
+            throw new DataException("Not setted property:  ", ex);
+        }
+        
+        try (ResultSet result = setPollAsActive.executeQuery()) {
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+                
+    }
+
+    @Override
+    public boolean setDeactivated( ResultSet rs ) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

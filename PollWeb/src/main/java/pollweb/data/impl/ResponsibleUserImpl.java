@@ -17,13 +17,15 @@ public class ResponsibleUserImpl implements ResponsibleUser {
 
    
     private enum admin{ yes, no };
-    private admin administrator;
+
+    private boolean administrator;
+
     private int key;
 
     public ResponsibleUserImpl() {}
 
 
-    public ResponsibleUserImpl(int key,String nameR, String surnameR, String fiscalCode, String email, String pwd, admin administrator) {
+    public ResponsibleUserImpl(int key,String nameR, String surnameR, String fiscalCode, String email, String pwd, boolean administrator) {
         this.nameR = nameR;
         this.surnameR = surnameR;
         this.fiscalCode = fiscalCode;
@@ -83,11 +85,13 @@ public class ResponsibleUserImpl implements ResponsibleUser {
         this.pwd = pwd;
     }
 
-    public admin getAdministrator() {
+    @Override
+    public boolean getAdministrator() {
         return administrator;
     }
 
-    public void setAdministrator(admin administrator) {
+    @Override
+    public void setAdministrator(boolean administrator) {
         this.administrator = administrator;
     }
     
