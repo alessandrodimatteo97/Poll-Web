@@ -13,7 +13,10 @@ import framework.data.proxy.PollProxy;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pollweb.data.model.Poll;
 
 /**
@@ -135,7 +138,21 @@ PollProxy poll = createPoll();
 
     @Override
     public List<Poll> getOpenPolls() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Poll> result = new ArrayList();
+        try (ResultSet rs = searchOpenPolls.executeQuery()) {
+            while (rs.next()) {
+                result.add(createOpenPoll(rs));
+            }
+        } catch (SQLException ex) {
+            try {
+                throw new DataException("Unable to load poll", ex);
+            } catch (DataException ex1) {
+                Logger.getLogger(PollDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } catch (DataException ex) {
+            Logger.getLogger(PollDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 
     @Override

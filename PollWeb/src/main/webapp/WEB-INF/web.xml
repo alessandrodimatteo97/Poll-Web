@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee                       http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <servlet>
-        <servlet-name>SimpleServlet</servlet-name>
-        <servlet-class>SimpleServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>NewServletProva</servlet-name>
-        <servlet-class>pollweb.controller.NewServletProva</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>LoginPage</servlet-name>
-        <servlet-class>pollweb.controller.LoginPage</servlet-class>
-    </servlet>
+    <context-param>
+        <param-name>view.date_format</param-name>
+        <param-value>dd/MM/yyyy hh:mm:ss</param-value>
+    </context-param>
+    <context-param>
+        <param-name>view.debug</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>view.template_directory</param-name>
+        <param-value>templates</param-value>
+    </context-param>
+    <context-param>
+        <param-name>view.outline_template</param-name>
+        <param-value>outline.ftl.html</param-value>
+    </context-param>
+   
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>pollweb.controller.Home</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>LoginPage</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SimpleServlet</servlet-name>
-        <url-pattern>/SimpleServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LoginPage</servlet-name>
-        <url-pattern>/LoginPage</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>Home</servlet-name>
-        <url-pattern>/home</url-pattern>
+        <url-pattern>/Home</url-pattern>
     </servlet-mapping>
+        <welcome-file-list>
+        <welcome-file>Home</welcome-file>
+    </welcome-file-list>
+    
     <session-config>
         <session-timeout>
             30

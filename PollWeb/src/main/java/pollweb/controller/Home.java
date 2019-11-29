@@ -5,17 +5,20 @@
  */
 package pollweb.controller;
 
+import framework.data.DataException;
+import framework.data.dao.PollDataLayer;
+import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import pollweb.data.model.Poll;
 
 /**
  *
@@ -33,46 +36,46 @@ public class Home extends PollBaseController {
      * @throws IOException if an I/O error occurs
      * @throws framework.result.TemplateManagerException
      */
-    @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-          //  ServletContext context = getServletContext( );
-           // context.log(json.toString());
-            TemplateResult res = new TemplateResult(getServletContext());
-        try {    
-            res.activate("home.ftl.html", request, response);
-        } catch (TemplateManagerException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+    private void action_error(HttpServletRequest request, HttpServletResponse response) {
+        if (request.getAttribute("exception") != null) {
+            (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
+        } else {
+            (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("page_title", "Home");
+            request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getOpenPolls());
+            List<Poll> p = new ArrayList<Poll>();
+            p.addAll(((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getOpenPolls());
+            ServletContext context = getServletContext( );
+            context.log(p.toString());
+            res.activate("home.ftl.html", request, response);
+        } catch (TemplateManagerException ex) {
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        } 
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException {
+
+        try {
+            action_default(request, response);
+
+        } catch (IOException ex) {
+            request.setAttribute("exception", ex);
+            action_error(request, response);
+
+        } catch (TemplateManagerException ex) {
+            request.setAttribute("exception", ex);
+            action_error(request, response);
+
+        }
     }
 
     /**
@@ -82,7 +85,8 @@ public class Home extends PollBaseController {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Main Newspaper servlet";
     }// </editor-fold>
+
 
 }

@@ -138,6 +138,11 @@ public class PollImpl implements Poll {
         this.key=key;
     }
     
+    @Override
+    public String toString(){
+        return title +' '+ apertureText;
+    }
+    
     
   
 }
