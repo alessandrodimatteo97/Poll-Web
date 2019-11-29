@@ -17,6 +17,7 @@ import pollweb.data.impl.AnswerImpl;
 public class AnswerProxy extends AnswerImpl{
     
     protected boolean dirty;
+    protected int partecipantKey, questionKey;
     protected DataLayer dataLayer;
     
     public AnswerProxy(DataLayer d) {
@@ -26,17 +27,26 @@ public class AnswerProxy extends AnswerImpl{
     }
     
     @Override
-  public void setTextA(JSONObject textA){
-      super.setTextA(textA);
-      this.dirty= true;
-  }
-  
-  @Override 
-  public void setKey(int key){
-      super.setKey(key);
-      this.dirty= true;
-  }
-  
+    public void setTextA(JSONObject textA){
+        super.setTextA(textA);
+        this.dirty= true;
+    }
+
+    @Override 
+    public void setKey(int key){
+        super.setKey(key);
+        this.dirty= true;
+    }
+
+    public void setPartecipantKey(int key){
+        this.partecipantKey = key;
+        this.dirty= true;
+    }
+
+    public void setQuestionKey(int key){
+        this.questionKey = key;
+        this.dirty= true;
+    }
   /*METODI DEL PROXY*/
     public void setDirty(boolean dirty) {
         this.dirty = dirty;

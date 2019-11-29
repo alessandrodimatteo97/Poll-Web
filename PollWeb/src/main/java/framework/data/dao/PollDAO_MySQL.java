@@ -24,7 +24,7 @@ import pollweb.data.model.Poll;
  * @author davide
  */
 public class PollDAO_MySQL extends DAO implements PollDAO {
-    
+    private PreparedStatement getAllPolls;
     private PreparedStatement searchPollByPollId, searchPollByUserId, searchOpenPolls, searchReservedPolls; /** Ricerche */
     private PreparedStatement insertReservedPoll, insertOpenPoll, updatePoll, deletePoll; /** insert update and delete polls*/
     private PreparedStatement setPollAsActive, setPollAsDeactive; /**settano le poll attive e disabilitate */
@@ -40,6 +40,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             super.init();
             
             /*   Qui scrivo gli statement precompilati   */
+            getAllPolls = connection.prepareStatement("SELECT * FROM poll");
             searchPollByPollId = connection.prepareStatement("SELECT * FROM poll WHERE ID=?");
             searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=?");
             searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open'");
@@ -129,6 +130,24 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
         return poll;    
     }
 
+    public List<Poll> getAllPolls() throws DataException{
+        
+        List<Poll> result = new ArrayList();
+
+            try (ResultSet rs = getAllPolls.executeQuery()) {
+               while(rs.next()) {
+                   if(rs.getString("type").equals("open")) {
+                       result.add((Poll)getPollById(rs.getInt("ID")));
+                   } else {
+                       result.add((Poll)getPollById(rs.getInt("ID")));
+                   }
+               }             
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+        
+        return result;
+    }
     @Override
     public Poll getPollById(int pollId) throws DataException {
         try {
