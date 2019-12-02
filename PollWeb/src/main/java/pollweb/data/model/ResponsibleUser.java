@@ -24,6 +24,8 @@ public interface ResponsibleUser {
     boolean getAdministrator();
     
     int getKey();
+    
+    boolean getAccepted();
 
     void setAdministrator(boolean administrator);
     
@@ -38,5 +40,7 @@ public interface ResponsibleUser {
     void setSurnameR(String surnameR);
     
     void setKey(int key);
+    
+    void setAccepted(boolean accepted);
     
 }

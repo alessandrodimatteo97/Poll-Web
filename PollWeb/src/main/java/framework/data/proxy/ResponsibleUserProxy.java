@@ -59,6 +59,12 @@ public class ResponsibleUserProxy extends ResponsibleUserImpl{
         this.dirty= true;
     }
     
+    @Override 
+    public void setAccepted(boolean accepted){
+        super.setAccepted(accepted);
+        this.dirty= true;
+    }
+    
     @Override
     public void setKey(int key) {
         super.setKey(key);
