@@ -53,9 +53,9 @@ public class PollDataLayer extends DataLayer {
     public QuestionDAO getQuestionDAO() {
        return (QuestionDAO) getDAO(Question.class);
     }
-    /*
+    
     public ResponsibleUserDAO getResponsibleUserDAO() {
         return (ResponsibleUserDAO) getDAO(ResponsibleUser.class);
     }
-    */
+    
 }

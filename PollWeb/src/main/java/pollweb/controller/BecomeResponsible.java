@@ -7,6 +7,7 @@ package pollweb.controller;
 
 import framework.data.DataException;
 import framework.data.dao.PollDataLayer;
+import framework.data.dao.ResponsibleUserDAO;
 import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
@@ -16,6 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import pollweb.data.impl.ResponsibleUserImpl;
+import pollweb.data.model.ResponsibleUser;
 
 /**
  *
@@ -65,6 +68,32 @@ public class BecomeResponsible extends PollBaseController {
 
         }
     }
+    
+    @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+     String firstName = request.getParameter("firstName");
+     String surname = request.getParameter("surname");
+     String fiscalCode = request.getParameter("fiscalCode");
+     String email = request.getParameter("email");
+     String pwd = request.getParameter("pwd");
+     
+     ResponsibleUser ru = new ResponsibleUserImpl();
+     
+     ru.setNameR(firstName);
+     ru.setSurnameR(surname);
+     ru.setFiscalCode(fiscalCode);
+     ru.setEmail(email);
+     ru.setPwd(pwd);
+     
+        try {
+            ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().storeResponsibleUser(ru);
+        } catch (DataException ex) {
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        }
+     
+    }
+
 
     /**
      * Returns a short description of the servlet.

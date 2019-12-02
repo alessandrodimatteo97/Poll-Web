@@ -70,7 +70,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `responsibleUser` WRITE;
 /*!40000 ALTER TABLE `responsibleUser` DISABLE KEYS */;
-INSERT INTO `responsibleUser` VALUES (3,'Alessandro','Di Matteo','ALESSANDRO','alessandro@gmail.com','alessandro','yes'),(4,'Davide','Fontana','DAVIDEFONTANA','davide@gmail.com','davide','no'),(5,'Giulia','Scoccia','GIULIASCOCCIA','giulia@gmail.com','giulia','no');
+INSERT INTO `responsibleUser` VALUES (3,'Alessandro','Di Matteo','ALESSANDRO','alessandro@gmail.com','alessandro','yes',1),(4,'Davide','Fontana','DAVIDEFONTANA','davide@gmail.com','davide','no',1),(5,'Giulia','Scoccia','GIULIASCOCCIA','giulia@gmail.com','giulia','no',1);
 /*!40000 ALTER TABLE `responsibleUser` ENABLE KEYS */;
 UNLOCK TABLES;
 
