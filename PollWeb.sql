@@ -43,7 +43,7 @@ foreign key (ID_part) references participant(ID)
 
 create table question (
 ID integer unsigned not null primary key auto_increment,
-typeq enum('short text', 'long text', 'numeric', 'date' , 'single choice' , 'multiple choice') unique not null,
+typeq enum('short text', 'long text', 'numeric', 'date' , 'single choice' , 'multiple choice')  not null,
 textq varchar(500) not null,
 note varchar(200),
 obbligation enum('yes', 'no') not null default 'no',
