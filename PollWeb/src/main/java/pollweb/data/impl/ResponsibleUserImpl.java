@@ -15,17 +15,18 @@ import pollweb.data.model.ResponsibleUser;
 public class ResponsibleUserImpl implements ResponsibleUser {
     private String nameR, surnameR, fiscalCode, email, pwd;
 
+  
    
     private enum admin{ yes, no };
 
-    private boolean administrator;
+    private boolean administrator, accepted;
 
     private int key;
 
     public ResponsibleUserImpl() {}
 
 
-    public ResponsibleUserImpl(int key,String nameR, String surnameR, String fiscalCode, String email, String pwd, boolean administrator) {
+    public ResponsibleUserImpl(int key,String nameR, String surnameR, String fiscalCode, String email, String pwd, boolean administrator,boolean accepted) {
         this.nameR = nameR;
         this.surnameR = surnameR;
         this.fiscalCode = fiscalCode;
@@ -33,6 +34,7 @@ public class ResponsibleUserImpl implements ResponsibleUser {
         this.pwd = pwd;
         this.administrator = administrator;
         this.key = key;
+        this.accepted= accepted;
     }
 
     @Override
@@ -105,7 +107,16 @@ public class ResponsibleUserImpl implements ResponsibleUser {
         this.key= key;
     }
     
-    
+      @Override
+    public boolean getAccepted() {
+       return accepted;
+    }
+
+    @Override
+    public void setAccepted(boolean accepted) {
+        this.accepted=accepted;
+    }
+
     
     
 }

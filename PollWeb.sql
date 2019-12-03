@@ -10,7 +10,8 @@ surnameR varchar(100),
 fiscalCode varchar(16) unique,
 email varchar(100) not null,
 pwd varchar(16) not null,
-administrator enum('yes', 'no') not null default 'no'
+administrator enum('yes', 'no') not null default 'no',
+accepted boolean not null default 0
 );
 
 create table poll (
@@ -19,7 +20,7 @@ title varchar(100) unique not null,
 apertureText varchar(500),
 closerText varchar(200),
 typeP enum('open','reserved') default 'open',
-url varchar(100) not null unique,
+url varchar(100) unique,
 activated enum('0','1') not null default '0',
 idR integer unsigned not null,
 foreign key (idR) references responsibleUser(ID) 
