@@ -5,7 +5,11 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <div align="center">
-    
+    <#if ok!false>
+    <div class="alert alert-success" role="alert">
+  A simple success alert—check it out!
+</div>
+    </#if>
     </br>
         </br>
 
@@ -23,7 +27,7 @@ and open the template in the editor.
      <div class="form-group">
          <label for="inputFirstName" class="col-sm-2 col-form-label"><strong>First Name</strong></label>
     <div class="form-group col-md-4">
-        <input name="firsname" type="text" class="form-control" id="inputName" placeholder="First Name">
+        <input name="firstName" type="text" class="form-control" id="inputName" placeholder="First Name">
     </div>
      
 
@@ -61,7 +65,7 @@ and open the template in the editor.
  
   <div class="form-group " align="center">
     <br/><br/>  
-     <input type="submit" value="register"/>  
+    <button type="submit" value="register" name="register"> register </button>
   </div>
     </div>
 </form>

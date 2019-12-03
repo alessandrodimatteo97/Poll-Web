@@ -13,6 +13,7 @@ import framework.data.proxy.ResponsibleUserProxy;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import pollweb.data.model.ResponsibleUser;
 
@@ -36,7 +37,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             super.init();
             checkUserExist = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? and pwd=?");
 
-            insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)");
+            insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
             updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer",ex);
@@ -157,6 +158,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
                 insertResponsibleUser.setString(4, responsibleUser.getEmail());
                 insertResponsibleUser.setString(5, responsibleUser.getPwd());
             }
+            
             if (insertResponsibleUser.executeUpdate() == 1){
                 try(ResultSet keys = insertResponsibleUser.getGeneratedKeys()){
                     if(keys.next()){
