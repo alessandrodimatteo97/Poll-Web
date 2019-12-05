@@ -39,7 +39,6 @@ public interface ResponsibleUserDAO {
 
     
     ResponsibleUser getResponsibleUser (int UserKey) throws DataException;
-    
 
     boolean checkResponsible (ResponsibleUser user) throws DataException;
    

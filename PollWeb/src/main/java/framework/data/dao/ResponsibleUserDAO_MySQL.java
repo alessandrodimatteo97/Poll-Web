@@ -34,6 +34,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
 
        private PreparedStatement checkUserExist;
 
+
     public ResponsibleUserDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -41,16 +42,13 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
     @Override
     public void init() throws DataException{
         try {
-            super.init();
-            
+            super.init();            
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)");
             //updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
             getAllResponsible = connection.prepareStatement("SELECT ID FROM responsibleUser");
             getResponsibleById = connection.prepareStatement("SELECT * FROM responsibleUser WHERE ID=?");
             getAllRespNotAccepted = connection.prepareCall("SELECT ID FROM responsibleUser WHERE accepted=0");
             updateRespToAccepted = connection.prepareStatement("UPDATE responsibleUser SET accepted=? WHERE ID=?");
-            
-
             checkUserExist = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? and pwd=?");
 
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
@@ -236,7 +234,6 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             throw new DataException("Unable to store responsible", ex);
         }
     }
-
 
     
 }
