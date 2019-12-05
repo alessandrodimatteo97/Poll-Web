@@ -25,7 +25,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
 
     private PreparedStatement searchPartecipantById, searchPartecipantByPollId, searchPartecipantByApiKey;
     private PreparedStatement deletePartecipant;
-    private PreparedStatement createFullPartecipant, createHalfPartecipant;
+    private PreparedStatement createFullPartecipant, createHalfPartecipant, getPartecipants;
     
     public PartecipantDAO_MySQL(DataLayer d) {
         super(d);
@@ -37,13 +37,14 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
         try {
             super.init();
             
-            searchPartecipantById = connection.prepareStatement("SELECT * FROM partecipant WHERE ID=?");
-            searchPartecipantByPollId = connection.prepareStatement("SELECT * FROM partecipant JOIN partecipation ON partecipant.ID=partecipation.ID_part "
+            searchPartecipantById = connection.prepareStatement("SELECT * FROM participant WHERE ID=?");
+            searchPartecipantByPollId = connection.prepareStatement("SELECT * FROM participant JOIN partecipation ON participant.ID=partecipation.ID_part "
                     + "WHERE partecipation.ID_poll=?");
-            searchPartecipantByApiKey = connection.prepareStatement("SELECT * FROM partecipant WHERE apiKey=?");
-            deletePartecipant = connection.prepareStatement("DELETE FROM partecipant WHERE ID=? ");
-            createFullPartecipant = connection.prepareStatement("INSERT INTO partecipant (apiKey, nameP, email, pwd) VALUES(?,?,?,?)");
-            createHalfPartecipant = connection.prepareStatement("INSERT INTO partecipant (apiKey, nameP) VALUES(?,?)");
+            getPartecipants = connection.prepareStatement("SELECT ID FROM participant");
+            searchPartecipantByApiKey = connection.prepareStatement("SELECT * FROM participant WHERE apiKey=?");
+            deletePartecipant = connection.prepareStatement("DELETE FROM participant WHERE ID=? ");
+            createFullPartecipant = connection.prepareStatement("INSERT INTO participant (apiKey, nameP, email, pwd) VALUES(?,?,?,?)");
+            createHalfPartecipant = connection.prepareStatement("INSERT INTO participant (apiKey, nameP) VALUES(?,?)");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing partecipant data layer", ex);
@@ -89,7 +90,14 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
     @Override
     public List<Partecipant> getPartecipants() throws DataException{
         List<Partecipant> result = new ArrayList();
-        return null;
+        try( ResultSet rs = this.getPartecipants.executeQuery()) {
+            while(rs.next()) {
+                result.add((Partecipant) getUserById(rs.getInt("ID")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException ("Error from db" + ex);
+        }
+        return result;
     }
 
     @Override

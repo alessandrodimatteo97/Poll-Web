@@ -13,7 +13,10 @@ import framework.data.proxy.ResponsibleUserProxy;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pollweb.data.model.ResponsibleUser;
 
 /**
@@ -23,7 +26,9 @@ import pollweb.data.model.ResponsibleUser;
 public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
     
     private PreparedStatement insertResponsibleUser, updateResponsibleUser;
-
+    private PreparedStatement getAllResponsible, getResponsibleById, getAllRespNotAccepted;
+    private PreparedStatement updateRespToAccepted;
+    
     public ResponsibleUserDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -34,7 +39,12 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             super.init();
             
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)");
-            updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
+            //updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
+            getAllResponsible = connection.prepareStatement("SELECT ID FROM responsibleUser");
+            getResponsibleById = connection.prepareStatement("SELECT * FROM responsibleUser WHERE ID=?");
+            getAllRespNotAccepted = connection.prepareCall("SELECT ID FROM responsibleUser WHERE accepted=0");
+            updateRespToAccepted = connection.prepareStatement("UPDATE responsibleUser SET accepted=? WHERE ID=?");
+            
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer",ex);
         }
@@ -70,8 +80,8 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             ru.setFiscalCode(rs.getString("fiscalCode"));
             ru.setEmail(rs.getString("email"));
             ru.setPwd(rs.getString("pwd"));
-            ru.setAccepted(rs.getBoolean("accepted"));
-            ru.setAdministrator(rs.getBoolean("administrator"));
+            ru.setAccepted(rs.getInt("accepted"));
+            ru.setAdministrator(rs.getString("administrator"));
           
             
         } catch (SQLException ex) {
@@ -104,17 +114,65 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
     public boolean changeEmail(ResponsibleUser user) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public List<ResponsibleUser> getResponsibleUsers() throws DataException{
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     @Override
     public ResponsibleUser getResponsibleUser(int UserKey) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        try {
+            this.getResponsibleById.setInt(1, UserKey);
+            
+            try ( ResultSet rs = this.getResponsibleById.executeQuery() ) {
+                if (rs.next()) {
+                    return createResponsibleUser(rs);
+                }
+            }
 
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+        
+        return null;
+    }
+    @Override
+    public List<ResponsibleUser> getResponsibleUsers() throws DataException{
+        List<ResponsibleUser> result = new ArrayList();
+        try( ResultSet rs = this.getAllResponsible.executeQuery()) {
+            while(rs.next()) {
+                result.add((ResponsibleUser) getResponsibleUser(rs.getInt("ID")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException ("Error from db" + ex);
+        }
+        return result;
+    }
+    
+    @Override
+    public List<ResponsibleUser> getResponsibleUsersNotAccepted() throws DataException{
+        List<ResponsibleUser> result = new ArrayList();
+        try( ResultSet rs = this.getAllRespNotAccepted.executeQuery()) {
+            while(rs.next()) {
+                result.add((ResponsibleUser) getResponsibleUser(rs.getInt("ID")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException ("Error from db" + ex);
+        }
+        return result;
+    }
+    @Override
+    public void setAccepted(int userKey) throws DataException {
+        try {
+            this.updateRespToAccepted.setInt(1, 1);
+            this.updateRespToAccepted.setInt(2, userKey);
+            
+            ResultSet rs ;
+            this.getResponsibleById.executeUpdate();
+
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+        
+    }
+    
+/*
     @Override
     public void storeResponsibleUser(ResponsibleUser responsibleUser) throws DataException {
         int key = responsibleUser.getKey();
@@ -152,5 +210,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             throw new DataException("Unable to store responsible", ex);
         }
     }
+*/
+
     
 }
