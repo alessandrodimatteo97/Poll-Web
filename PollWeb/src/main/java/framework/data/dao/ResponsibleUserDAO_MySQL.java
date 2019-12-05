@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +30,10 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
     private PreparedStatement getAllResponsible, getResponsibleById, getAllRespNotAccepted;
     private PreparedStatement updateRespToAccepted;
     
+
+
+       private PreparedStatement checkUserExist;
+
     public ResponsibleUserDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -45,6 +50,11 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             getAllRespNotAccepted = connection.prepareCall("SELECT ID FROM responsibleUser WHERE accepted=0");
             updateRespToAccepted = connection.prepareStatement("UPDATE responsibleUser SET accepted=? WHERE ID=?");
             
+
+            checkUserExist = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? and pwd=?");
+
+            insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
+            updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer",ex);
         }
@@ -171,8 +181,23 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         }
         
     }
+
+    @Override
+    public boolean checkResponsible(ResponsibleUser user) throws DataException {
+		  try{
+                    this.checkUserExist.setString(1, user.getEmail());
+                    this.checkUserExist.setString(2, user.getPwd());
+            try (ResultSet rs = this.checkUserExist.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load articles by issue", ex);
+        }
+        return false;
+    }
     
-/*
     @Override
     public void storeResponsibleUser(ResponsibleUser responsibleUser) throws DataException {
         int key = responsibleUser.getKey();
@@ -196,6 +221,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
                 insertResponsibleUser.setString(4, responsibleUser.getEmail());
                 insertResponsibleUser.setString(5, responsibleUser.getPwd());
             }
+            
             if (insertResponsibleUser.executeUpdate() == 1){
                 try(ResultSet keys = insertResponsibleUser.getGeneratedKeys()){
                     if(keys.next()){
@@ -210,7 +236,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             throw new DataException("Unable to store responsible", ex);
         }
     }
-*/
+
 
     
 }

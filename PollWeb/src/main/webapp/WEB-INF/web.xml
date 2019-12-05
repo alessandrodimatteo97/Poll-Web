@@ -43,6 +43,8 @@
     <servlet>
         <servlet-name>Admin</servlet-name>
         <servlet-class>pollweb.controller.AdminController</servlet-class>
+        <servlet-name>ResponsiblePage</servlet-name>
+        <servlet-class>pollweb.controller.ResponsiblePage</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
@@ -74,6 +76,8 @@
     <servlet-mapping>
         <servlet-name>Admin</servlet-name>
         <url-pattern>/admin</url-pattern>
+        <servlet-name>ResponsiblePage</servlet-name>
+        <url-pattern>/ResponsiblePage</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

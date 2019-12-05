@@ -40,5 +40,8 @@ public interface ResponsibleUserDAO {
     
     ResponsibleUser getResponsibleUser (int UserKey) throws DataException;
     
-   // void storeResponsibleUser(ResponsibleUser responsibleUser) throws DataException;
+
+    boolean checkResponsible (ResponsibleUser user) throws DataException;
+   
+    void storeResponsibleUser(ResponsibleUser responsibleUser) throws DataException;
 }

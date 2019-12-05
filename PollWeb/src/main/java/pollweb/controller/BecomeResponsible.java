@@ -13,6 +13,9 @@ import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +38,7 @@ public class BecomeResponsible extends PollBaseController {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
         if (request.getAttribute("exception") != null) {
             (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
@@ -54,9 +58,17 @@ public class BecomeResponsible extends PollBaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
-
+        
         try {
+            request.setAttribute("ok", false);
+            if(request.getParameter("register")!= null){
+                this.action_register(request, response);
+            }
+        //    if(prova ==)
+            
+            else{
             action_default(request, response);
+            }
 
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
@@ -69,9 +81,10 @@ public class BecomeResponsible extends PollBaseController {
         }
     }
     
-    @Override
-   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-     String firstName = request.getParameter("firstName");
+    private void action_register(HttpServletRequest request, HttpServletResponse response){
+       String firstName = request.getParameter("firstName");
+     ServletContext context = getServletContext( );
+       context.log(firstName);
      String surname = request.getParameter("surname");
      String fiscalCode = request.getParameter("fiscalCode");
      String email = request.getParameter("email");
@@ -86,13 +99,20 @@ public class BecomeResponsible extends PollBaseController {
      ru.setPwd(pwd);
      
         try {
+// if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkResponsible(ru)){
+
             ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().storeResponsibleUser(ru);
+              TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("page_title", "BecomeResponsible");
+            request.setAttribute("ok", true);
+            res.activate("becomeResponsible.ftl.html", request, response);
         } catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
             action_error(request, response);
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(BecomeResponsible.class.getName()).log(Level.SEVERE, null, ex);
         }
-     
-    }
+   }
 
 
     /**
