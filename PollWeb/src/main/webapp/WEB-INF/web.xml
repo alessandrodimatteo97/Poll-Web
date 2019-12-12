@@ -61,7 +61,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Poll</servlet-name>
-        <url-pattern>/Poll/*</url-pattern>
+        <url-pattern>/Poll</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>BecomeResponsible</servlet-name>

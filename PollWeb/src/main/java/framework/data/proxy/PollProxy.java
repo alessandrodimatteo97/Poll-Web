@@ -30,6 +30,7 @@ public class PollProxy extends PollImpl{
     protected DataLayer dataLayer;
     protected int RespUserKey = 0;
     
+    
     public PollProxy(DataLayer d){
         super();
         this.dirty=false;
@@ -122,7 +123,7 @@ public class PollProxy extends PollImpl{
     public List<Question> getQuestions() {
         if (super.getQuestions() == null){
             try {
-                super.setQuestions(((QuestionDAO) dataLayer.getDAO(Question.class)).getQuestionsByPollId(this));
+                super.setQuestions(((QuestionDAO) dataLayer.getDAO(Question.class)).getQuestionsByPollId(super.getKey()));
             } catch (DataException ex) {
                 Logger.getLogger(PollProxy.class.getName()).log(Level.SEVERE, null, ex);
             }

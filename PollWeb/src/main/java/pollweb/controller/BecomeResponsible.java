@@ -60,11 +60,12 @@ public class BecomeResponsible extends PollBaseController {
             throws ServletException {
         
         try {
+            
             request.setAttribute("ok", false);
+     
             if(request.getParameter("register")!= null){
                 this.action_register(request, response);
             }
-        //    if(prova ==)
             
             else{
             action_default(request, response);
@@ -83,12 +84,22 @@ public class BecomeResponsible extends PollBaseController {
     
     private void action_register(HttpServletRequest request, HttpServletResponse response){
        String firstName = request.getParameter("firstName");
+       if(firstName == null){
+       }
      ServletContext context = getServletContext( );
        context.log(firstName);
      String surname = request.getParameter("surname");
+      if(surname == null){
+       }
      String fiscalCode = request.getParameter("fiscalCode");
+      if(fiscalCode == null){
+       }
      String email = request.getParameter("email");
+      if(email == null){
+       }
      String pwd = request.getParameter("pwd");
+      if(pwd == null){
+       }
      
      ResponsibleUser ru = new ResponsibleUserImpl();
      
@@ -122,7 +133,7 @@ public class BecomeResponsible extends PollBaseController {
      */
     @Override
     public String getServletInfo() {
-        return "Main Newspaper servlet";
+        return "Main Poll servlet";
     }// </editor-fold>
 
 }

@@ -130,7 +130,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
                 }
             }
         } catch (SQLException ex) {
-            throw new DataException("Unable to load articles by issue", ex);
+            throw new DataException("Unable find user", ex);
         }
         return false;
     }
