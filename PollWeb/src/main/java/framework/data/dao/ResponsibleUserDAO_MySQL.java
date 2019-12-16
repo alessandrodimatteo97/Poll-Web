@@ -48,11 +48,11 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             getAllResponsible = connection.prepareStatement("SELECT ID FROM responsibleUser");
             getResponsibleById = connection.prepareStatement("SELECT * FROM responsibleUser WHERE ID=?");
             getAllRespNotAccepted = connection.prepareCall("SELECT ID FROM responsibleUser WHERE accepted=0");
-            updateRespToAccepted = connection.prepareStatement("UPDATE responsibleUser SET accepted=? WHERE ID=?");
+            updateRespToAccepted = connection.prepareStatement("UPDATE responsibleUser SET accepted=1 WHERE email=?");
             checkUserExist = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? and pwd=?");
 
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
-            updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
+            updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator='no', accepted=1 WHERE ID=?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer",ex);
         }
@@ -166,18 +166,23 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         return result;
     }
     @Override
-    public void setAccepted(int userKey) throws DataException {
-        try {
-            this.updateRespToAccepted.setInt(1, 1);
-            this.updateRespToAccepted.setInt(2, userKey);
-            
-            ResultSet rs ;
-            this.getResponsibleById.executeUpdate();
+    public boolean setAccepted(ResponsibleUser user) throws DataException {
+        try{
+            this.updateResponsibleUser.setString(1, user.getNameR());//nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?
+            this.updateResponsibleUser.setString(2, user.getSurnameR());
+            this.updateResponsibleUser.setString(3, user.getEmail());
+            this.updateResponsibleUser.setString(4, user.getPwd());
+            this.updateResponsibleUser.setInt(5, user.getKey());
 
-        } catch (SQLException ex) {
-            throw new DataException("Error from DataBase: ", ex);
+            int result = this.updateResponsibleUser.executeUpdate();
+            if (result == 1) {
+            return true;
         }
+        } catch (SQLException ex) {
+            throw new DataException("wwww", ex);
+        }    
         
+        return false;
     }
 
     @Override

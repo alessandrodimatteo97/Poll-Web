@@ -44,22 +44,54 @@ public class AdminController extends PollBaseController {
   
    
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+        try{
         TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Admin");
         request.setAttribute("users", ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUsersNotAccepted());
         res.activate("adminPanel.ftl.html", request, response); 
-        }
+        } catch (DataException ex) {
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        } 
+    }
     
-    private void action_update(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+    private void action_update(HttpServletRequest request, HttpServletResponse response) throws  ServletException, TemplateManagerException {
         TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Admin");
         String [] array = request.getParameterValues("checkbox");
-        request.setAttribute("results", array);
-        ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().setAccepted(5);
-        request.setAttribute("users", ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUsersNotAccepted());
 
-        res.activate("adminPanel.ftl.html", request, response);
+        request.setAttribute("results", array);
+        try {
+        for(int i = 0; i<array.length; i++) {
+            
+                ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(parseInt(array[i]));
+            
+            request.setAttribute("userLogged", rs);
+            Boolean result = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().setAccepted(rs); 
+            ServletContext context = getServletContext( );
+            if(result) {
+                context.log("si");
+            } else {
+                context.log("no");
+            }
+                    
+
+            
+         } 
+        action_default(request, response);
+
+
+        } catch (DataException ex) {
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        } catch (IOException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+
+        
+    
     }
+    
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         int selectedResp;
