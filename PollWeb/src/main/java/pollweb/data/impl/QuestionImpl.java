@@ -104,7 +104,7 @@ public class QuestionImpl implements Question {
 
     @Override
     public void setPossibleAnswer(JSONObject possibleAnswer) {
-        this.possibleAnswer = new JSONObject(possibleAnswer);
+        this.possibleAnswer =possibleAnswer;
     }
     
     @Override

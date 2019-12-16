@@ -13,10 +13,18 @@ import framework.data.proxy.QuestionProxy;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import static java.util.logging.Logger.global;
+
 import javax.json.Json;
+import javax.json.JsonObject;
+import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import pollweb.data.model.Answer;
-import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
 
 /**
@@ -127,13 +135,50 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
     }
 
     @Override
-    public Question getQuestionById(int questionId) throws DataException{
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Question getQuestionById(ResultSet rs) throws DataException{
+          QuestionProxy question = createQuestion();
+        try {
+           question.setKey(rs.getInt("ID"));
+           question.setNote(rs.getString("note"));
+           question.setTextq(rs.getString("textq"));
+           question.setTypeP(rs.getString("typeq"));
+           if(rs.getString("obbligation").equals("yes")){
+                question.setObbligated(true);
+            } else {
+                question.setObbligated(false);
+            }
+           question.setPollKey(rs.getInt("IDP"));
+          if (rs.getString("possible_answer") != null){
+              JSONObject j = new JSONObject(rs.getString("possible_answer"));
+              question.setPossibleAnswer(j);
+              
+          }
+              
+          
+        }
+            
+         catch (SQLException ex) {
+            throw new DataException("Unable to load article by ID", ex);
+         }
+
+        return question;   
+}
 
     @Override
-    public List<Question> getQuestionsByPollId(Poll poll) throws DataException{
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Question> getQuestionsByPollId(int keyPoll) throws DataException{
+             List<Question> result = new ArrayList();
+             
+        try {
+            getQuestionsByPollId.setInt(1, keyPoll);
+            try (ResultSet rs = getQuestionsByPollId.executeQuery()) {
+                while (rs.next()) {
+                    result.add((Question) getQuestionById(rs));
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load articles by issue", ex);
+        }
+        return result;
     }
 
     @Override

@@ -111,7 +111,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     }
 
     @Override
-    public Poll createOpenPoll(ResultSet rs) throws DataException {
+    public PollProxy createOpenPoll(ResultSet rs) throws DataException {
         PollProxy poll = createPoll();
         
         try {
@@ -147,9 +147,9 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public Poll getPollById(int pollId) throws DataException {
         try {
-            this.searchPollByPollId.setInt(1, pollId);
+            searchPollByPollId.setInt(1, pollId);
             
-            try ( ResultSet rs = this.searchPollByPollId.executeQuery() ) {
+            try ( ResultSet rs = searchPollByPollId.executeQuery() ) {
                 if (rs.next()) {
                     if(rs.getString("typeP").equals("open"))
                      return createOpenPoll(rs);
