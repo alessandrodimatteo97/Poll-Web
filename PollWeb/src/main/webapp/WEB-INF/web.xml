@@ -44,6 +44,10 @@
         <servlet-name>ResponsiblePage</servlet-name>
         <servlet-class>pollweb.controller.ResponsiblePage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreatePoll</servlet-name>
+        <servlet-class>pollweb.controller.CreatePoll</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -74,6 +78,10 @@
     <servlet-mapping>
         <servlet-name>ResponsiblePage</servlet-name>
         <url-pattern>/ResponsiblePage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreatePoll</servlet-name>
+        <url-pattern>/CreatePoll</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

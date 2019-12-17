@@ -35,10 +35,13 @@ public interface QuestionDAO {
 
     boolean setObbligation(Question question, String obl) throws DataException;
     
-    Question getQuestionById(int questionId) throws DataException;
+    Question getQuestionById(ResultSet rs) throws DataException;
     
-    List<Question> getQuestionsByPollId(Poll poll) throws DataException; //cambiata la firma del metodo
+    List<Question> getQuestionsByPollId(int keyPoll) throws DataException; //cambiata la firma del metodo
     
     List<Question> getQuestionsByUserId(int userId) throws DataException;
+    
+    int getQuestionNumber(int poll_ket) throws DataException;
 
+    void store(Question question) throws DataException;
 }

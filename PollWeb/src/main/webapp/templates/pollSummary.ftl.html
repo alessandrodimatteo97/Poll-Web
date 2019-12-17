@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<#if (questions?size>0)>
+        <div class="container">
+        <div class="row">
+          <#list questions as question>
+
+          <div class="col-sm-3 mt-5">
+    <div class="card">
+      <div class="card-body">
+               <#if (question.textq?has_content)>
+
+        <h5 class="card-title">${question.textq}</h5>
+         <div class="card-body"> 
+             ${question.key}
+          <#if (question.possibleAnswer?has_content)>
+
+          <#list question.possibleAnswer?eval as key, value>
+        <p class="card-text">${key} ${value}</p>
+                       </#list>
+
+            </#if>
+       </div>
+          </#if>
+        
+       
+      </div>
+    </div>
+  </div>
+               </#list>
+
+</div>
+        </div>
+        </#if>

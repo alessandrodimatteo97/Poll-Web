@@ -27,6 +27,8 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
 
        private PreparedStatement checkUserExist;
 
+       private PreparedStatement getResponsible;
+       
     public ResponsibleUserDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -39,6 +41,8 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
 
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
             updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
+        
+            getResponsible = connection.prepareStatement("SELECT * FROM responsibleUser where ID = ?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer",ex);
         }
@@ -49,6 +53,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         try {
             insertResponsibleUser.close();
             updateResponsibleUser.close();
+            getResponsible.close();
         } catch (SQLException ex) {
             //
         }
@@ -75,11 +80,18 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             ru.setEmail(rs.getString("email"));
             ru.setPwd(rs.getString("pwd"));
             ru.setAccepted(rs.getBoolean("accepted"));
-            ru.setAdministrator(rs.getBoolean("administrator"));
+            if(rs.getString("administrator").equals("yes")){
+                ru.setAdministrator(true);
+
+            }
+            else {
+             ru.setAdministrator(false);
+
+            }
           
             
         } catch (SQLException ex) {
-            throw new DataException("Unable to create article object form ResultSet", ex);
+            throw new DataException("Unable to create ResponsibleUser object form ResultSet", ex);
         }
         return ru; 
     }
@@ -116,7 +128,18 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
 
     @Override
     public ResponsibleUser getResponsibleUser(int UserKey) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+                    this.getResponsible.setInt(1, UserKey);
+                    
+            try (ResultSet rs = this.getResponsible.executeQuery()) {
+                if (rs.next()) {
+                    return this.createResponsibleUser(rs);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load articles by issue", ex);
+        }
+        return null;
     }
 
     @Override

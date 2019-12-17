@@ -19,13 +19,14 @@ public class PollImpl implements Poll {
 
     
     private  String title, apertureText, closerText, type, url;
-    private boolean activated;
+    private boolean activated ;
     private List<Question> questions;
     private List<Partecipant> partecipant; // inteso come reservedPartecipant
     private ResponsibleUser respUser;
     private int key;
 
     public PollImpl(int key,String title, String apertureText, String closerText, String type, String url, boolean activated, List<Question> questions, List<Partecipant> partecipant, ResponsibleUser respUser) {
+        this.key = key;
         this.title = title;
         this.apertureText = apertureText;
         this.closerText = closerText;
@@ -35,10 +36,23 @@ public class PollImpl implements Poll {
         this.questions = questions;
         this.partecipant = partecipant;
         this.respUser = respUser;
-        this.key = key;
     }
 
-    public PollImpl() {}
+    public PollImpl() {
+    this.key = 0;
+
+    this.title = "";
+    this.apertureText = "";
+    this.closerText = "";
+    this.type = "open";
+    this.url = "";
+    activated = false;
+    this.questions = null;
+    this.partecipant = null;
+    this.respUser = null;
+
+    
+    }
     
     @Override
     public List<Partecipant> getPartecipant() {

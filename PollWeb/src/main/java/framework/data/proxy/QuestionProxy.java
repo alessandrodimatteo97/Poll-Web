@@ -8,12 +8,14 @@ package framework.data.proxy;
 import framework.data.DataException;
 import framework.data.DataLayer;
 import framework.data.dao.AnswerDAO;
+import framework.data.dao.PollDAO;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONObject;
 import pollweb.data.impl.QuestionImpl;
 import pollweb.data.model.Answer;
+import pollweb.data.model.Poll;
 
 /**
  *
@@ -98,4 +100,27 @@ public class QuestionProxy  extends QuestionImpl {
         this.poll_key = poll_key;
     }
     
+    public int getPollKey(){
+        return this.poll_key;
+    }
+    
+    @Override
+    public void setPoll(Poll poll){
+        super.setPoll(poll);
+        if(poll!=null) this.poll_key = poll.getKey();
+        else { this.poll_key = 0; }
+        this.dirty = true;
+    }
+    @Override
+    public Poll getPoll(){
+        
+   if (super.getPoll()== null && poll_key > 0) {
+            try { // .getIssue(issue_key));
+                super.setPoll(((PollDAO) dataLayer.getDAO(Poll.class)).getPollById(poll_key));
+            } catch (DataException ex) {
+                Logger.getLogger(PollProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return super.getPoll();
+    }
 }
