@@ -7,14 +7,17 @@ and open the template in the editor.
 <div align="center">
     <#if ok!false>
     <div class="alert alert-success" role="alert">
-  A simple success alert—check it out!
+  Your request has been sent successfully
+  <a class="nav-link" href="Home">Come back home</a>
 </div>
     </#if>
+  
     </br>
         </br>
 
      <h3>
         <span style="font-family: Arial"><strong>Become a responsible user</strong></span>
+        
      </h3>
           </br>
     </br>
@@ -27,7 +30,7 @@ and open the template in the editor.
      <div class="form-group">
          <label for="inputFirstName" class="col-sm-2 col-form-label"><strong>First Name</strong></label>
     <div class="form-group col-md-4">
-        <input name="firstName" type="text" class="form-control" id="inputName" placeholder="First Name">
+        <input name="firstName" type="text" class="form-control" id="inputName" placeholder="First Name" required>
     </div>
      
 
@@ -35,7 +38,7 @@ and open the template in the editor.
   <div class="form-group ">
     <label for="inputSurname" class="col-sm-2 col-form-label"><strong>Surname</strong></label>
     <div class="form-group col-md-4">
-      <input name="surname" type="text" class="form-control" id="inputSurname" placeholder="Surname">
+      <input name="surname" type="text" class="form-control" id="inputSurname" placeholder="Surname" required>
     </div>
   </div>
         
@@ -43,7 +46,7 @@ and open the template in the editor.
       <div class="form-group ">
           <label for="inputFiscalCode" class="col-sm-2 col-form-label"><strong>Fiscal Code</strong></label>
     <div class="form-group col-md-4">
-      <input name="fiscalCode" type="text" class="form-control" id="inputFiscalCode" placeholder="Fiscal Code">
+      <input name="fiscalCode" type="text" class="form-control" id="inputFiscalCode" placeholder="Fiscal Code" required>
     </div>
   </div>
             
@@ -51,21 +54,23 @@ and open the template in the editor.
   <div class="form-group ">
       <label for="inputEmail" class="col-sm-2 col-form-label"><strong>Email</strong></label>
    <div class="form-group col-md-4">
-      <input name="email" type="email" class="form-control" id="inputEmail" placeholder="Email">
+      <input name="email" type="email" class="form-control" id="inputEmail" placeholder="Email" required>
     </div>
   </div>
 
   <div class="form-group ">
       <label for="inputPassword" class="col-sm-2 col-form-label"><strong>Password</strong></label>
     <div class="form-group col-md-4">
-      <input name="pwd" type="password" class="form-control" id="inputPassword" placeholder="Password">
+      <input name="pwd" type="password" class="form-control" id="inputPassword" placeholder="Password" required>
     </div>
   </div>
-  
+      
  
   <div class="form-group " align="center">
     <br/><br/>  
     <button type="submit" value="register" name="register"> register </button>
+    </br>
+        </br>
   </div>
     </div>
 </form>

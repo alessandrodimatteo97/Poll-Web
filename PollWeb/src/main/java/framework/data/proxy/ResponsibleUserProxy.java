@@ -53,15 +53,22 @@ public class ResponsibleUserProxy extends ResponsibleUserImpl{
         this.dirty= true;
     }
     
-      @Override
-    public void setAdministrator(boolean administrator) {
-        super.setAdministrator(administrator);
+      
+    public void setAdministrator(String administrator) {
+        if(administrator.equals("yes")) {
+            super.setAdministrator(true);
+        } else {
+            super.setAdministrator(false);
+        }
         this.dirty= true;
     }
     
-    @Override 
-    public void setAccepted(boolean accepted){
-        super.setAccepted(accepted);
+    public void setAccepted(int accepted){
+        if (accepted == 1) {
+            super.setAccepted(true);
+        } else {
+            super.setAccepted(false);
+        }
         this.dirty= true;
     }
     

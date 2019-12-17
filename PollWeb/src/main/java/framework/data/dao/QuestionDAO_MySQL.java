@@ -16,10 +16,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.json.Json;
 import org.json.JSONObject;
 import pollweb.data.model.Answer;
-import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
 
 /**
@@ -110,7 +108,7 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
     }
 
     @Override
-    public Json setPossibleAnswers(Question question, Json possibleAnswers) throws DataException{
+    public JSONObject setPossibleAnswers(Question question, JSONObject possibleAnswers) throws DataException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -153,11 +151,11 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
         }
         catch (SQLException ex) {
             throw new DataException("Unable to load question by ID", ex);
+
          }
 
         return question;   
 }
-            
 
     @Override
     public List<Question> getQuestionsByPollId(int keyPoll) throws DataException{
@@ -172,6 +170,7 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
             }
         } catch (SQLException ex) {
             throw new DataException("Unable to load question by id poll", ex);
+
         }
         return result;
     }

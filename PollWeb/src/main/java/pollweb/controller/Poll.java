@@ -8,15 +8,20 @@ package pollweb.controller;
 
 import framework.data.DataException;
 import framework.data.dao.PollDataLayer;
+import framework.data.proxy.QuestionProxy;
 import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
+import framework.security.SecurityLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import pollweb.data.model.Question;
 
 /**
  *
@@ -41,20 +46,28 @@ public class Poll extends PollBaseController {
         }
     }
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
-            TemplateResult res = new TemplateResult(getServletContext());
+    private void action_default(HttpServletRequest request, HttpServletResponse response ,int n) throws IOException, ServletException, TemplateManagerException, DataException {
+            try{TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("page_title", "Poll name");
-           
+           String type = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n).getType();
+           if(type == "open"){
+            request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n));
             res.activate("poll.ftl.html", request, response);
-       
+           }else{
+               res.activate("login.ftl.html",request,response);
+           }
+            }  catch (DataException ex) {
+           Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
+       }
     }
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
-
+            int n=0;
         try {
-            action_default(request, response);
+            n = SecurityLayer.checkNumeric(request.getParameter("n"));
+            action_default(request, response ,n);
 
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
@@ -64,7 +77,9 @@ public class Poll extends PollBaseController {
             request.setAttribute("exception", ex);
             action_error(request, response);
 
-        }
+        } catch (DataException ex) {
+           Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
+       }
     }
 
     /**

@@ -1,0 +1,39 @@
+<#if (users?size>0)>
+   <table class="table">
+    <form method="POST" action="" id="form1">
+
+    <thead>
+      <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Surname</th>
+          <th scope="col">Mail</th>
+          <th scope="col">Set Responsible</th>
+      </tr>
+    </thead>
+    <tbody>
+        <#list users as user>
+        <tr>
+            <td>${user.key}</td>
+            <td>${user.nameR}</td>
+            <td>${user.surnameR}</td>
+            <td>${user.email}</td>
+            <td><input type="checkbox" name="checkbox" value="${user.key}"/></td>
+        </tr>
+        </#list>
+    </tbody>
+    </table>  
+    <button type="submit" class="btn btn-dark" form="form1" value="Submit">Submit</button>
+   </form>  
+</#if>
+
+<#if (results?has_content)>
+<ol>
+    <#list results as result>
+    <li>${result}</li>
+    </#list>
+</ol>
+</#if>
+
+
+        

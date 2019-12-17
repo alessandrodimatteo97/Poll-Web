@@ -30,6 +30,7 @@ public class PollProxy extends PollImpl{
     protected DataLayer dataLayer;
     protected int RespUserKey = 0;
     
+    
     public PollProxy(DataLayer d){
         super();
         this.dirty=false;
