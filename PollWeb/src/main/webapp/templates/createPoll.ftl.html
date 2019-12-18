@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+title, apertureText, closerText, typeP, url, activated, idR
+-->
+<div align="center">
+    
+    </br>
+        </br>
+
+     <h3>
+        <span style="font-family: Arial"><strong>Create Poll</strong></span>
+     </h3>
+          </br>
+  
+   
+
+
+    <form class="justify-content-center" action="CreatePoll" method="post">
+    <div align="center">
+     <div class="form-group ">
+         <label for="title" class="col-sm-2 col-form-label"><strong>Title</strong></label>
+    <div class="form-group col-md-4">
+        <input name="title" type="text" class="form-control" id="title" placeholder="Title" value="${poll.title}">
+    </div>
+
+
+  </div>
+            <input type="hidden" name="k" value="${poll.key}"/>
+  <div class="form-group ">
+    <label for="apertureText" class="col-sm-2 col-form-label"><strong>Aperture Text</strong></label>
+    <div class="form-group col-md-4">
+        <textarea class="form-control" name="apertureText" id="exampleFormControlTextarea1" rows="3" >${poll.apertureText}</textarea>
+    </div>
+  </div>
+
+      <div class="form-group ">
+          <label for="closerText" class="col-sm-2 col-form-label"><strong>Closer Text</strong></label>
+    <div class="form-group col-md-4">
+    <textarea class="form-control" name="closerText" id="exampleFormControlTextarea1" rows="3" >${poll.closerText}</textarea>
+    </div>
+  </div>
+            
+
+  <div class="form-group">
+      <label  class="col-sm-2 col-form-label"><strong>Type</strong></label>
+        <div class="form-group col-md-4">
+
+      <select class="form-control" name="type" id="Type">
+      <option value="open">public</option>
+      <option value="reserved">reserved</option>
+      
+    </select>
+        </div>
+  </div>
+  
+        <div class="form-group ">
+    <label for="apertureText" class="col-sm-2 col-form-label"><strong>Url</strong></label>
+    <div class="form-group col-md-4">
+        <input class="form-control" name="url"  rows="3" value="${poll.url}"></input>
+    </div>
+  </div>
+  
+  
+        
+        <br/>
+        
+  <div class="form-group " align="center">
+    <div class="form-group col-md-4">
+              <button type="submit" class="btn btn-primary btn-lg btn-block" name="update" value="update">update</button>
+
+                     
+    </div> 
+  </div>
+        <#if (poll.key!=0)>
+        <div class="form-group " align="center">
+    <div class="form-group col-md-4">
+                     <button type="submit" class="btn btn-primary btn-lg btn-block" name="addQuestions" value="addQuestions">add Questions</button>
+
+                     
+    </div> 
+  </div>
+        <#else>
+        </#if>
+        <#if (numberQuestion?? && numberQuestion!=0)>
+        <div class="form-group " align="center">
+    <div class="form-group col-md-4">
+                     <button type="submit" class="btn btn-primary btn-lg btn-block" name="Finish" value="Finish">Check Questions (${numberQuestion})</button>
+
+                     
+    </div> 
+  </div>
+        <#else>
+        </#if>
+        
+        
+
+        
+    </div>
+</form>
+ 
+    </div>

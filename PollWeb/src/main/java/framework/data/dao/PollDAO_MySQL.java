@@ -13,6 +13,7 @@ import framework.data.proxy.PollProxy;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,7 +27,7 @@ import pollweb.data.model.Poll;
 public class PollDAO_MySQL extends DAO implements PollDAO {
     private PreparedStatement getAllPolls;
     private PreparedStatement searchPollByPollId, searchPollByUserId, searchOpenPolls, searchReservedPolls; /** Ricerche */
-    private PreparedStatement insertReservedPoll, insertOpenPoll, updatePoll, deletePoll; /** insert update and delete polls*/
+    private PreparedStatement insertPoll, insertOpenPoll, updatePoll, deletePoll; /** insert update and delete polls*/
     private PreparedStatement setPollAsActive, setPollAsDeactive; /**settano le poll attive e disabilitate */
     
     public PollDAO_MySQL(DataLayer d) {
@@ -45,7 +46,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=?");
             searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open'");
             searchReservedPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='reserved'");
-            insertReservedPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,reserved,?,?,?)");
+            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             insertOpenPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,open,?,?,?)");
             updatePoll = connection.prepareStatement("UPDATE poll SET title=?,apertureText=?,closerText=?,typeP=?,url=?,activated=?,idR=? WHERE ID=?");
             deletePoll = connection.prepareStatement("DELETE FROM poll WHERE ID=?");
@@ -64,7 +65,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             searchPollByUserId.close();
             searchOpenPolls.close();
             searchReservedPolls.close();
-            insertReservedPoll.close();
+            insertPoll.close();
             insertOpenPoll.close();
             updatePoll.close();
             deletePoll.close();
@@ -151,11 +152,11 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             
             try ( ResultSet rs = searchPollByPollId.executeQuery() ) {
                 if (rs.next()) {
-                    if(rs.getString("typeP").equals("open"))
+                   // if(rs.getString("typeP").equals("open"))
                      return createOpenPoll(rs);
-                    else {
-                        return createReservedPoll(rs);
-                    }
+                   // else {
+                    //    return createReservedPoll(rs);
+                   // }
                 }
             }
 
@@ -248,9 +249,87 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+    @Override    //title=?,apertureText=?,closerText=?,typeP=?,url=?,activated=?,idR=? WHERE ID=?
     public void storePoll(Poll poll) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int key = poll.getKey();
+        try {
+            if (poll.getKey() > 0) { //update
+                //non facciamo nulla se l'oggetto è un proxy e indica di non aver subito modifiche
+                //do not store the object if it is a proxy and does not indicate any modification
+                if (poll instanceof PollProxy && !((PollProxy) poll).isDirty()) {
+                    return;
+                }
+                updatePoll.setString(1, poll.getTitle());
+                updatePoll.setString(2, poll.getApertureText());
+                updatePoll.setString(3, poll.getCloserText());
+                updatePoll.setString(4, poll.getType());
+                updatePoll.setString(5, poll.getUrl());
+                updatePoll.setInt(6, 1);
+                if (poll.getRespUser()!= null) {
+                    updatePoll.setInt(7, 3);
+                } else {
+                    updatePoll.setNull(7, java.sql.Types.INTEGER);
+                }
+                updatePoll.setInt(8, poll.getKey());
+              
+                updatePoll.executeUpdate();
+            } else { //insert
+                insertPoll.setString(1, poll.getTitle());
+                insertPoll.setString(2, poll.getApertureText());
+                insertPoll.setString(3, poll.getCloserText());
+                insertPoll.setString(4, poll.getType());
+                insertPoll.setString(5, poll.getUrl());
+                insertPoll.setInt(6, 1);
+                if (poll.getRespUser()!= null) {
+                    insertPoll.setInt(7, 3);
+                } else {
+                    insertPoll.setNull(7, java.sql.Types.INTEGER);
+                }
+
+                if (insertPoll.executeUpdate() == 1) {
+                    //per leggere la chiave generata dal database
+                    //per il record appena inserito, usiamo il metodo
+                    //getGeneratedKeys sullo statement.
+                    //to read the generated record key from the database
+                    //we use the getGeneratedKeys method on the same statement
+                    try (ResultSet keys = insertPoll.getGeneratedKeys()) {
+                        //il valore restituito è un ResultSet con un record
+                        //per ciascuna chiave generata (uno solo nel nostro caso)
+                        //the returned value is a ResultSet with a distinct record for
+                        //each generated key (only one in our case)
+                        if (keys.next()) {
+                            //i campi del record sono le componenti della chiave
+                            //(nel nostro caso, un solo intero)
+                            //the record fields are the key componenets
+                            //(a single integer in our case)
+                            key = keys.getInt(1);
+                        }
+                    }
+                    //aggiornaimo la chiave in caso di inserimento
+                    //after an insert, uopdate the object key
+                    poll.setKey(key);
+                }
+            }
+
+//            //se possibile, restituiamo l'oggetto appena inserito RICARICATO
+//            //dal database tramite le API del modello. In tal
+//            //modo terremo conto di ogni modifica apportata
+//            //durante la fase di inserimento
+//            //if possible, we return the just-inserted object RELOADED from the
+//            //database through our API. In this way, the resulting
+//            //object will ambed any data correction performed by
+//            //the DBMS
+//            if (key > 0) {
+//                article.copyFrom(getArticle(key));
+//            }
+            //se abbiamo un proxy, resettiamo il suo attributo dirty
+            //if we have a proxy, reset its dirty attribute
+            if (poll instanceof PollProxy) {
+                ((PollProxy) poll).setDirty(false);
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to store article", ex);
+        }
     }
 
     @Override

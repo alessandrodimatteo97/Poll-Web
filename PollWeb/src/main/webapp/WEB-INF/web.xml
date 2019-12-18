@@ -43,13 +43,10 @@
     <servlet>
         <servlet-name>Admin</servlet-name>
         <servlet-class>pollweb.controller.AdminController</servlet-class>
-
-
-        <servlet-name>Admin</servlet-name>
-        <servlet-class>pollweb.controller.AdminController</servlet-class>
-
-        <servlet-name>ResponsiblePage</servlet-name>
-        <servlet-class>pollweb.controller.ResponsiblePage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreatePoll</servlet-name>
+        <servlet-class>pollweb.controller.CreatePoll</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
@@ -81,13 +78,10 @@
     <servlet-mapping>
         <servlet-name>Admin</servlet-name>
         <url-pattern>/admin</url-pattern>
-
-
-        <servlet-name>Admin</servlet-name>
-        <url-pattern>/admin</url-pattern>
-
-        <servlet-name>ResponsiblePage</servlet-name>
-        <url-pattern>/ResponsiblePage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreatePoll</servlet-name>
+        <url-pattern>/CreatePoll</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -100,10 +94,4 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
-    <!-- 
-    <welcome-file-list>
-        <welcome-file>Homepage.html</welcome-file> 
-    </welcome-file-list>
-    in questo modo inserisco la pagina come iniziale e senza caricamento servlets
-  -->
 </web-app>

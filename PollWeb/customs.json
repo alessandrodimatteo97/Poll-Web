@@ -1,8 +1,17 @@
 {
-    "elements": {},
+    "elements": {
+        "input": {
+            "attributes": {
+                "type": {}
+            }
+        }
+    },
     "attributes": {
         "integrity": {
             "context": "link"
+        },
+        "value": {
+            "context": "textarea"
         }
     }
 }

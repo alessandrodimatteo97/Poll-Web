@@ -9,10 +9,9 @@ package framework.data.dao;
 import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
-import javax.json.Json;
 import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
-
+import org.json.JSONObject;
 /**
  *
  * @author davide
@@ -27,7 +26,7 @@ public interface QuestionDAO {
     
     boolean setQuestionType(Question question, String type) throws DataException;
     
-    Json setPossibleAnswers(Question question, Json possibleAnswers) throws DataException;
+    JSONObject setPossibleAnswers(Question question, JSONObject possibleAnswers) throws DataException;
     
     String setTextQuestion(Question question, String textQuestion) throws DataException;
     
@@ -35,10 +34,13 @@ public interface QuestionDAO {
 
     boolean setObbligation(Question question, String obl) throws DataException;
     
-    Question getQuestionById(ResultSet rs)throws DataException;
-    
+    Question getQuestionById(ResultSet rs) throws DataException;
+
     List<Question> getQuestionsByPollId(int keyPoll) throws DataException; //cambiata la firma del metodo
     
     List<Question> getQuestionsByUserId(int userId) throws DataException;
+    
+    int getQuestionNumber(int poll_ket) throws DataException;
 
+    void store(Question question) throws DataException;
 }

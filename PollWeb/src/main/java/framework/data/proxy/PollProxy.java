@@ -127,7 +127,7 @@ public class PollProxy extends PollImpl{
             } catch (DataException ex) {
                 Logger.getLogger(PollProxy.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        } 
         return super.getQuestions();
     }
     @Override

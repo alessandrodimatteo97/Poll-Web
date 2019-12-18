@@ -43,7 +43,14 @@ public interface Question {
      void setAnswer(List<Answer> answer);
      
      void setKey(int key);
+     
+     void setPoll(Poll poll);
+     
+     Poll getPoll();
 
     
     
 }
+
+// 1 issue ha più articoli, praticamente c'è un campo issue che rappresenta la chiave esterna di articol, stessa cosa per quanto riguarda Question, dove nella classe c'è bisogno 
+// del campo Poll, e nel proxy bisogna settare la chiave;

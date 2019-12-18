@@ -42,12 +42,32 @@ public class Login extends PollBaseController {
     String ref;
     
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
-        if (request.getAttribute("exception") != null) {
-            (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
-        } else {
-            (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
+        
+        try {
+            if (request.getAttribute("login_failed").equals("missing_data")) {
+            
+            TemplateResult res = new TemplateResult(getServletContext());
+            this.ref = request.getHeader("referer");
+            request.setAttribute("page_title", "Login");
+            request.setAttribute("login_error", "Campo mancante!");
+            res.activate("login.ftl.html", request, response);   
+            
+        } 
+            
+        if(request.getAttribute("login_failed").equals("wrong_data")) {
+            
+            TemplateResult res = new TemplateResult(getServletContext());
+            this.ref = request.getHeader("referer");
+            request.setAttribute("page_title", "Login");
+            request.setAttribute("login_error", "Username o password errati!");
+            res.activate("login.ftl.html", request, response);   
         }
+        } catch(TemplateManagerException ex){
+            
+        }
+                
     }
+    
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
             TemplateResult res = new TemplateResult(getServletContext());
@@ -100,32 +120,32 @@ public class Login extends PollBaseController {
      * @return a String containing servlet description
      */
     private void action_login(HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateManagerException, DataException {
-         String username = request.getParameter("email");
+        String username = request.getParameter("email");
         String password = request.getParameter("password");
-        //... VALIDAZIONE IDENTITA'...
-        //... IDENTITY CHECKS ...
-      //  UserProxy up = new UserProxy();
+
         ResponsibleUserImpl ru = new ResponsibleUserImpl();
-         ru.setEmail(username);
-         ru.setPwd(password);
+        ru.setEmail(username);
+        ru.setPwd(password);
     
 
         if (!username.isEmpty() && !password.isEmpty()) {
-            //se la validazione ha successo
-            //if the identity validation succeeds
-            //carichiamo lo userid dal database utenti
-            //load userid from user database
+            
             if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkResponsible(ru)){
                 
-                 int userid = 12;
+            int userid = 12;
             SecurityLayer.createSession(request, username, userid);
             response.sendRedirect("ResponsiblePage");
             ServletContext context = getServletContext( );
                 context.log("è andato bene il cazzo di login");
-            }
-            else {
-                ServletContext context = getServletContext( );
-                context.log("è andato di merda il login");
+            } else {
+                if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkAdmin(ru)){
+                int userid = 12;
+                SecurityLayer.createSession(request, username, userid);
+                response.sendRedirect("admin");
+                } else {
+                    request.setAttribute("login_failed", "wrong_data");
+                    action_error(request, response);
+                }
             }
             
        //     response.sen
@@ -146,7 +166,7 @@ public class Login extends PollBaseController {
 
 
         } else {
-            request.setAttribute("exception", new Exception("Login failed"));
+            request.setAttribute("login_failed", "missing_data");
             action_error(request, response);
         }
     }

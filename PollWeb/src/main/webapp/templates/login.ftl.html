@@ -28,17 +28,21 @@ and open the template in the editor.
      
 
   <div class="form-group ">
-      <label for="inputEmail" class="col-sm-2 col-form-label"><strong>Email</strong></label>
-   <div class="form-group col-md-4">
-      <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email">
-    </div>
+    <label for="inputEmail" class="col-sm-2 col-form-label"><strong>Email</strong></label>
+        <div class="form-group col-md-4">
+          <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email">
+        </div>
   </div>
 
   <div class="form-group ">
-      <label for="inputPassword" class="col-sm-2 col-form-label"><strong>Password</strong></label>
-    <div class="form-group col-md-4">
-        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
-    </div>
+    <label for="inputPassword" class="col-sm-2 col-form-label"><strong>Password</strong></label>
+        <div class="form-group col-md-4">
+            <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
+        </div>
+    <#if (login_error??)>
+    <p > ${login_error}</p>
+    </#if>
+
   </div>
   
  
@@ -49,5 +53,5 @@ and open the template in the editor.
   </div>
     </div>
 </form>
- 
+
     </div>
