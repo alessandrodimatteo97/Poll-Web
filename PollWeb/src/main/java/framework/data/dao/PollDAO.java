@@ -38,9 +38,9 @@ public interface PollDAO {
     
     List<Poll> getReservedPolls() throws DataException;
 
-    boolean setActivated(ResultSet rs) throws DataException;
+    boolean setActivated(Poll poll) throws DataException;
     
-    boolean setDeactivated(ResultSet rs) throws DataException;
+    boolean setDeactivated(Poll poll) throws DataException;
         
     void storePoll( Poll poll) throws DataException;
     

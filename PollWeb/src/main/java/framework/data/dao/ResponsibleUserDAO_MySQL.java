@@ -27,14 +27,11 @@ import pollweb.data.model.ResponsibleUser;
 public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
     
     private PreparedStatement insertResponsibleUser, updateResponsibleUser;
-    private PreparedStatement getAllResponsible, getResponsibleById, getAllRespNotAccepted;
+    private PreparedStatement getAllResponsible, getResponsibleById, getResponsibleByToken, getAllRespNotAccepted;
     private PreparedStatement updateRespToAccepted;
-    
-
-
-       private PreparedStatement checkUserExist, checkAdmin;
-
-       private PreparedStatement getResponsible;
+    private PreparedStatement checkUserExist, checkAdmin;
+    private PreparedStatement getResponsible;
+    private PreparedStatement setToken;
        
 
     public ResponsibleUserDAO_MySQL(DataLayer d) {
@@ -56,8 +53,9 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
             updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator='no', accepted=1 WHERE ID=?");
             updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
-        
+            setToken = connection.prepareStatement("UPDATE responsibleUser SET token=? WHERE email=?");
             getResponsible = connection.prepareStatement("SELECT * FROM responsibleUser where ID = ?");
+            getResponsibleByToken = connection.prepareStatement("SELECT * FROM responsibleUser where token=?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer",ex);
         }
@@ -261,6 +259,39 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         } catch (SQLException ex) {
             throw new DataException("Unable to store responsible", ex);
         }
+    }
+
+    @Override
+    public boolean setToken(String mail, String token) throws DataException {
+        try{
+            this.setToken.setString(1, token);
+            this.setToken.setString(2, mail);
+            int result = this.setToken.executeUpdate();
+            if (result == 1) {
+            return true;
+        }
+        } catch (SQLException ex) {
+            throw new DataException("wwww", ex);
+        }    
+        
+        return false;    }
+
+    @Override
+    public ResponsibleUser getResponsibleUser(String token) throws DataException {
+        try {
+            this.getResponsibleByToken.setString(1, token);
+            
+            try ( ResultSet rs = this.getResponsibleByToken.executeQuery() ) {
+                if (rs.next()) {
+                    return createResponsibleUser(rs);
+                }
+            }
+
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+        
+        return null;
     }
 
   

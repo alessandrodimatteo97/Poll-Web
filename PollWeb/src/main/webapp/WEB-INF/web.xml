@@ -48,6 +48,7 @@
         <servlet-name>CreatePoll</servlet-name>
         <servlet-class>pollweb.controller.CreatePoll</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>

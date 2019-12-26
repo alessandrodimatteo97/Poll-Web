@@ -131,7 +131,7 @@ public class PollImpl implements Poll {
 
     @Override
     public void setActivated(boolean activated) {
-        this.activated = activated;
+        this.activated = activated;        
     }
     
     @Override

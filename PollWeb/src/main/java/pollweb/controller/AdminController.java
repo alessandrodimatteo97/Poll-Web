@@ -11,15 +11,10 @@ import framework.data.dao.PollDataLayer;
 import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
+import framework.security.SecurityLayer;
 import java.io.IOException;
-import java.io.PrintWriter;
 import static java.lang.Integer.parseInt;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -27,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import pollweb.data.model.ResponsibleUser;
+import pollweb.data.model.Poll;
 
 /**
  *
@@ -35,12 +31,17 @@ import pollweb.data.model.ResponsibleUser;
 public class AdminController extends PollBaseController {
     
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
-            if (request.getAttribute("exception") != null) {
-                (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
+        try {    
+            if (request.getAttribute("exception").equals("invalid_session")) {
+                request.setAttribute("login_error", "Session errore");
+                response.sendRedirect("Login");
             } else {
                 (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
             }
+        } catch (IOException ex) {
+            request.setAttribute("exception", ex);
         }
+    }
   
    
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
@@ -48,7 +49,14 @@ public class AdminController extends PollBaseController {
         TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Admin");
         request.setAttribute("users", ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUsersNotAccepted());
-        res.activate("adminPanel.ftl.html", request, response); 
+        //String active_one = SecurityLayer.retrieveSession(request);
+        //    ServletContext context = getServletContext( );
+        //        context.log(active_one);
+        ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
+        
+        request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
+        res.activate("adminPanel.ftl.html", request, response);
+
         } catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
             action_error(request, response);
@@ -64,7 +72,7 @@ public class AdminController extends PollBaseController {
         try {
         for(int i = 0; i<array.length; i++) {
             
-                ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(parseInt(array[i]));
+            ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(parseInt(array[i]));
             
             request.setAttribute("userLogged", rs);
             Boolean result = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().setAccepted(rs); 
@@ -91,28 +99,82 @@ public class AdminController extends PollBaseController {
         
     
     }
+    private void action_deactivate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("page_title", "Admin");
+
+            ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
+
+            String id_poll = request.getParameter("poll_id");
+
+            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(parseInt(id_poll));
+            ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setDeactivated(pollRs);
+            request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
+            res.activate("mypolls_adminpanel.ftl.html", request, response, false);
+        } catch (DataException ex) {
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        }
+    }
+
+    private void action_activate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("page_title", "Admin");
+
+            ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
+            String id_poll = request.getParameter("poll_id");
+
+            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(parseInt(id_poll));
+            ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setActivated(pollRs);
+            request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
+            res.activate("mypolls_adminpanel.ftl.html", request, response, false);
+
+        } catch (DataException ex) {
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        }
+    }
     
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int selectedResp;
        
         try {
-            if(request.getParameterValues("checkbox") != null) {
-                action_update(request, response);
+            if(request.getParameter("to_do") != null) {
+                if(request.getParameter("to_do").equals("activate")) {
+                    action_activate(request, response);
+                }
+                if (request.getParameter("to_do").equals("deactivate"))
+                {
+                    action_deactivate(request,response);
+                }
             } else {
-                action_default(request, response);
+
+                if (request.getParameterValues("checkbox") != null) {
+                    action_update(request, response);
+                } else {
+                    if (request.getSession(false) == null) {
+                        request.setAttribute("exception", "invalid_session");
+                        action_error(request, response); //CASO SESSIONE NON VALIDA
+                    } else {
+                        action_default(request, response);
+                    }
+                }
             }
-
-        } catch (IOException ex) {
+                
+            } catch (IOException ex) {
             request.setAttribute("exception", ex);
             action_error(request, response);
 
-        } catch (TemplateManagerException ex) {
-            request.setAttribute("exception", ex);
-            action_error(request, response);
+            } catch (TemplateManagerException ex) {
+                request.setAttribute("exception", ex);
+                action_error(request, response);
 
-        } catch (DataException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            } catch (DataException ex) {
+                Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
+
+
 }

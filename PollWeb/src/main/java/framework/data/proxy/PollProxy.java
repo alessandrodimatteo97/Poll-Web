@@ -107,9 +107,12 @@ public class PollProxy extends PollImpl{
     
     
  
-     @Override
-    public void setActivated(boolean activated) {
-        super.setActivated(activated);
+    public void setActivated(String activated) {
+        if(activated.equals("yes")) {
+            super.setActivated(true);
+        } else {
+            super.setActivated(false);
+        }
         this.dirty= true;
     }
     

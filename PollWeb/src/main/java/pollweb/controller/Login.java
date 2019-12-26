@@ -78,14 +78,6 @@ public class Login extends PollBaseController {
         
     }
     
-     private void action_default1(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
-            TemplateResult res = new TemplateResult(getServletContext());
-            
-            request.setAttribute("page_title", "index");
-           
-            res.activate("index.ftl.html", request, response);
-        
-    }
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -94,10 +86,8 @@ public class Login extends PollBaseController {
             
             if(request.getParameter("login")!=null){
                 action_login(request, response);
-
-                }
-            else{
-                
+            }
+            else {
             action_default(request, response);
             }
 
@@ -131,39 +121,19 @@ public class Login extends PollBaseController {
         if (!username.isEmpty() && !password.isEmpty()) {
             
             if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkResponsible(ru)){
-                
-            int userid = 12;
-            SecurityLayer.createSession(request, username, userid);
+
+            SecurityLayer.createSession(request, username);
             response.sendRedirect("ResponsiblePage");
-            ServletContext context = getServletContext( );
-                context.log("è andato bene il cazzo di login");
+
             } else {
                 if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkAdmin(ru)){
-                int userid = 12;
-                SecurityLayer.createSession(request, username, userid);
+                SecurityLayer.createSession(request, username);
                 response.sendRedirect("admin");
                 } else {
                     request.setAttribute("login_failed", "wrong_data");
                     action_error(request, response);
                 }
             }
-            
-       //     response.sen
-
-           
-            //se � stato trasmesso un URL di origine, torniamo a quell'indirizzo
-            //if an origin URL has been transmitted, return to it
-            /*
-            String referrer = request.getHeader("referer"); // Yes, with the legendary misspelling.
-
-            if (referrer != null) {
-                ServletContext context = getServletContext( );
-                response.sendRedirect(ref);
-            } else {
-                response.sendRedirect("Home");
-            }
-*/
-
 
         } else {
             request.setAttribute("login_failed", "missing_data");
@@ -174,6 +144,6 @@ public class Login extends PollBaseController {
  
     @Override
     public String getServletInfo() {
-        return "Main Newspaper servlet";
+        return "Main login servlet";
     }// </editor-fold>
 }
