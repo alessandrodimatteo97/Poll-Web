@@ -32,7 +32,8 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
     private PreparedStatement checkUserExist, checkAdmin;
     private PreparedStatement getResponsible;
     private PreparedStatement setToken;
-       
+
+
 
     public ResponsibleUserDAO_MySQL(DataLayer d) {
         super(d);
@@ -47,11 +48,10 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             getAllResponsible = connection.prepareStatement("SELECT ID FROM responsibleUser");
             getResponsibleById = connection.prepareStatement("SELECT * FROM responsibleUser WHERE ID=?");
             getAllRespNotAccepted = connection.prepareCall("SELECT ID FROM responsibleUser WHERE accepted=0");
-            updateRespToAccepted = connection.prepareStatement("UPDATE responsibleUser SET accepted=1 WHERE email=?");
-            checkUserExist = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? AND pwd=? AND administrator='no'");
-            checkAdmin = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? AND pwd=? AND administrator='yes'");
+            updateRespToAccepted = connection.prepareStatement("UPDATE responsibleUser SET accepted=? WHERE ID=?");
+            checkUserExist = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? and pwd=?");
+
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
-            updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator='no', accepted=1 WHERE ID=?");
             updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
             setToken = connection.prepareStatement("UPDATE responsibleUser SET token=? WHERE email=?");
             getResponsible = connection.prepareStatement("SELECT * FROM responsibleUser where ID = ?");
@@ -92,13 +92,12 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             ru.setFiscalCode(rs.getString("fiscalCode"));
             ru.setEmail(rs.getString("email"));
             ru.setPwd(rs.getString("pwd"));
-
             ru.setAccepted(rs.getInt("accepted"));
             ru.setAdministrator(rs.getString("administrator"));
           
             
         } catch (SQLException ex) {
-            throw new DataException("Unable to create ResponsibleUser object form ResultSet", ex);
+            throw new DataException("Unable to create article object form ResultSet", ex);
         }
         return ru; 
     }
@@ -158,7 +157,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         return result;
     }
     
-    
+
     @Override
     public List<ResponsibleUser> getResponsibleUsersNotAccepted() throws DataException{
         List<ResponsibleUser> result = new ArrayList();
@@ -186,7 +185,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         }
         } catch (SQLException ex) {
             throw new DataException("wwww", ex);
-        }    
+        }
         
         return false;
     }
@@ -212,7 +211,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         try {
             this.checkAdmin.setString(1, user.getEmail());
             this.checkAdmin.setString(2, user.getPwd());
-            
+
             try (ResultSet rs = this.checkAdmin.executeQuery()) {
                 if(rs.next()) return true;
             }
@@ -221,7 +220,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         }
         return false;
     }
-    
+
     @Override
     public void storeResponsibleUser(ResponsibleUser responsibleUser) throws DataException {
         int key = responsibleUser.getKey();
@@ -272,15 +271,15 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         }
         } catch (SQLException ex) {
             throw new DataException("wwww", ex);
-        }    
-        
+        }
+
         return false;    }
 
     @Override
     public ResponsibleUser getResponsibleUser(String token) throws DataException {
         try {
             this.getResponsibleByToken.setString(1, token);
-            
+
             try ( ResultSet rs = this.getResponsibleByToken.executeQuery() ) {
                 if (rs.next()) {
                     return createResponsibleUser(rs);
@@ -290,11 +289,11 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         } catch (SQLException ex) {
             throw new DataException("Error from DataBase: ", ex);
         }
-        
+
         return null;
     }
 
-  
 
-    
+
+
 }
