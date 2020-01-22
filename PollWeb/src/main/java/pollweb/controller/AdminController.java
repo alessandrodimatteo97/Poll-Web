@@ -55,6 +55,8 @@ public class AdminController extends PollBaseController {
         ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
         
         request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
+
+        request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
         res.activate("adminPanel.ftl.html", request, response);
 
         } catch (DataException ex) {
@@ -111,6 +113,7 @@ public class AdminController extends PollBaseController {
             Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(parseInt(id_poll));
             ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setDeactivated(pollRs);
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
+            request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
             res.activate("mypolls_adminpanel.ftl.html", request, response, false);
         } catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
@@ -129,6 +132,8 @@ public class AdminController extends PollBaseController {
             Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(parseInt(id_poll));
             ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setActivated(pollRs);
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
+            request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
+
             res.activate("mypolls_adminpanel.ftl.html", request, response, false);
 
         } catch (DataException ex) {

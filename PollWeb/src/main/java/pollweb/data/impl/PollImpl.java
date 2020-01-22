@@ -19,13 +19,13 @@ public class PollImpl implements Poll {
 
     
     private  String title, apertureText, closerText, type, url;
-    private boolean activated ;
+    private boolean activated, alreadyActivated ;
     private List<Question> questions;
     private List<Partecipant> partecipant; // inteso come reservedPartecipant
     private ResponsibleUser respUser;
     private int key;
 
-    public PollImpl(int key,String title, String apertureText, String closerText, String type, String url, boolean activated, List<Question> questions, List<Partecipant> partecipant, ResponsibleUser respUser) {
+    public PollImpl(int key,String title, String apertureText, String closerText, String type, String url, boolean activated, boolean alreadyActivated, List<Question> questions, List<Partecipant> partecipant, ResponsibleUser respUser) {
         this.key = key;
         this.title = title;
         this.apertureText = apertureText;
@@ -33,6 +33,7 @@ public class PollImpl implements Poll {
         this.type = type;
         this.url = url;
         this.activated = activated;
+        this.alreadyActivated = alreadyActivated;
         this.questions = questions;
         this.partecipant = partecipant;
         this.respUser = respUser;
@@ -47,6 +48,7 @@ public class PollImpl implements Poll {
     this.type = "open";
     this.url = "";
     activated = false;
+    alreadyActivated = false;
     this.questions = null;
     this.partecipant = null;
     this.respUser = null;
@@ -133,7 +135,13 @@ public class PollImpl implements Poll {
     public void setActivated(boolean activated) {
         this.activated = activated;        
     }
-    
+
+    @Override
+    public boolean isAlreadyActivated() { return alreadyActivated; }
+
+    @Override
+    public void setAlreadyActivated( boolean alreadyActivated) { this.alreadyActivated = alreadyActivated; }
+
     @Override
     public List<Question> getQuestions() {
         return questions;

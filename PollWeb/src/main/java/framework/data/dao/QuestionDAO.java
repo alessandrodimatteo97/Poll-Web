@@ -36,6 +36,8 @@ public interface QuestionDAO {
     
     Question getQuestionById(ResultSet rs) throws DataException;
 
+    Question getQuestionById(int keyQ) throws DataException;
+
     List<Question> getQuestionsByPollId(int keyPoll) throws DataException; //cambiata la firma del metodo
     
     List<Question> getQuestionsByUserId(int userId) throws DataException;

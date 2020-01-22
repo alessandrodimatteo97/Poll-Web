@@ -33,7 +33,8 @@ $(document).on("click", ".btn-secondary" , function(event) {
     let clicked = event.target.id;
     if(clicked === 'activate') {
         activate_poll(event);
-    } else {
+    }
+    if(clicked === 'deactivate') {
         deactivate_poll(event);
     }
 });

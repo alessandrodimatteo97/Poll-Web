@@ -115,6 +115,15 @@ public class PollProxy extends PollImpl{
         }
         this.dirty= true;
     }
+
+    public void setAlreadyActivated(String activated) {
+        if(activated.equals("yes")) {
+            super.setAlreadyActivated(true);
+        } else {
+            super.setAlreadyActivated(false);
+        }
+        this.dirty= true;
+    }
     
     @Override
     public void setQuestions(List<Question> questions) {

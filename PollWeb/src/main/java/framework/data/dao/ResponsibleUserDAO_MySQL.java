@@ -50,7 +50,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             getAllRespNotAccepted = connection.prepareCall("SELECT ID FROM responsibleUser WHERE accepted=0");
             updateRespToAccepted = connection.prepareStatement("UPDATE responsibleUser SET accepted=? WHERE ID=?");
             checkUserExist = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? and pwd=?");
-
+            checkAdmin = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? AND pwd=? AND administrator='yes'");
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
             updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
             setToken = connection.prepareStatement("UPDATE responsibleUser SET token=? WHERE email=?");

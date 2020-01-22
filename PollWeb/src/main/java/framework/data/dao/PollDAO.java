@@ -33,12 +33,16 @@ public interface PollDAO {
     Poll getPollById(int pollId) throws DataException;
     
     List<Poll> getPollsByUserId(int userId) throws DataException;
+
+    List<Poll> getPollsAlreadyActivatedAndClosedByUserId(int userId) throws DataException;
     
     List<Poll> getOpenPolls() throws DataException;
     
     List<Poll> getReservedPolls() throws DataException;
 
     boolean setActivated(Poll poll) throws DataException;
+
+    boolean setAlreadyActivated(Poll poll) throws DataException;
     
     boolean setDeactivated(Poll poll) throws DataException;
         

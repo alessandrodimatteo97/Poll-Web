@@ -44,6 +44,15 @@ public class Login extends PollBaseController {
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
         
         try {
+            if (request.getAttribute("error").equals("poll_detail_controller")) {
+                TemplateResult res = new TemplateResult(getServletContext());
+                this.ref = request.getHeader("referer");
+                request.setAttribute("page_title", "Login");
+                request.setAttribute("login_error", "errore nel poll detail controller");
+                res.activate("login.ftl.html", request, response);
+            }
+
+
             if (request.getAttribute("login_failed").equals("missing_data")) {
             
             TemplateResult res = new TemplateResult(getServletContext());
@@ -80,8 +89,7 @@ public class Login extends PollBaseController {
     
 
     @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             
             if(request.getParameter("login")!=null){
@@ -119,16 +127,16 @@ public class Login extends PollBaseController {
     
 
         if (!username.isEmpty() && !password.isEmpty()) {
-            
-            if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkResponsible(ru)){
+
+        if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkAdmin(ru)){
 
             SecurityLayer.createSession(request, username);
-            response.sendRedirect("ResponsiblePage");
+            response.sendRedirect("admin");
 
             } else {
-                if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkAdmin(ru)){
-                SecurityLayer.createSession(request, username);
-                response.sendRedirect("admin");
+                if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkResponsible(ru)){
+                    SecurityLayer.createSession(request, username);
+                    response.sendRedirect("ResponsiblePage");
                 } else {
                     request.setAttribute("login_failed", "wrong_data");
                     action_error(request, response);

@@ -5,21 +5,21 @@
     <div class="content">
         <div class="table-full-width">
             <table class="table table-hover table-striped">
-                <caption class="bg-dark text-white"> Totale sondaggi: 4</caption>
+                <caption class="bg-dark text-white"> Totale sondaggi: da inserire</caption>
                 <thead class="thead-dark">
                 <th scope="col">Titolo</th>
                 <th scope="col">Tipo</th>
-                <th scope="col">Risposte</th>
+                <th scope="col">Url</th>
                 <th scope="col">Attivalo</th>
 
                 </thead>
                 <tbody>
                 <#list polls as poll>
                 <#if poll.activated>
-                <tr class="table-success">
+                <tr class="table-success" >
                     <td>${poll.title}</td>
                     <td>${poll.type}</td>
-                    <td>80</td>
+                    <td><a href="Poll_Detail?k=${poll.key}">${poll.url}</a></td>
                     <td>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-secondary active">
@@ -35,7 +35,7 @@
                 <tr class="table-danger">
                     <td>${poll.title}</td>
                     <td>${poll.type}</td>
-                    <td>80</td>
+                    <td><a href="Poll_Detail?k=${poll.key}">${poll.url}</a></td>
                     <td>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-secondary " id="activate">
@@ -51,6 +51,29 @@
             </#list>
             </tbody>
             </table>
+            <h4 class="title">I miei sondaggi chiusi</h4>
+            <table class="table table-hover table-striped">
+
+
+                <caption class="bg-dark text-white"> Totale sondaggi terminati: 4</caption>
+                <thead class="thead-dark">
+                <th scope="col">Titolo</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Url</th>
+
+                </thead>
+                <tbody>
+                <#list closed_polls as closed_poll>
+
+                <tr class="table" >
+                    <td>${closed_poll.title}</td>
+                    <td>${closed_poll.type}</td>
+                    <td><a href="Poll_Detail?k=${closed_poll.key}">${closed_poll.url}</a></td>
+                </tr>
+                </#list>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
