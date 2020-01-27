@@ -19,10 +19,10 @@ import org.json.JSONObject;
 public interface QuestionDAO {
     
     Question createQuestion();
-    
+
     Question createQuestion(ResultSet rs) throws DataException;
     
-    boolean deleteQuestion(ResultSet rs) throws DataException;
+    boolean deleteQuestion(int question_key) throws DataException;
     
     boolean setQuestionType(Question question, String type) throws DataException;
     
@@ -35,6 +35,8 @@ public interface QuestionDAO {
     boolean setObbligation(Question question, String obl) throws DataException;
     
     Question getQuestionById(ResultSet rs) throws DataException;
+    
+    Question getQuestionById(int question_key) throws DataException;
 
     List<Question> getQuestionsByPollId(int keyPoll) throws DataException; //cambiata la firma del metodo
     
@@ -43,4 +45,6 @@ public interface QuestionDAO {
     int getQuestionNumber(int poll_ket) throws DataException;
 
     void store(Question question) throws DataException;
+
+    boolean checkQuestionPoll(int poll_key, int question_key) throws DataException;
 }

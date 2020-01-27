@@ -45,6 +45,13 @@ public class QuestionImpl implements Question {
    
     
     public QuestionImpl() {
+        this.textq = "";
+        this.note = "";
+        this.typeP = "shortText";
+        this.obbligated = false;
+        this.possibleAnswer = null;
+        this.answer = null;
+        this.poll = null;
     }
 
     public QuestionImpl(int key,String textq, String note, String typeP, boolean obbligated, JSONObject possibleAnswer, List<Answer> answer, Poll poll) {

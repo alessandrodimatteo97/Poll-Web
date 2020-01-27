@@ -29,28 +29,31 @@ title, apertureText, closerText, typeP, url, activated, idR
 
   </div>
             <input type="hidden" name="k" value="${poll.key}"/>
+                        <input type="hidden" name="qk" value="0"/>
+
   <div class="form-group ">
     <label for="apertureText" class="col-sm-2 col-form-label"><strong>Aperture Text</strong></label>
     <div class="form-group col-md-4">
-        <textarea class="form-control" name="apertureText" id="exampleFormControlTextarea1" rows="3" >${poll.apertureText}</textarea>
+        <textarea class="form-control" name="apertureText"  rows="3" >${poll.apertureText}</textarea>
     </div>
   </div>
 
       <div class="form-group ">
           <label for="closerText" class="col-sm-2 col-form-label"><strong>Closer Text</strong></label>
     <div class="form-group col-md-4">
-    <textarea class="form-control" name="closerText" id="exampleFormControlTextarea1" rows="3" >${poll.closerText}</textarea>
+    <textarea class="form-control" name="closerText"  rows="3" >${poll.closerText}</textarea>
     </div>
   </div>
-            
 
+
+        <!-- da risolvere il problema, perché quando scarica il poll questa pagina lo setta direttamente open -->
   <div class="form-group">
-      <label  class="col-sm-2 col-form-label"><strong>Type</strong></label>
+      <label  class="col-sm-2 col-form-label"><strong>${poll.type}</strong></label>
         <div class="form-group col-md-4">
 
       <select class="form-control" name="type" id="Type">
-      <option value="open">public</option>
-      <option value="reserved">reserved</option>
+      <option value="open" <#if (poll.type == "open" )> selected="selected"</#if>>public</option>
+      <option value="reserved" <#if (poll.type == "reserved")> selected="selected"</#if>>reserved</option>
       
     </select>
         </div>
@@ -59,7 +62,7 @@ title, apertureText, closerText, typeP, url, activated, idR
         <div class="form-group ">
     <label for="apertureText" class="col-sm-2 col-form-label"><strong>Url</strong></label>
     <div class="form-group col-md-4">
-        <input class="form-control" name="url"  rows="3" value="${poll.url}"></input>
+        <input class="form-control" name="url" rows="3" value="${poll.url}"/>
     </div>
   </div>
   

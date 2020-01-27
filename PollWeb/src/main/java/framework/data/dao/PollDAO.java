@@ -9,6 +9,8 @@ package framework.data.dao;
 import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
+
+import framework.data.proxy.PollProxy;
 import pollweb.data.model.Poll;
 
 /**
@@ -18,12 +20,15 @@ import pollweb.data.model.Poll;
 public interface PollDAO {
     
     Poll createPoll();
-    
-    Poll createReservedPoll();
+
+    PollProxy createPoll(ResultSet rs) throws DataException;
+
+
+    Poll createReservedPoll() throws DataException;
     
     Poll createReservedPoll( ResultSet rs ) throws DataException;
     
-    Poll createOpenPoll();
+    Poll createOpenPoll() throws DataException;
     
     Poll createOpenPoll( ResultSet rs ) throws DataException;
     
@@ -46,6 +51,7 @@ public interface PollDAO {
     
       List<Poll> getAllPolls() throws DataException;
   
+     boolean pollContainsQuestion(int poll_key, int question_key) throws DataException;
       
     
 }

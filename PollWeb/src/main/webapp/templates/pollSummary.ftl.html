@@ -4,19 +4,100 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+
+</br>
+</br>
+<div class="container">
+    <div class="jumbotron border border-dark">
+        <form action="CreatePoll" method="post">
+        <div class="row border border-dark">
+            <div class="col-md-8">
+
+                <h3>${poll.title}</h3>
+            </div>
+        </div>
+        <hr/>
+            <input type="hidden" name="k" value="${poll.key}"/>
+            <input type="hidden" name="qk" value="0"/>
+
+            <div class="row border ">
+            <div class="col-md-6 col-xs-8">
+                <div class="row border border-dark">
+                    <div class="col-md-6 col-xs-4 col-sm-4 col-6">
+                        <p style="white-space: nowrap; font-weight: bold">Aperture Text:</p>
+                    </div>
+                    <div class="col-md-5 col-5 col-xs-3">
+                        <span >${poll.apertureText}</span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 border border-dark">
+                <div class="row">
+
+                    <div class="col-md-6 col-xs-4 col-sm-4 col-6">
+                        <p style="white-space: nowrap; font-weight: bold">Closer Text:</p>
+                    </div>
+                    <div class="col-md-5 col-5 col-xs-3">
+                        <span >${poll.apertureText}</span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 border border-dark">
+                <div class="row">
+
+                    <div class="col-md-6 col-xs-4 col-sm-4 col-6">
+                        <p style="font-weight: bold">Type:</p>
+                    </div>
+                    <div class="col-md-5 col-5 col-xs-3">
+                        <span >${poll.type}</span>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 border border-dark">
+                <div class="row">
+
+                    <div class="col-md-6 col-xs-4 col-sm-4 col-6">
+                        <p style="white-space: nowrap; font-weight: bold">Url:</p>
+                    </div>
+                    <div class="col-md-5 col-5 col-xs-3">
+                        <span >${poll.url}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<br/>
+        <a href="CreatePoll?k=${poll.key}"  class="btn btn-primary">Modify</a>
+            <button type="submit" class="btn btn-primary " name="addQuestion" value="addQuestion">Create another Question</button>
+        <!-- TODO deve riandare nellla pagina dei poll-->
+                <a  href="#" class="btn btn-primary">Finish</a>
+        </form>
+    </div>
+</div>
+
+
+<div id="QuestionPage">
 <#if (questions?size>0)>
         <div class="container">
-        <div class="row">
-          <#list questions as question>
 
+
+            <div class="row">
+          <#list questions as question>
           <div class="col-sm-3 mt-5">
-    <div class="card">
+    <div class="card border border-dark">
       <div class="card-body">
                <#if (question.textq?has_content)>
 
         <h5 class="card-title">${question.textq}</h5>
-         <div class="card-body"> 
-             ${question.key}
+          <h6 class="card-subtitle mb-2 text-muted">${question.typeP}</h6>
+         <div class="card-body">
+             <input type="hidden" name="qk"  value=${question.key}">
+             <input type="hidden" name="k"  value=${poll.key}">
+
           <#if (question.possibleAnswer?has_content)>
 
           <#list question.possibleAnswer?eval as key, value>
@@ -26,13 +107,19 @@ and open the template in the editor.
             </#if>
        </div>
           </#if>
-        
-       
-      </div>
+                <a href="CreatePoll?addQuestions=n&qk=${question.key}&k=${poll.key}" value="modify" class="btn btn-primary">Modify</a>
+                <button name="delete" value="CreatePoll?deleteQuestion=n&qk=${question.key}&k=${poll.key}" class="btn btn-danger">Delete</button>
+            </div>
+
     </div>
   </div>
+
                </#list>
 
 </div>
-        </div>
+                </div>
+<#else>
+non c'è proprio un cazzo da mostrare
         </#if>
+</div>
+

@@ -35,12 +35,15 @@ var addChoice = function(){
 };
 
 $('#plus').click(function(){addChoice();});
- 
- 
+
+
+    window.onload = function() {
+        if($('#Type').val() == 'single choice' || $('#Type').val() == 'multiple choice') $('#prova1').show();
+    };
+
 $(' #Type').change(function(){
     
     
-            console.log('perche non funzioni??????');
 
     if($(this).val() == 'single choice' || $(this).val() == 'multiple choice') $('#prova1').show();
 
