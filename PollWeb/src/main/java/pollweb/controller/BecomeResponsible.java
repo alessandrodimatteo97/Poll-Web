@@ -110,7 +110,6 @@ public class BecomeResponsible extends PollBaseController {
      ru.setPwd(pwd);
      
         try {
-// if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkResponsible(ru)){
 
             ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().storeResponsibleUser(ru);
               TemplateResult res = new TemplateResult(getServletContext());

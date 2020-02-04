@@ -50,12 +50,12 @@ public class Poll extends PollBaseController {
             try{TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("page_title", "Poll name");
            String type = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n).getType();
-           if(type == "open"){
+          // if(type == "open"){
             request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n));
             res.activate("poll.ftl.html", request, response);
-           }else{
+          /* }else{
                res.activate("login.ftl.html",request,response);
-           }
+           }*/
             }  catch (DataException ex) {
            Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
        }
@@ -68,6 +68,10 @@ public class Poll extends PollBaseController {
         try {
             n = SecurityLayer.checkNumeric(request.getParameter("n"));
             action_default(request, response ,n);
+            request.setAttribute("ok", false);
+             if(request.getParameter("confirm")!= null){
+                this.action_answer(request, response);
+            }
 
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
@@ -82,6 +86,9 @@ public class Poll extends PollBaseController {
        }
     }
 
+        private void action_answer(HttpServletRequest request, HttpServletResponse response){
+      
+   }
     /**
      * Returns a short description of the servlet.
      *
