@@ -10,12 +10,15 @@ package framework.security;
  * @author achissimo
  */
 
+import framework.data.DataException;
+import framework.data.dao.PollDataLayer;
 import java.io.IOException;
 import java.util.Calendar;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang.RandomStringUtils;
 
 public class SecurityLayer {
 
@@ -90,13 +93,35 @@ public class SecurityLayer {
         }
     }
 
-    public static HttpSession createSession(HttpServletRequest request, String username, int userid) {
+    public static HttpSession createSession(HttpServletRequest request, String username) {
         HttpSession s = request.getSession(true);
         s.setAttribute("username", username);
         s.setAttribute("ip", request.getRemoteHost());
         s.setAttribute("inizio-sessione", Calendar.getInstance());
-        s.setAttribute("userid", userid);
+        String token = tokenGenerator(s);
+        s.setAttribute("token", token);
+        try {
+            ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().setToken(username, token);
+        } catch (DataException ex) {
+            
+        }
         return s;
+    }
+    //SOLO PER CAPIRE SE FUNZIONA TUTTO
+    public static String retrieveSession(HttpServletRequest request) {
+        HttpSession s = checkSession(request);
+        String session_string = (String) (s.getAttribute("username") + " " + s.getAttribute("ip") + " " + s.getAttribute("inizio-sessione") + " " + s.getAttribute("token"));
+        return session_string;
+    }
+    
+    public static boolean isValid (HttpServletRequest request) {
+        HttpSession s = checkSession(request);
+        return s!=null;
+    }
+    
+    private static String tokenGenerator(HttpSession s) {
+        String toEncode = RandomStringUtils.randomAlphanumeric(40);
+        return toEncode;
     }
 
     public static void disposeSession(HttpServletRequest request) {

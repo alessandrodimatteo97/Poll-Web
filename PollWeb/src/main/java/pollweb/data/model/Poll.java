@@ -38,6 +38,10 @@ public interface Poll {
 
     boolean isActivated();
 
+    boolean isAlreadyActivated();
+
+    void setAlreadyActivated( boolean alreadyActivated);
+
     void setActivated(boolean activated);
 
     void setApertureText(String apertureText);

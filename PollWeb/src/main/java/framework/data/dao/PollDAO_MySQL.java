@@ -26,10 +26,11 @@ import pollweb.data.model.Poll;
  */
 public class PollDAO_MySQL extends DAO implements PollDAO {
     private PreparedStatement getAllPolls;
-    private PreparedStatement searchPollByPollId, searchPollByUserId, searchOpenPolls, searchReservedPolls; /** Ricerche */
+    private PreparedStatement searchPollByPollId, searchPollByUserId, searchOpenPolls, searchReservedPolls, searchAlreadyActivatedPollsByUserId; /** Ricerche */
     private PreparedStatement insertPoll, insertOpenPoll, updatePoll, deletePoll; /** insert update and delete polls*/
     private PreparedStatement setPollAsActive, setPollAsDeactive; /**settano le poll attive e disabilitate */
-    
+    private PreparedStatement setPollAlreadyActivated;
+
     public PollDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -43,15 +44,17 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             /*   Qui scrivo gli statement precompilati   */
             getAllPolls = connection.prepareStatement("SELECT * FROM poll");
             searchPollByPollId = connection.prepareStatement("SELECT * FROM poll WHERE ID=?");
-            searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=?");
+            searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='no' OR activated='yes' AND alreadyActivated='yes'");
+            searchAlreadyActivatedPollsByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='yes'");
             searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open'");
             searchReservedPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='reserved'");
-            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,alreadyActivated,idR) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             insertOpenPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,open,?,?,?)");
             updatePoll = connection.prepareStatement("UPDATE poll SET title=?,apertureText=?,closerText=?,typeP=?,url=?,activated=?,idR=? WHERE ID=?");
             deletePoll = connection.prepareStatement("DELETE FROM poll WHERE ID=?");
-            setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='1' WHERE ID=?");
-            setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='0' WHERE ID=?");
+            setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='yes' WHERE ID=?");
+            setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='no' WHERE ID=?");
+            setPollAlreadyActivated = connection.prepareStatement("UPDATE poll SET alreadyActivated='yes' WHERE ID=?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer", ex);
@@ -98,8 +101,9 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             poll.setCloserText(rs.getString("closerText"));
             poll.setType("reserved");
             poll.setUrl(rs.getString("url"));
-            poll.setActivated(true);
-            
+            poll.setActivated(rs.getString("activated"));
+            poll.setAlreadyActivated(rs.getString("alreadyActivated"));
+
         } catch (SQLException ex) {
             throw new DataException("Unable to create article object form ResultSet", ex);
         }
@@ -123,7 +127,8 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             poll.setCloserText(rs.getString("closerText"));
             poll.setType("open");
             poll.setUrl(rs.getString("url"));
-            poll.setActivated(true);
+            poll.setActivated(rs.getString("activated"));
+            poll.setAlreadyActivated(rs.getString("alreadyActivated"));
             
         } catch (SQLException ex) {
             throw new DataException("Unable to create article object form ResultSet", ex);
@@ -194,6 +199,32 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     }
 
     @Override
+    public List<Poll> getPollsAlreadyActivatedAndClosedByUserId(int userId) throws DataException {
+
+        List<Poll> result = new ArrayList();
+
+        try {
+
+            this.searchAlreadyActivatedPollsByUserId.setInt(1, userId);
+
+            try (ResultSet rs = searchAlreadyActivatedPollsByUserId.executeQuery()) {
+                while(rs.next()) {
+                    if(rs.getString("typeP").equals("open")) {
+                        result.add((Poll)getPollById(rs.getInt("ID")));
+                    } else {
+                        result.add((Poll)getPollById(rs.getInt("ID")));
+                    }
+                }
+            }
+
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+
+        return result;
+    }
+
+    @Override
 
     public List<Poll> getOpenPolls() throws DataException {
         List<Poll> result = new ArrayList();
@@ -228,25 +259,66 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     }
 
     @Override
-    public boolean setActivated( ResultSet rs ) throws DataException {
-        
+    public boolean setActivated( Poll poll)  throws DataException {
+
         try {
-            setPollAsActive.setInt(1, rs.getInt("ID"));
+            setPollAsActive.setInt(1, poll.getKey());
         } catch (SQLException ex) {
             throw new DataException("Not setted property:  ", ex);
         }
         
-        try (ResultSet result = setPollAsActive.executeQuery()) {
-            return true;
+        try {
+            int result = setPollAsActive.executeUpdate();
+            if (result == 1) {
+                setAlreadyActivated(poll);
+                return true;
+            } else {
+                return false;
+            }
         } catch (SQLException ex) {
-            return false;
+            throw new DataException("Non è andata bene pollDAO:  ", ex);
         }
                 
     }
 
     @Override
-    public boolean setDeactivated( ResultSet rs ) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean setAlreadyActivated(Poll poll) throws DataException {
+        try {
+            setPollAlreadyActivated.setInt(1, poll.getKey());
+        } catch (SQLException ex) {
+            throw new DataException("Not setted property:  ", ex);
+        }
+
+        try {
+            int result = setPollAlreadyActivated.executeUpdate();
+            if (result == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Non è andata bene pollDAO:  ", ex);
+        }
+    }
+
+    @Override
+    public boolean setDeactivated( Poll poll ) throws DataException {
+        try {
+            setPollAsDeactive.setInt(1, poll.getKey());
+        } catch (SQLException ex) {
+            throw new DataException("Not setted property:  ", ex);
+        }
+
+        try {
+            int result = setPollAsDeactive.executeUpdate();
+            if (result == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Non è andata bene pollDAO:  ", ex);
+        }
     }
 
     @Override    //title=?,apertureText=?,closerText=?,typeP=?,url=?,activated=?,idR=? WHERE ID=?
@@ -351,7 +423,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
 
             }
             poll.setUrl(rs.getString("url"));
-            poll.setActivated(true);
+            poll.setActivated("yes");
             
         } catch (SQLException ex) {
             throw new DataException("Unable to create article object form ResultSet", ex);

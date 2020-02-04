@@ -31,16 +31,21 @@ public interface ResponsibleUserDAO {
     
     boolean changeEmail(ResponsibleUser user) throws DataException;
     
-    void setAccepted(int userKey) throws DataException;
+    boolean setAccepted(ResponsibleUser user) throws DataException;
     
     List<ResponsibleUser> getResponsibleUsers() throws DataException;
     
     List<ResponsibleUser> getResponsibleUsersNotAccepted() throws DataException;
 
+    ResponsibleUser getResponsibleUser(String token) throws DataException;
     
     ResponsibleUser getResponsibleUser (int UserKey) throws DataException;
 
     boolean checkResponsible (ResponsibleUser user) throws DataException;
+    
+    boolean checkAdmin (ResponsibleUser user ) throws DataException;
+    
+    boolean setToken ( String mail, String token ) throws DataException;
    
     void storeResponsibleUser(ResponsibleUser responsibleUser) throws DataException;
 }

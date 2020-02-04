@@ -158,6 +158,25 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
 }
 
     @Override
+    public Question getQuestionById(int keyQ) throws DataException {
+        Question result ;
+        try {
+            getQuestionById.setInt(1, keyQ);
+            ResultSet rs = getQuestionById.executeQuery();
+            if(rs.next()) {
+                result = (Question) getQuestionById(rs);
+            }  else {
+                result = null;
+            }
+
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load question by id", ex);
+
+        }
+        return result;
+    }
+
+    @Override
     public List<Question> getQuestionsByPollId(int keyPoll) throws DataException{
              List<Question> result = new ArrayList();
              
