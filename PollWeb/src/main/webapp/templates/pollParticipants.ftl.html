@@ -1,0 +1,139 @@
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+ID, typeq, textq, note, obbligation, possible_answer, IDP
+'short text', 'long text', 'numeric', 'date' , 'single choice' , 'multiple choice'
+-->
+
+<div class="container-fluid">
+<div class="row flex-xl-nowrap">
+<div class="col-12 col-md-3 col-xl-2 bd-sidebar">
+    <br>
+    <h4>
+       Add in the Poll by Csv File
+    </h4>
+    <br>
+    <div class="form-group">
+
+    <form class="form-group " align="center" action="InsertParticipant" method="post"  enctype='multipart/form-data'>
+        <div class="form-group">
+            <input type="file" class="form-control-file" name="f1">
+        </div>
+        <input type="hidden" name="k" value="${poll.key}"/>
+        <input class="btn btn-primary btn-lg btn-block btn-sm"  type="submit" name="insert" value="insert" class="form-control"/>
+
+    </form>
+    </div>
+
+
+
+</div> <!-- parte sx-->
+<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+<div align="center"> <!-- parte centrale, gente nuova da aggiungere-->
+
+
+
+    <h3>
+        <span style="font-family: Arial"><strong>Add Participant</strong></span>
+    </h3>
+    </br>
+
+
+
+
+    <form class="justify-content-center" action="InsertParticipant" method="post">
+
+
+
+        <input type="hidden" name="k" value="${poll.key}"/>
+
+
+
+
+<div class="container" >
+    <label class="col-sm-2 col-form-label"><strong>Add </strong><img alt="plus" id="addParticipant" src="images/p.png"></label>
+
+
+
+
+
+
+
+<div class="row-md-9">
+    <div class="input-group col-md-9 form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" >email and password</span>
+        </div>
+        <input type="email" name="email" placeholder="email" class="form-control">
+        <input type="password" name="password" placeholder="password" class="form-control">
+        <div class="input-group-prepend">
+            <span class="input-group-text prof" id="prova"><img alt="delete" id="delete" src="images/wrong.png"></span>
+
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<br/>
+<div class="form-group " align="center">
+    <div class="form-group col-md-4">
+        <button type="submit" class="btn btn-primary btn-lg btn-block" name="addParticipants" value="addParticipants">Insert Participant</button>
+
+    </div>
+</div>
+    <div class="form-group " align="center">
+    <div class="form-group col-md-4">
+        <a href="SummaryPoll?k=${poll.key}" class="btn btn-primary btn-lg btn-block">Finish</a>
+    </div>
+</div>
+
+</form>
+
+</main>
+    <div class="col-12 col-md-3 col-xl-2 bd-sidebar">
+        <br>
+        <h4>already added in this poll</h4>
+        <br>
+            <#if (pollParticipants?has_content && pollParticipants?size>0)>
+        <form action="InsertParticipant" method="post">
+            <input type="hidden" name="k" value="${poll.key}"/>
+
+
+            <ul class="list-group">
+            <#list pollParticipants as participant>
+            <li class="list-group-item">
+                ${participant.email}
+
+            <div style="float: right">
+                <input name="delete" type="checkbox" value="${participant.key}">
+            </div>
+            </li>
+
+
+
+        </#list>
+            <li class="list-group-item">
+        <button class="btn btn-primary btn-lg btn-block btn-sm"  type="submit" name="deleteParticipant" value="deleteParticipant">delete</button>
+            </li>
+            </ul>
+        </form>
+        <#else>
+        <ul>
+             <li class="list-group-item">Non ci sono partecipanti</li>
+        </ul>
+
+
+        </#if>
+    </div> <!-- parte dx -->
+
+
+</div>
+</div>

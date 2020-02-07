@@ -1,0 +1,79 @@
+<div class="card ">
+    <div class="header">
+        <h4 class="title">I miei sondaggi</h4>
+    </div>
+    <div class="content">
+        <div class="table-full-width">
+            <table class="table table-hover table-striped">
+                <caption class="bg-dark text-white"> Totale sondaggi: da inserire</caption>
+                <thead class="thead-dark">
+                <th scope="col">Titolo</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Url</th>
+                <th scope="col">Attivalo</th>
+
+                </thead>
+                <tbody>
+                <#list polls as poll>
+                <#if poll.activated>
+                <tr class="table-success" >
+                    <td>${poll.title}</td>
+                    <td>${poll.type}</td>
+                    <td><a href="SummaryPoll?k=${poll.key}">${poll.url}</a></td>
+                    <td>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-secondary active">
+                                <input type="radio" name="options" value="${poll.key}" checked> Attiva
+                            </label>
+                            <label class="btn btn-secondary" id="deactivate">
+                                <input type="radio" name="options" value="${poll.key}"> Disattiva
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <#else>
+                <tr class="table-danger">
+                    <td>${poll.title}</td>
+                    <td>${poll.type}</td>
+                    <td><a href="SummaryPoll?k=${poll.key}">${poll.url}</a></td>
+                    <td>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-secondary " id="activate">
+                                <input type="radio" name="options" value="${poll.key}"> Attiva
+                            </label>
+                            <label class="btn btn-secondary active">
+                                <input type="radio" name="options" value="${poll.key}" checked> Disattiva
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                </#if>
+            </#list>
+            </tbody>
+            </table>
+            <h4 class="title">I miei sondaggi chiusi</h4>
+            <table class="table table-hover table-striped">
+
+
+                <caption class="bg-dark text-white"> Totale sondaggi terminati: 4</caption>
+                <thead class="thead-dark">\
+                <th scope="col">Titolo</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Url</th>
+
+                </thead>
+                <tbody>
+                <#list closed_polls as closed_poll>
+
+                <tr class="table" >
+                    <td>${closed_poll.title}</td>
+                    <td>${closed_poll.type}</td>
+                    <td><a href="SummaryPoll?k=${closed_poll.key}">${closed_poll.url}</a></td>
+                </tr>
+                </#list>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

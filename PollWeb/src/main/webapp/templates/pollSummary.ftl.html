@@ -4,12 +4,13 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+<div class="container">
 
 </br>
 </br>
 <div class="container">
     <div class="jumbotron border border-dark">
-        <form action="CreatePoll" method="post">
+        <form action="SummaryPollController" method="post">
         <div class="row border border-dark">
             <div class="col-md-8">
 
@@ -72,54 +73,19 @@ and open the template in the editor.
 
 <br/>
         <a href="CreatePoll?k=${poll.key}"  class="btn btn-primary">Modify</a>
-            <button type="submit" class="btn btn-primary " name="addQuestion" value="addQuestion">Create another Question</button>
-        <!-- TODO deve riandare nellla pagina dei poll-->
-                <a  href="#" class="btn btn-primary">Finish</a>
+            <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-primary ">Create another Question</a>
+             <#if (poll.type == "reserved" )>
+            <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
+        </#if>
+            <a  href="admin" class="btn btn-primary">Finish</a>
         </form>
     </div>
 </div>
 
 
 <div id="QuestionPage">
-<#if (questions?size>0)>
-        <div class="container">
-
-
-            <div class="row">
-          <#list questions as question>
-          <div class="col-sm-3 mt-5">
-    <div class="card border border-dark">
-      <div class="card-body">
-               <#if (question.textq?has_content)>
-
-        <h5 class="card-title">${question.textq}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">${question.typeP}</h6>
-         <div class="card-body">
-             <input type="hidden" name="qk"  value=${question.key}">
-             <input type="hidden" name="k"  value=${poll.key}">
-
-          <#if (question.possibleAnswer?has_content)>
-
-          <#list question.possibleAnswer?eval as key, value>
-        <p class="card-text">${key} ${value}</p>
-                       </#list>
-
-            </#if>
-       </div>
-          </#if>
-                <a href="CreatePoll?addQuestions=n&qk=${question.key}&k=${poll.key}" value="modify" class="btn btn-primary">Modify</a>
-                <button name="delete" value="CreatePoll?deleteQuestion=n&qk=${question.key}&k=${poll.key}" class="btn btn-danger">Delete</button>
-            </div>
-
-    </div>
-  </div>
-
-               </#list>
-
+    <#include 'questionSummary.ftl.html'>
 </div>
-                </div>
-<#else>
-non c'è proprio un cazzo da mostrare
-        </#if>
+
 </div>
 

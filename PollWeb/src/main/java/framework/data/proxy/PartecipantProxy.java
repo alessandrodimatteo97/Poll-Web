@@ -18,11 +18,14 @@ public class PartecipantProxy extends PartecipantImpl{
     
     protected boolean dirty;
     protected DataLayer dataLayer;
-    
+    protected int pollId;
+
     public PartecipantProxy(DataLayer d){
         super();
         this.dirty= false;
-        this.dataLayer= d;      
+        this.dataLayer= d;
+        this.pollId = 0;
+
     }
     
   
@@ -71,7 +74,8 @@ public class PartecipantProxy extends PartecipantImpl{
     public boolean isDirty() {
         return dirty;
     }
-    
+
+
 }
 
 

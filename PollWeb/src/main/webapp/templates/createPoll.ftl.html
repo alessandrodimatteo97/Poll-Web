@@ -32,14 +32,14 @@ title, apertureText, closerText, typeP, url, activated, idR
                         <input type="hidden" name="qk" value="0"/>
 
   <div class="form-group ">
-    <label for="apertureText" class="col-sm-2 col-form-label"><strong>Aperture Text</strong></label>
+    <label class="col-sm-2 col-form-label"><strong>Aperture Text</strong></label>
     <div class="form-group col-md-4">
         <textarea class="form-control" name="apertureText"  rows="3" >${poll.apertureText}</textarea>
     </div>
   </div>
 
       <div class="form-group ">
-          <label for="closerText" class="col-sm-2 col-form-label"><strong>Closer Text</strong></label>
+          <label class="col-sm-2 col-form-label"><strong>Closer Text</strong></label>
     <div class="form-group col-md-4">
     <textarea class="form-control" name="closerText"  rows="3" >${poll.closerText}</textarea>
     </div>
@@ -58,14 +58,17 @@ title, apertureText, closerText, typeP, url, activated, idR
     </select>
         </div>
   </div>
-  
-        <div class="form-group ">
-    <label for="apertureText" class="col-sm-2 col-form-label"><strong>Url</strong></label>
-    <div class="form-group col-md-4">
-        <input class="form-control" name="url" rows="3" value="${poll.url}"/>
-    </div>
-  </div>
-  
+
+     <label class="col-sm-2 col-form-label"><strong>Url</strong></label>
+
+        <div class="input-group mb-3 form-group col-md-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text">localhost:8080/PollWeb/</span>
+
+            </div>
+            <input class="form-control" name="url" rows="3" value="${poll.url}"/>
+
+        </div>
   
         
         <br/>
@@ -80,7 +83,7 @@ title, apertureText, closerText, typeP, url, activated, idR
         <#if (poll.key!=0)>
         <div class="form-group " align="center">
     <div class="form-group col-md-4">
-                     <button type="submit" class="btn btn-primary btn-lg btn-block" name="addQuestions" value="addQuestions">add Questions</button>
+                     <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-primary btn-lg btn-block" >add Questions</a>
 
                      
     </div> 
@@ -90,14 +93,13 @@ title, apertureText, closerText, typeP, url, activated, idR
         <#if (numberQuestion?? && numberQuestion!=0)>
         <div class="form-group " align="center">
     <div class="form-group col-md-4">
-                     <button type="submit" class="btn btn-primary btn-lg btn-block" name="Finish" value="Finish">Check Questions (${numberQuestion})</button>
+                     <a href="SummaryPoll?k=${poll.key}" class="btn btn-primary btn-lg btn-block">Check Questions (${numberQuestion})</a>
 
                      
     </div> 
   </div>
         <#else>
         </#if>
-        
         
 
         

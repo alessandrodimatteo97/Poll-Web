@@ -28,7 +28,7 @@ public class AnswerDAO_MySQL extends DAO implements AnswerDAO {
     private PreparedStatement searchAnswerById;
     private PreparedStatement getAnswersByQuestionId, getAnswersByUserId; 
     private PreparedStatement insertAnswer;
-    
+    private PreparedStatement getAnswerbyIdParticipantQuestionId;
     public AnswerDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -39,11 +39,10 @@ public class AnswerDAO_MySQL extends DAO implements AnswerDAO {
             super.init();
             
             searchAnswerById = connection.prepareStatement("SELECT * FROM answer WHERE ID=?");
-            getAnswersByQuestionId = connection.prepareStatement("SELECT * FROM answer JOIN question ON answer.IDQ=question.ID"
-                    + "WHERE question.ID=?");
+            getAnswersByQuestionId = connection.prepareStatement("SELECT * FROM answer JOIN question ON answer.IDQ=question.ID WHERE question.ID=?");
             getAnswersByUserId = connection.prepareStatement("SELECT * FROM answer WHERE ID_P=?");
             insertAnswer = connection.prepareStatement("INSERT INTO answer (IDQ,ID_P,texta) VALUES(?,?,?)");
-
+            getAnswerbyIdParticipantQuestionId = connection.prepareStatement("SELECT * FROM answer where ID_P=? AND IDQ=?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing answer data layer", ex);
         }
@@ -72,7 +71,12 @@ public class AnswerDAO_MySQL extends DAO implements AnswerDAO {
         
         try {
             answer.setKey(rs.getInt("ID"));
-            answer.setTextA((JSONObject) rs.getObject("texta"));//non so se funziona questo cast provare
+            if (rs.getString("texta") != null){
+               JSONObject j = new JSONObject(rs.getString("texta"));
+                answer.setTextA(j);
+
+            }
+
             answer.setPartecipantKey(rs.getInt("ID_P"));
             answer.setQuestionKey(rs.getInt("IDQ"));
         } catch (SQLException ex) {
@@ -116,5 +120,26 @@ public class AnswerDAO_MySQL extends DAO implements AnswerDAO {
         
         return null;
     }
-    
+
+    @Override
+    public Answer getAnswerByQuestionIdParticipantId(int idp, int idq) throws DataException {
+        try {
+            this.getAnswerbyIdParticipantQuestionId.setInt(1, idp);
+            this.getAnswerbyIdParticipantQuestionId.setInt(2, idq);
+
+
+            try ( ResultSet rs = this.getAnswerbyIdParticipantQuestionId.executeQuery() ) {
+                if (rs.next()) {
+                    return createAnswer(rs);
+                }
+            }
+
+        } catch (SQLException ex) {
+            throw new DataException("Error from DataBase: ", ex);
+        }
+
+        return null;
+    }
+
+
 }

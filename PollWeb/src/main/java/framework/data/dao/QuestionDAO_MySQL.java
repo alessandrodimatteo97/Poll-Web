@@ -76,7 +76,10 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
         try {
             question.setKey(rs.getInt("ID"));
             question.setNote(rs.getString("note"));
-            question.setAnswer((List<Answer>) rs.getArray("possible_answer")); //non funziona secondo me
+            if(rs.getString("possible_answer")!=null){
+               JSONObject j = new JSONObject(rs.getString("possible_answer"));
+                question.setPossibleAnswer(j);
+            }
             if(rs.getString("obbligation").equals("yes")){
                 question.setObbligated(true);
             } else {
@@ -160,19 +163,25 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
 
         return question;   
 }
+
+
     @Override
-    public Question getQuestionById(int question_key) throws DataException{
+    public Question getQuestionById(int keyQ) throws DataException {
+        Question result ;
         try {
-            this.getQuestionById.setInt(1, question_key);
-         ResultSet rs =   getQuestionById.executeQuery();
-         if(rs.next()){
-             return this.getQuestionById(rs);
-         }
-            
+            getQuestionById.setInt(1, keyQ);
+            ResultSet rs = getQuestionById.executeQuery();
+            if(rs.next()) {
+                result = (Question) getQuestionById(rs);
+            }  else {
+                result = null;
+            }
+
         } catch (SQLException ex) {
-            Logger.getLogger(QuestionDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataException("Unable to load question by id", ex);
+
         }
-        return null;
+        return result;
     }
 
     @Override

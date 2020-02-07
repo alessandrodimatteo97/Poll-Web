@@ -24,5 +24,6 @@ public interface AnswerDAO {
     List<Answer> getAnswersByQuestionId(int questionKey) throws DataException; //cambiato la firma del metodo 
     
     Answer getAnswerById(int AnswerId) throws DataException;
-    
+
+    Answer getAnswerByQuestionIdParticipantId(int idp, int idq)throws DataException;
 }

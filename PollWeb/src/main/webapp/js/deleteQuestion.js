@@ -1,12 +1,12 @@
 $(function() {
 
-    $(".btn-danger").click(function(){
-            console.log($(this).val()); // Cè UN BUG PERCHè GLI ID SONO UNICI...
-            $.get($(this).val(), response => {
+    $(document).on('click','.btn-danger',function (e) {
+            console.log($(this).val());
+            $.get("SummaryPoll?deleteQuestion=delete&k="+$(this).val()+"&qk="+$(this).attr("data-value"), response => {
                 $("#QuestionPage").html(response);
+
             });
         });
-
 
 });
 

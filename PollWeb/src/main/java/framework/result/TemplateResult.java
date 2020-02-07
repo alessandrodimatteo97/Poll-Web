@@ -155,7 +155,7 @@ public class TemplateResult {
     //this main method calls Freemarker and compiles the template
     //if an outline template has been specified, the requested template is
     //embedded in the outline
-    protected void process(String tplname, Map datamodel, Writer out) throws TemplateManagerException {
+    protected void process(String tplname, Map datamodel, Writer out, Boolean outlined) throws TemplateManagerException {
         Template t;
         //assicuriamoci di avere sempre un data model da passare al template, che contenga anche tutti i default
         //ensure we have a data model, initialized with some default data
@@ -167,35 +167,46 @@ public class TemplateResult {
         if (datamodel != null) {
             localdatamodel.putAll(datamodel);
         }
-        String outline_name = (String) localdatamodel.get("outline_tpl");
-        try {
-            if (outline_name == null || outline_name.isEmpty()) {
-                //se non c'Ã¨ un outline, carichiamo semplicemente il template specificato
-                //if an outline has not been set, load the specified template
-                t = cfg.getTemplate(tplname);
-            } else {
-                //un template di outline ï¿½ stato specificato: il template da caricare ï¿½ quindi sempre l'outline...
-                //if an outline template has been specified, load the outline...
-                t = cfg.getTemplate(outline_name);
-                //...e il template specifico per questa pagina viene indicato all'outline tramite una variabile content_tpl
-                //...and pass the requested template name to the outline using the content_tpl variable
-                localdatamodel.put("content_tpl", tplname);
-                //si suppone che l'outline includa questo secondo template
-                //we suppose that the outline template includes this second template somewhere
+        if (outlined) {
+            String outline_name = (String) localdatamodel.get("outline_tpl");
+            try {
+                if (outline_name == null || outline_name.isEmpty()) {
+                    //se non c'Ã¨ un outline, carichiamo semplicemente il template specificato
+                    //if an outline has not been set, load the specified template
+                    t = cfg.getTemplate(tplname);
+                } else {
+                    //un template di outline ï¿½ stato specificato: il template da caricare ï¿½ quindi sempre l'outline...
+                    //if an outline template has been specified, load the outline...
+                    t = cfg.getTemplate(outline_name);
+                    //...e il template specifico per questa pagina viene indicato all'outline tramite una variabile content_tpl
+                    //...and pass the requested template name to the outline using the content_tpl variable
+                    localdatamodel.put("content_tpl", tplname);
+                    //si suppone che l'outline includa questo secondo template
+                    //we suppose that the outline template includes this second template somewhere
+                }
+                //associamo i dati al template e lo mandiamo in output
+                //add the data to the template and output the result
+                t.process(localdatamodel, out);
+            } catch (IOException e) {
+                throw new TemplateManagerException("Template error: " + e.getMessage(), e);
+            } catch (TemplateException e) {
+                throw new TemplateManagerException("Template error: " + e.getMessage(), e);
             }
-            //associamo i dati al template e lo mandiamo in output
-            //add the data to the template and output the result
-            t.process(localdatamodel, out);
-        } catch (IOException e) {
-            throw new TemplateManagerException("Template error: " + e.getMessage(), e);
-        } catch (TemplateException e) {
-            throw new TemplateManagerException("Template error: " + e.getMessage(), e);
+        } else {
+            try {
+
+                t = cfg.getTemplate(tplname);
+                t.process(localdatamodel, out);
+            } catch (IOException e) {
+                throw new TemplateManagerException("Template error: " + e.getMessage(), e);
+            } catch (TemplateException e) {
+                throw new TemplateManagerException("Template error: " + e.getMessage(), e);
+            }
         }
     }
-
     //questa versione di activate accetta un modello dati esplicito
     //this activate method gets an explicit data model
-    public void activate(String tplname, Map datamodel, HttpServletResponse response) throws TemplateManagerException {
+    public void activate(String tplname, Map datamodel, HttpServletResponse response, Boolean outlined) throws TemplateManagerException {
         //impostiamo il content type, se specificato dall'utente, o usiamo il default
         //set the output content type, if user-specified, or use the default
         String contentType = (String) datamodel.get("contentType");
@@ -230,7 +241,7 @@ public class TemplateResult {
         response.setCharacterEncoding(encoding);
 
         try {
-            process(tplname, datamodel, response.getWriter());
+            process(tplname, datamodel, response.getWriter(), outlined);
         } catch (IOException ex) {
             throw new TemplateManagerException("Template error: " + ex.getMessage(), ex);
         }
@@ -240,7 +251,12 @@ public class TemplateResult {
     //this acivate method extracts the data model from the request attributes
     public void activate(String tplname, HttpServletRequest request, HttpServletResponse response) throws TemplateManagerException {
         Map datamodel = getRequestDataModel(request);
-        activate(tplname, datamodel, response);
+        activate(tplname, datamodel, response, true);
+    }
+
+    public void activate(String tplname, HttpServletRequest request, HttpServletResponse response, Boolean outlined) throws TemplateManagerException {
+        Map datamodel = getRequestDataModel(request);
+        activate(tplname, datamodel, response, outlined);
     }
 
     //questa versione di activate puï¿½ essere usata per generare output non diretto verso il browser, ad esempio
@@ -255,7 +271,7 @@ public class TemplateResult {
         try {
             //notare la gestione dell'encoding, che viene invece eseguita implicitamente tramite il setContentType nel contesto servlet
             //note how we set the output encoding, which is usually handled via setContentType when the output is sent to a browser
-            process(tplname, datamodel, new OutputStreamWriter(out, encoding));
+            process(tplname, datamodel, new OutputStreamWriter(out, encoding), true);
         } catch (UnsupportedEncodingException ex) {
             throw new TemplateManagerException("Template error: " + ex.getMessage(), ex);
         }

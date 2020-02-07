@@ -24,7 +24,7 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
 
 
 
-    <form class="justify-content-center" action="CreatePoll" method="post">
+    <form class="justify-content-center" action="CreateQuestion" method="post">
     <div align="center">
      <div class="form-group ">
          <label for="title" class="col-sm-2 col-form-label"><strong>Title</strong></label>
@@ -37,7 +37,12 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
         <div class="form-group ">
             <label for="title" class="col-sm-2 col-form-label"><strong>Note</strong></label>
             <div class="form-group col-md-4">
+                <#if (question.note??)>
                 <input name="note" type="text" class="form-control" id="note" placeholder="Note" value="${question.note}">
+                <#else>
+                <input name="note" type="text" class="form-control" id="note" placeholder="Note">
+
+            </#if>
             </div>
 
 
@@ -71,55 +76,54 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
   </div>
   
         <div id="prova1" style="display: none">
-        <label for="title" class="col-sm-2 col-form-label"><strong>Choices </strong><img alt="plus" id="plus" src="images/p.png"></label>
+            <label for="title" class="col-sm-2 col-form-label"><strong>Choices </strong><img alt="plus" id="plus" src="images/p.png"></label>
      
-         <div id="sortable">
+            <div id="sortable">
 
-             <#if (question.possibleAnswer?has_content && question.possibleAnswer?size>0)>
+                <#if (question.possibleAnswer?has_content && question.possibleAnswer?size>0)>
 
-             <#list question.possibleAnswer?eval as key, value>
-
-
+                <#list question.possibleAnswer?eval as key, value>
 
 
-   <div class="input-group mb-3 form-group col-md-4">
+
+
+                <div class="input-group mb-3 form-group col-md-4">
     
-    <input name="fieldName" type="text" class="form-control" placeholder="Choice ${key}" value="${value}">
-    <div class="input-group-prepend">
-        <span class="input-group-text"><img src="images/sort.png" ></span>
+                <input name="fieldName" type="text" class="form-control" placeholder="Choice ${key}" value="${value}">
+                <div class="input-group-prepend">
+                <span class="input-group-text"><img src="images/sort.png" ></span>
                 <span class="input-group-text cazzi" id="prova"><img alt="delete" id="delete" src="images/wrong.png"></span>
 
-    </div>
-</div>
-         </#list>
+                </div>
+                </div>
+                </#list>
 
-            <#else>
-
-
-<div class="input-group mb-3 form-group col-md-4">
-
-    <input name="fieldName" type="text" class="form-control" placeholder="Choice 1">
-    <div class="input-group-prepend">
-        <span class="input-group-text"><img src="images/sort.png" ></span>
-        <span class="input-group-text cazzi" id="prova"><img alt="delete" id="delete" src="images/wrong.png"></span>
-
-    </div>
-
-</div>
+                     <#else>
 
 
+                <div class="input-group mb-3 form-group col-md-4">
+
+                <input name="fieldName" type="text" class="form-control" placeholder="Choice 1">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><img src="images/sort.png" ></span>
+                    <span class="input-group-text cazzi" id="prova"><img alt="delete" id="delete" src="images/wrong.png"></span>
+
+                    </div>
+
+                    </div>
 
 
 
-</#if>
+
+
+                    </#if>
 
      
 
 
 
     
-         </div>
-        
+             </div>
         </div>
 
 
@@ -128,26 +132,25 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
   
         
         <br/>
-  <div class="form-group " align="center">
-    <div class="form-group col-md-4">
-        <button type="submit" class="btn btn-primary btn-lg btn-block" name="nextQuestion" value="nextQuestion">insert/update</button>
-
-    </div> 
-  </div>
         <div class="form-group " align="center">
-    <div class="form-group col-md-4">
-        <button type="submit" class="btn btn-primary btn-lg btn-block" name="addQuestion" value="addQuestion">Create another Question</button>
+                <div class="form-group col-md-4">
+                <button type="submit" class="btn btn-primary btn-lg btn-block" name="nextQuestion" value="nextQuestion">insert/update</button>
 
-    </div> 
-  </div>
+            </div>
+            </div>
+                <div class="form-group " align="center">
+             <div class="form-group col-md-4">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="addQuestion" value="addQuestion">Create another Question</button>
+
+            </div>
+            </div>
 
       
-        <div class="form-group " align="center">
-    <div class="form-group col-md-4">
-      <button type="submit" class="btn btn-primary btn-lg btn-block" name="Finish" value="Finish">Finish</button>
+                <div class="form-group " align="center">
+                 <div class="form-group col-md-4">
+                <a href="SummaryPoll?k=${poll.key}" class="btn btn-primary btn-lg btn-block" >Finish</a>
+                 </div>
+                </div>
 
-    </div> 
-  </div>
-
-</form>
+        </form>
   

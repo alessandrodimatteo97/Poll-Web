@@ -39,7 +39,7 @@ public class AnswerImpl implements Answer {
 
     @Override
     public void setTextA(JSONObject textA) {
-        this.textA = new JSONObject(textA);
+        this.textA = textA;
     }
     
     @Override 

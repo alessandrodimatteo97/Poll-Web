@@ -9,6 +9,8 @@ package framework.data.dao;
 import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
+
+import framework.data.proxy.QuestionProxy;
 import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
 import org.json.JSONObject;
@@ -20,7 +22,7 @@ public interface QuestionDAO {
     
     Question createQuestion();
 
-    Question createQuestion(ResultSet rs) throws DataException;
+    QuestionProxy createQuestion(ResultSet rs) throws DataException;
     
     boolean deleteQuestion(int question_key) throws DataException;
     
@@ -35,8 +37,8 @@ public interface QuestionDAO {
     boolean setObbligation(Question question, String obl) throws DataException;
     
     Question getQuestionById(ResultSet rs) throws DataException;
-    
-    Question getQuestionById(int question_key) throws DataException;
+
+    Question getQuestionById(int keyQ) throws DataException;
 
     List<Question> getQuestionsByPollId(int keyPoll) throws DataException; //cambiata la firma del metodo
     
