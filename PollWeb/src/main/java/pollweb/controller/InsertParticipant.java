@@ -1,5 +1,10 @@
 package pollweb.controller;
 
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import framework.data.DataException;
 import framework.data.dao.PollDataLayer;
 import framework.result.FailureResult;
@@ -42,9 +47,21 @@ public class InsertParticipant extends PollBaseController {
                     if ((poll_key != 0)) {
                         idU = (((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(poll_key).getRespUser().getKey());
                         if ((idU != Integer.parseInt(request.getSession().getAttribute("userid").toString()))) {
-                            request.setAttribute("message", "it is not your poll asshole");
+                            request.setAttribute("message", "it is not your poll");
                             action_error(request, response);
                         }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                         if (request.getParameter("addParticipants") != null) {
@@ -98,19 +115,26 @@ public class InsertParticipant extends PollBaseController {
     private void action_updateParticipants(HttpServletRequest request, HttpServletResponse response, int poll_key, int idU) throws IOException, ServletException, TemplateManagerException, DataException {
         try {
             Partecipant p;
+            Poll poll =  ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(poll_key);
+
             ArrayList<String> e = new ArrayList<String>(Arrays.asList(request.getParameterValues("email")));
             ArrayList<String> e1 = new ArrayList<String>(Arrays.asList(request.getParameterValues("password")));
+            ArrayList<String> e2 = new ArrayList<String>(Arrays.asList(request.getParameterValues("name")));
             Iterator<String> iterator1 = e.iterator();
             Iterator<String> iterator2 = e1.iterator();
-            String em, pa;
-            while (iterator1.hasNext() && iterator2.hasNext()) {
+            Iterator<String> iterator3 = e2.iterator();
+            String em, pa, na;
+            while (iterator1.hasNext() && iterator2.hasNext() && iterator3.hasNext()) {
                 em = iterator1.next();
                 pa = iterator2.next();
-                if ((!em.matches("[ ]+") && !em.isEmpty()) && (!pa.matches("[ ]+") && !pa.isEmpty())) {
+                na = iterator3.next();
+                if ((!em.matches("[ ]+") && !em.isEmpty()) && (!pa.matches("[ ]+") && !pa.isEmpty()) && (!na.matches("[ ]+") && !na.isEmpty())) {
                     p = ((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().createPartecipant();
                     p.setEmail(em);
                     p.setPwd(pa);
+                    p.setNameP(na);
                     ((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().storePartecipant(p, poll_key);
+                    SendEmail(poll, p);
                 } else {
                     request.setAttribute("message", "you have to insert at least one user");
                     action_error(request, response);
@@ -147,9 +171,9 @@ public class InsertParticipant extends PollBaseController {
 
     }
 
-    private void action_insertCsvParticipant(HttpServletRequest request, HttpServletResponse response, int poll_key, int idU) throws IOException, ServletException {
+    private void action_insertCsvParticipant(HttpServletRequest request, HttpServletResponse response, int poll_key, int idU) throws IOException, ServletException, DataException {
         ServletContext sc = getServletContext();
-        request.getParameter("k");
+        Poll poll = ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(poll_key);
         //if the request is empty or is not multipart encoded, calling getPart() would rease a ServletException!
         try {
             //if the request is empty or is not multipart encoded, calling getPart() would rease a ServletException!
@@ -170,15 +194,18 @@ public class InsertParticipant extends PollBaseController {
                         {
                             String[] participant = line.split(splitBy);    // use comma as separator
 
-                            if (participant[0] != null && !participant[0].isEmpty() &&  participant[0].contains("@") && participant[1] != null &&  !participant[1].isEmpty()){
+                            if (participant[0] != null &&  !participant[0].isEmpty() && participant[1] != null && !participant[1].isEmpty() &&  participant[1].contains("@") && participant[2] != null &&  !participant[2].isEmpty()){
                               Partecipant  pa = ((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().createPartecipant();
-                              pa.setEmail(participant[0]);
-                              pa.setPwd(participant[1]);
+                             pa.setNameP(participant[0]);
+
+                              pa.setEmail(participant[1]);
+                              pa.setPwd(participant[2]);
                                 ((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().storePartecipant(pa, poll_key );
+                                SendEmail(poll, pa);
                             }
 
 
-                            sc.log("parrticipant [First Name=" + participant[0] + ", password=" + participant[1] + "]");
+                            sc.log("parrticipant [First Name=" + participant[0] + " email="+participant[1]+ ", password=" + participant[1] + "]");
                         }
                         action_participants(request, response, poll_key, idU);
                     }
@@ -200,6 +227,19 @@ public class InsertParticipant extends PollBaseController {
             request.setAttribute("exception", ex);
             action_error(request, response);
         }
+    }
+
+
+   public void SendEmail(Poll poll, Partecipant p) throws ServletException {
+        String body = p.getNameP()+
+                " sei stato aggiunto in un nuovo sondaggio riservato. L'url per accedere è: "+
+                poll.getUrl()+
+                " con la mail: "+
+                p.getEmail()+ " e password: "+
+                p.getPwd();
+
+        SecurityLayer.sendEmail(getServletContext().getInitParameter("user"), getServletContext().getInitParameter("pass"), p.getEmail(), "Sei stato aggiunto in un poll riservato", body);
+
     }
 }
 

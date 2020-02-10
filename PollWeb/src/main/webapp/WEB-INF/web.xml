@@ -21,6 +21,25 @@
         <param-name>view.outline_template</param-name>
         <param-value>outline.ftl.html</param-value>
     </context-param>
+    <context-param>
+        <param-name>host</param-name>
+        <param-value>smtp.gmail.com</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>port</param-name>
+        <param-value>587</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>user</param-name>
+        <param-value>assistenza.pollweb@gmail.com</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>pass</param-name>
+        <param-value>Alessandro1997</param-value>
+    </context-param>
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>pollweb.controller.Home</servlet-class>
@@ -83,9 +102,18 @@
         <servlet-name>ProvaServlet</servlet-name>
         <servlet-class>pollweb.controller.ProvaServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrdinateQuestion</servlet-name>
+        <servlet-class>pollweb.controller.OrdinateQuestion</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrdinateQuestion</servlet-name>
+        <url-pattern>/OrdinateQuestion</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ProvaServlet</servlet-name>

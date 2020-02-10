@@ -40,9 +40,9 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
         try {
             super.init();
             getNumberQuestion = connection.prepareStatement("SELECT COUNT(ID) AS number FROM question where IDP = ?");
-             getQuestionById = connection.prepareStatement("SELECT * FROM question WHERE ID=?");
-             getQuestionsByPollId = connection.prepareStatement("SELECT * FROM question JOIN poll ON question.IDP=poll.ID WHERE poll.ID=?");
-             updateQuestion = connection.prepareStatement("UPDATE question SET textq=?,typeq=?,note=?,obbligation=?,possible_answer=? WHERE ID=?");
+             getQuestionById = connection.prepareStatement("SELECT * FROM question  WHERE ID=? order by number");
+             getQuestionsByPollId = connection.prepareStatement("SELECT * FROM question JOIN poll ON question.IDP=poll.ID WHERE poll.ID=? order by number");
+             updateQuestion = connection.prepareStatement("UPDATE question SET textq=?,typeq=?,note=?,obbligation=?,possible_answer=?, number=? WHERE ID=?");
              deleteQuestion = connection.prepareStatement("DELETE FROM question WHERE ID=?");
              createQuestion = connection.prepareStatement("INSERT INTO question (textq, typeq,note,obbligation,IDP, possible_answer) VALUES(?,?,?,?,?, ?)", Statement.RETURN_GENERATED_KEYS);
              checkQuestionPoll = connection.prepareStatement("SELECT  * FROM question WHERE ID=? AND IDP=?");
@@ -85,6 +85,7 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
             } else {
                 question.setObbligated(false);
             }
+            question.setNumber(rs.getInt("number"));
             question.setTypeP(rs.getString("typeq"));
             question.setTextq(rs.getString("textq"));
             question.setPollKey(rs.getInt("IDP"));
@@ -224,8 +225,9 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
                 if(question.getPossibleAnswer()!=null) updateQuestion.setString(5, question.getPossibleAnswer().toString());
                 else updateQuestion.setNull(5, Types.VARCHAR);
 
+                updateQuestion.setInt(6, question.getNumber());
 
-                    updateQuestion.setInt(6, key);
+                    updateQuestion.setInt(7, key);
 
 
                 updateQuestion.executeUpdate();
