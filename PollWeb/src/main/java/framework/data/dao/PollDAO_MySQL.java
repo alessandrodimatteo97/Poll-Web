@@ -100,7 +100,8 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             poll.setCloserText(rs.getString("closerText"));
             poll.setType(rs.getString("typeP"));
             poll.setUrl(rs.getString("url"));
-            poll.setActivated(true);
+            poll.setActivated(rs.getString("activated"));
+            poll.setAlreadyActivated(rs.getString("alreadyActivated"));
 
         } catch (SQLException ex) {
             throw new DataException("Unable to create article object form ResultSet", ex);
@@ -162,7 +163,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
 @Override
     public List<Poll> getAllPolls() throws DataException{
         
-        List<Poll> result = new ArrayList();
+        List<Poll> result = new ArrayList<>();
 
             try (ResultSet rs = getAllPolls.executeQuery()) {
                while(rs.next()) {
@@ -200,7 +201,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public List<Poll> getPollsByUserId(int userId) throws DataException {
         
-        List<Poll> result = new ArrayList();
+        ArrayList<Poll> result = new ArrayList<>();
 
         try {
             
@@ -226,7 +227,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public List<Poll> getPollsAlreadyActivatedAndClosedByUserId(int userId) throws DataException {
 
-        List<Poll> result = new ArrayList();
+        List<Poll> result = new ArrayList<>();
 
         try {
 
@@ -252,7 +253,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
 
     public List<Poll> getOpenPolls() throws DataException {
-        List<Poll> result = new ArrayList();
+        List<Poll> result = new ArrayList<>();
         
         try (ResultSet rs = searchOpenPolls.executeQuery()) {
             while (rs.next()) {
@@ -271,7 +272,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
 
     @Override
     public List<Poll> getReservedPolls() throws DataException {
-        List<Poll> result = new ArrayList();
+        List<Poll> result = new ArrayList<>();
         try ( ResultSet rs = searchReservedPolls.executeQuery()) {
             while(rs.next()) {
                 result.add((Poll) getPollById(rs.getInt("ID")));

@@ -4,6 +4,7 @@ import framework.data.dao.PollDataLayer;
 import framework.result.FailureResult;
 import framework.result.StreamResult;
 import framework.result.TemplateResult;
+import framework.security.SecurityLayer;
 import pollweb.data.model.Answer;
 import pollweb.data.model.Partecipant;
 import pollweb.data.model.Question;
@@ -25,6 +26,7 @@ public class ProvaServlet extends PollBaseController {
 
     //CSV file header
     private static final String FILE_HEADER = "key";
+    
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("page_title", "expection");
 
@@ -39,17 +41,18 @@ public class ProvaServlet extends PollBaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         StreamResult res = new StreamResult(getServletContext());
         ServletContext sc = getServletContext();
+        int poll_key = SecurityLayer.checkNumeric(request.getParameter("k"));
         try {
             File temp = File.createTempFile("Statistichs", ".csv");
             Writer fstream = null;
             fstream = new OutputStreamWriter(new FileOutputStream(temp), StandardCharsets.ISO_8859_1);
-            List<Question> questions = ((PollDataLayer) request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(13);
+            List<Question> questions = ((PollDataLayer) request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(poll_key);
             fstream.write(";");
             for(Question q: questions){
                 fstream.write(q.getTextq()+ ";");
             }
             fstream.write("\n");
-            List<Partecipant> participants =((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().getPartecipantsByPollId(13);
+            List<Partecipant> participants =((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().getPartecipantsByPollId(poll_key);
 
             for(Partecipant partecipant: participants){
              fstream.write("user: "+partecipant.getKey()+";");
@@ -62,13 +65,6 @@ public class ProvaServlet extends PollBaseController {
             }
             fstream.close();
             res.activate(temp, request, response);
-    //        FileWriter ip = new FileWriter;
-
-
-         //   res.activate("error.ftl.html", request, response);
-         //   File f = new File(fileWriter);
-          //  InputStream is = new FileInputStream(fileWriter);
-               // request.setAttribute("contentType", fileWriter.);
 
 
             sc.log("CSV file was created successfully !!!");

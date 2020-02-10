@@ -49,14 +49,15 @@ public class AdminController extends PollBaseController {
         TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Admin");
         request.setAttribute("users", ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUsersNotAccepted());
-        //String active_one = SecurityLayer.retrieveSession(request);
-        //    ServletContext context = getServletContext( );
-        //        context.log(active_one);
-        ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
-        
-        request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
 
-        request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
+
+
+        int userKey = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token")).getKey();
+
+
+        request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(userKey));
+
+        request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(userKey));
         res.activate("adminPanel.ftl.html", request, response);
 
         } catch (DataException ex) {
@@ -84,9 +85,7 @@ public class AdminController extends PollBaseController {
             } else {
                 context.log("no");
             }
-                    
 
-            
          } 
         action_default(request, response);
 
