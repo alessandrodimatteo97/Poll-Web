@@ -77,7 +77,8 @@ and open the template in the editor.
              <#if (poll.type == "reserved" )>
             <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
         </#if>
-            <a  href="admin" class="btn btn-primary">Finish</a>
+        <a  href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Order Question</a>
+        <a  href="admin" class="btn btn-primary">Finish</a>
         </form>
     </div>
 </div>

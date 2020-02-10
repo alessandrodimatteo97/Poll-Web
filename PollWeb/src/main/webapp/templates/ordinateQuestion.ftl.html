@@ -1,0 +1,68 @@
+
+<div id="prova">
+<div class="container" >
+    </br>
+
+    <h3>
+        <span style="font-family: Arial;"><strong>Riordina le domande</strong></span>
+    </h3>
+</br>
+
+    <#if (questions?size>0)>
+    <form action="OrdinateQuestion" method="post">
+        <input type="hidden" name="k" value="${poll.key}"/>
+
+        <div id="sortable">
+
+    <#list questions as question>
+    <ul class="list-group">
+</br>
+
+        <li  class="list-group-item d-flex justify-content-between align-items-center list-group-item-action list-group-item-grey"  >${question.textq}
+            <input type="hidden" name="question" value="${question.key}"/>
+            <span class="input-group-text"><img src="images/sort.png" ></span>
+        </li>
+
+    </ul>
+
+
+
+
+
+</#list>
+    <div>
+
+    <br/>
+<br/>
+<div class="form-group " align="center">
+    <div class="form-group col-md-4">
+        <button type="submit" class="btn btn-primary btn-lg btn-block" name="update" value="update">update</button>
+
+    </div>
+</div>
+
+
+
+<div class="form-group " align="center">
+    <div class="form-group col-md-4">
+        <a href="SummaryPoll?k=${poll.key}" class="btn btn-primary btn-lg btn-block" >Finish</a>
+    </div>
+</div>
+
+<#else>
+
+
+<h1>non ci sono domande</h1>
+
+
+
+
+
+</#if>
+    </form>
+
+
+
+
+</div>
+</div>

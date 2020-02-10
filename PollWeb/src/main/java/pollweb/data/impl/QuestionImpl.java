@@ -41,7 +41,7 @@ public class QuestionImpl implements Question {
     private List<Answer> answer;
     private int key;
     private Poll poll;
-
+    private int number;
    
     
     public QuestionImpl() {
@@ -148,6 +148,9 @@ public class QuestionImpl implements Question {
         return poll;
     }
 
-    
-    
+    @Override
+    public void setNumber(int number) { this.number = number;}
+
+    @Override
+    public int getNumber() { return this.number;}
 } 

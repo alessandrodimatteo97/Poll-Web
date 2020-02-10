@@ -50,10 +50,10 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
             deletePartecipant = connection.prepareStatement("DELETE FROM participant WHERE ID=? ");
             createFullPartecipant = connection.prepareStatement("INSERT INTO participant (apiKey, nameP, email, pwd) VALUES(?,?,?,?)");
             createHalfPartecipant = connection.prepareStatement("INSERT INTO participant (apiKey, nameP) VALUES(?,?)");
-            insertPartecipant = connection.prepareStatement("INSERT INTO participant (email, pwd) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
+            insertPartecipant = connection.prepareStatement("INSERT INTO participant (email, pwd, nameP) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
             addToken = connection.prepareStatement("UPDATE participant SET apiKey=? WHERE email=?");
             addPartecipantToPoll = connection.prepareStatement("INSERT INTO participation(id_poll, id_part) values (?,?)");
-            updatePartecipant = connection.prepareStatement("UPDATE participant SET email=?, pwd=? where ID=?");
+            updatePartecipant = connection.prepareStatement("UPDATE participant SET email=?, pwd=?, nameP=? where ID=?");
             deleteParticipantToPoll = connection.prepareStatement("DELETE FROM participation WHERE ID_part=? AND ID_poll=?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing partecipant data layer", ex);
@@ -173,13 +173,14 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
                 }
                 updatePartecipant.setString(1, p.getEmail());
                 updatePartecipant.setString(2, p.getPwd());
-
-                updatePartecipant.setInt(3, p.getKey());
+                updatePartecipant.setString(3, p.getNameP());
+                updatePartecipant.setInt(4, p.getKey());
 
                 updatePartecipant.executeUpdate();
             } else { //insert
                 insertPartecipant.setString(1, p.getEmail());
                 insertPartecipant.setString(2, p.getPwd());
+                insertPartecipant.setString(3, p.getNameP());
                 if (insertPartecipant.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database
                     //per il record appena inserito, usiamo il metodo
