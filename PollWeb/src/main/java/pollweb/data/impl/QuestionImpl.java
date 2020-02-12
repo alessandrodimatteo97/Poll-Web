@@ -38,7 +38,7 @@ public class QuestionImpl implements Question {
     private String typeP;
     private boolean obbligated;
     private JSONObject possibleAnswer;
-    private List<Answer> answer;
+    private List<String> answer;
     private int key;
     private Poll poll;
 
@@ -47,7 +47,7 @@ public class QuestionImpl implements Question {
     public QuestionImpl() {
     }
 
-    public QuestionImpl(int key,String textq, String note, String typeP, boolean obbligated, JSONObject possibleAnswer, List<Answer> answer, Poll poll) {
+    public QuestionImpl(int key,String textq, String note, String typeP, boolean obbligated, JSONObject possibleAnswer, List<String> answer, Poll poll) {
         this.textq = textq;
         this.note = note;
         this.typeP = typeP;
@@ -112,12 +112,12 @@ public class QuestionImpl implements Question {
     }
     
     @Override
-     public List<Answer> getAnswer() {
+     public List<String> getAnswer() {
         return answer;
     }
 
     @Override 
-    public void setAnswer(List<Answer> answer) {
+    public void setAnswer(List<String> answer) {
         this.answer = answer;
     }
     

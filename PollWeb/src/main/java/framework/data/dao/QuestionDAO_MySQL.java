@@ -74,7 +74,7 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
         try {
             question.setKey(rs.getInt("ID"));
             question.setNote(rs.getString("note"));
-            question.setAnswer((List<Answer>) rs.getArray("possible_answer")); //non funziona secondo me
+            question.setAnswer((List<String>) rs.getArray("possible_answer")); //non funziona secondo me
             if(rs.getString("obbligation").equals("yes")){
                 question.setObbligated(true);
             } else {

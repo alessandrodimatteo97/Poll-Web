@@ -13,14 +13,24 @@ import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
 import framework.security.SecurityLayer;
+import static framework.security.SecurityLayer.checkNumeric;
+import freemarker.template.utility.NumberUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.NumberUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import pollweb.data.model.Question;
 
 /**
@@ -49,30 +59,112 @@ public class Poll extends PollBaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response ,int n) throws IOException, ServletException, TemplateManagerException, DataException {
             try{TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("page_title", "Poll name");
-           String type = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n).getType();
-          // if(type == "open"){
+            pollweb.data.model.Poll p = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n);
+            if(p.isActivated()){
+
+           String type = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n).getType();   
+          
+           request.setAttribute("poll" ,((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(n));
+           
+           
+          if(type == "open"){
             request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n));
             res.activate("poll.ftl.html", request, response);
-          /* }else{
+          }else{
                res.activate("login.ftl.html",request,response);
-           }*/
-            }  catch (DataException ex) {
+           
+           }}res.activate("error.ftl.html", request, response);
+            }catch (DataException ex) {
            Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
        }
     }
 
+    
+
+        private void action_answer(HttpServletRequest request, HttpServletResponse response, int n) throws TemplateManagerException {
+            try{
+                TemplateResult res = new TemplateResult(getServletContext());
+                 request.setAttribute("page_title", "Confirm Page");
+              ServletContext sc = getServletContext();
+               List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
+               
+                
+                
+          for(Question q : question){
+               
+                 ArrayList<String> answer = new ArrayList<>();
+                 if(!q.getTypeP().equalsIgnoreCase( "multiple choice")){
+              
+               /*if(!q.getTypeP().equalsIgnoreCase("numeric")&&!q.getTypeP().equalsIgnoreCase("single choice")){
+                   answer.add(request.getParameter(Integer.toString(q.getKey())));
+               }else if (q.getTypeP().equalsIgnoreCase("numeric")){
+                   String str = request.getParameter(Integer.toString(q.getKey()));
+                    if(NumberUtils.isDigits(str)){
+                        answer.add(request.getParameter(Integer.toString(q.getKey())));
+                    }//res.activate("error.ftl.html", request, response);
+               }else if (q.getTypeP().equalsIgnoreCase("single choice")){
+              JSONObject json = q.getPossibleAnswer();
+              String str = json.toString();
+                  sc.log(str);
+                  
+            }*/
+               
+            
+                         
+                   
+                answer.add(request.getParameter(Integer.toString(q.getKey())));
+              
+              }else{
+                  String[] a = request.getParameterValues(Integer.toString(q.getKey()));
+                                        
+                    
+                  for (String s : a){
+                      sc.log(s  + q.getKey());
+                      answer.add(s);
+                      
+                     
+                      
+                  }
+                  
+              }
+              
+               q.setAnswer(answer);
+          }
+            request.setAttribute("questions",question);
+            request.setAttribute("poll" ,((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(n));
+             res.activate("confirmPoll.ftl.html", request, response);
+            }catch(DataException ex){
+                request.setAttribute("message", ex);
+                action_error(request, response);
+            }
+      
+   }
+        
+        
+    private void action_confirm(HttpServletRequest request, HttpServletResponse response, int n) throws DataException {
+       List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
+     
+    }
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+   
+    
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
             int n=0;
-        try {
+          
+        try {      
             n = SecurityLayer.checkNumeric(request.getParameter("n"));
-            action_default(request, response ,n);
-            request.setAttribute("ok", false);
-             if(request.getParameter("confirm")!= null){
-                this.action_answer(request, response);
-            }
-
+             if(request.getParameter("showResume")!= null){
+                 action_answer(request, response,n);
+             }else if (request.getParameter("confirm")!= null){
+                action_confirm(request,response, n);
+            }else action_default(request, response, n);
+             
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
             action_error(request, response);
@@ -84,18 +176,12 @@ public class Poll extends PollBaseController {
         } catch (DataException ex) {
            Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
        }
+  
     }
-
-        private void action_answer(HttpServletRequest request, HttpServletResponse response){
-      
-   }
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+        
     @Override
     public String getServletInfo() {
         return "Main Newspaper servlet";
     }// </editor-fold>
+
 }
