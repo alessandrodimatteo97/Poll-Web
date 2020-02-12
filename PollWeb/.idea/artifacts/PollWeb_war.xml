@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="PollWeb:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>PollWeb</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="PollWeb-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="PollWeb:war exploded" />
+    </root>
+  </artifact>
+</component>

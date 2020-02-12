@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Poll-Web.iml" filepath="$PROJECT_DIR$/.idea/Poll-Web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PollWeb/PollWeb.iml" filepath="$PROJECT_DIR$/PollWeb/PollWeb.iml" />
+    </modules>
+  </component>
+</project>

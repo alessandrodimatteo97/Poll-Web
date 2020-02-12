@@ -52,7 +52,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
             checkUserExist = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? and pwd=?");
             checkAdmin = connection.prepareStatement("SELECT * FROM responsibleUser WHERE email=? AND pwd=? AND administrator='yes'");
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)" , Statement.RETURN_GENERATED_KEYS);
-            updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
+            updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=? where ID=?");
             setToken = connection.prepareStatement("UPDATE responsibleUser SET token=? WHERE email=?");
             getResponsible = connection.prepareStatement("SELECT * FROM responsibleUser where ID = ?");
             getResponsibleByToken = connection.prepareStatement("SELECT * FROM responsibleUser where token=?");
@@ -235,8 +235,8 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
                 updateResponsibleUser.setString(4, "pwd");
                 updateResponsibleUser.setString(5,"administrator");
                 updateResponsibleUser.setString(6, "accepted");
-                
-                
+                updateResponsibleUser.setInt(7, 1 );
+                updateResponsibleUser.executeQuery();
             }else {
                 insertResponsibleUser.setString(1, responsibleUser.getNameR());
                 insertResponsibleUser.setString(2, responsibleUser.getSurnameR());

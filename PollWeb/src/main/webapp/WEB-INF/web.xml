@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee                       http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <context-param>
+        <param-name>uploads.directory</param-name>
+        <!-- Tomcat must have write permissions on this folder -->
+        <param-value>d:/Java/TomcatWork</param-value>
+    </context-param>
+    <context-param>
         <param-name>view.date_format</param-name>
         <param-value>dd/MM/yyyy hh:mm:ss</param-value>
     </context-param>
@@ -15,6 +20,25 @@
     <context-param>
         <param-name>view.outline_template</param-name>
         <param-value>outline.ftl.html</param-value>
+    </context-param>
+    <context-param>
+        <param-name>host</param-name>
+        <param-value>smtp.gmail.com</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>port</param-name>
+        <param-value>587</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>user</param-name>
+        <param-value>assistenza.pollweb@gmail.com</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>pass</param-name>
+        <param-value>Alessandro1997</param-value>
     </context-param>
     <servlet>
         <servlet-name>Home</servlet-name>
@@ -52,9 +76,48 @@
         <servlet-name>PollDetail</servlet-name>
         <servlet-class>pollweb.controller.PollDetailController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateQuestion</servlet-name>
+        <servlet-class>pollweb.controller.CreateQuestion</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InsertParticipant</servlet-name>
+        <servlet-class>pollweb.controller.InsertParticipant</servlet-class>
+        <multipart-config>
+            <!-- temporary files location (DEF: "") -->
+            <!-- <location>/tmp</location>  -->
+            <!-- max size of accepted upload (DEF: unlimited!) -->
+            <max-file-size>20848820</max-file-size>
+            <!-- max size of multipart requests (may contain more files or data) (DEF: ulimited!) -->
+            <max-request-size>418018841</max-request-size>
+            <!-- max size of files to hold in memory (without writing to temporary disk file) (DEF: 0) -->
+            <!-- <file-size-threshold>1048576</file-size-threshold>  -->
+        </multipart-config>
+    </servlet>
+    <servlet>
+        <servlet-name>SummaryPollController</servlet-name>
+        <servlet-class>pollweb.controller.SummaryPollController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProvaServlet</servlet-name>
+        <servlet-class>pollweb.controller.ProvaServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrdinateQuestion</servlet-name>
+        <servlet-class>pollweb.controller.OrdinateQuestion</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrdinateQuestion</servlet-name>
+        <url-pattern>/OrdinateQuestion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProvaServlet</servlet-name>
+        <url-pattern>/prova</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Home</welcome-file>
@@ -76,6 +139,10 @@
         <url-pattern>/BecomeResponsible</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>InsertParticipant</servlet-name>
+        <url-pattern>/InsertParticipant</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
     </servlet-mapping>
@@ -87,6 +154,15 @@
         <servlet-name>CreatePoll</servlet-name>
         <url-pattern>/CreatePoll</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateQuestion</servlet-name>
+        <url-pattern>/CreateQuestion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SummaryPollController</servlet-name>
+        <url-pattern>/SummaryPoll</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>PollDetail</servlet-name>
         <url-pattern>/Poll_Detail</url-pattern>

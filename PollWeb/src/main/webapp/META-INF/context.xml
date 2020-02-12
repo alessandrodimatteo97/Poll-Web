@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/PollWeb">
+<Context reloadable="true" privileged="true" antiJARLocking="true" path="/PollWeb">
 
 
 
       <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="10" maxIdle="5" maxWait="10000" name="jdbc/PollWeb" password="C4neT0by$" type="javax.sql.DataSource" url="jdbc:mysql://localhost/PollWeb?serverTimezone=UTC" username="root"/>
 
 
-
-</Context>
+      </Context>
  

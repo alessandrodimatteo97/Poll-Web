@@ -9,7 +9,11 @@ package framework.data.dao;
 import framework.data.DataException;
 import java.sql.ResultSet;
 import java.util.List;
+
+import framework.data.proxy.PartecipantProxy;
 import pollweb.data.model.Partecipant;
+
+import javax.xml.crypto.Data;
 
 /**
  *
@@ -19,7 +23,7 @@ public interface PartecipantDAO {
     
     Partecipant createPartecipant();
     
-    Partecipant createPartecipant(ResultSet rs) throws DataException;
+    PartecipantProxy createPartecipant(ResultSet rs) throws DataException;
     
     
 /*    boolean deletePartecipantUser(int UserKey);
@@ -39,5 +43,12 @@ public interface PartecipantDAO {
     List<Partecipant> getPartecipants() throws DataException;
     
     List<Partecipant> getPartecipantsByPollId(int pollId) throws DataException;
-    
+
+    void storePartecipant(Partecipant p, int pollId) throws DataException;
+
+    boolean setToken(String mail, String token) throws DataException;
+
+    boolean addPartecipantToPoll(Partecipant p, int pollid) throws DataException;
+
+    boolean deleteParticipantToPoll(Partecipant p, int pollid) throws DataException;
 }

@@ -4,35 +4,89 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<#if (questions?size>0)>
-        <div class="container">
-        <div class="row">
-          <#list questions as question>
+<div class="container">
 
-          <div class="col-sm-3 mt-5">
-    <div class="card">
-      <div class="card-body">
-               <#if (question.textq?has_content)>
+</br>
+</br>
+<div class="container">
+    <div class="jumbotron border border-dark">
+        <form action="SummaryPollController" method="post">
+        <div class="row border border-dark">
+            <div class="col-md-8">
 
-        <h5 class="card-title">${question.textq}</h5>
-         <div class="card-body"> 
-             ${question.key}
-          <#if (question.possibleAnswer?has_content)>
+                <h3>${poll.title}</h3>
+            </div>
+        </div>
+        <hr/>
+            <input type="hidden" name="k" value="${poll.key}"/>
+            <input type="hidden" name="qk" value="0"/>
 
-          <#list question.possibleAnswer?eval as key, value>
-        <p class="card-text">${key} ${value}</p>
-                       </#list>
+            <div class="row border ">
+            <div class="col-md-6 col-xs-8">
+                <div class="row border border-dark">
+                    <div class="col-md-6 col-xs-4 col-sm-4 col-6">
+                        <p style="white-space: nowrap; font-weight: bold">Aperture Text:</p>
+                    </div>
+                    <div class="col-md-5 col-5 col-xs-3">
+                        <span >${poll.apertureText}</span>
 
-            </#if>
-       </div>
-          </#if>
-        
-       
-      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 border border-dark">
+                <div class="row">
+
+                    <div class="col-md-6 col-xs-4 col-sm-4 col-6">
+                        <p style="white-space: nowrap; font-weight: bold">Closer Text:</p>
+                    </div>
+                    <div class="col-md-5 col-5 col-xs-3">
+                        <span >${poll.apertureText}</span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 border border-dark">
+                <div class="row">
+
+                    <div class="col-md-6 col-xs-4 col-sm-4 col-6">
+                        <p style="font-weight: bold">Type:</p>
+                    </div>
+                    <div class="col-md-5 col-5 col-xs-3">
+                        <span >${poll.type}</span>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 border border-dark">
+                <div class="row">
+
+                    <div class="col-md-6 col-xs-4 col-sm-4 col-6">
+                        <p style="white-space: nowrap; font-weight: bold">Url:</p>
+                    </div>
+                    <div class="col-md-5 col-5 col-xs-3">
+                        <span >${poll.url}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<br/>
+        <a href="CreatePoll?k=${poll.key}"  class="btn btn-primary">Modify</a>
+            <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-primary ">Create another Question</a>
+             <#if (poll.type == "reserved" )>
+            <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
+        </#if>
+        <a  href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Order Question</a>
+        <a  href="admin" class="btn btn-primary">Finish</a>
+        </form>
     </div>
-  </div>
-               </#list>
+</div>
+
+
+<div id="QuestionPage">
+    <#include 'questionSummary.ftl.html'>
+</div>
 
 </div>
-        </div>
-        </#if>
+

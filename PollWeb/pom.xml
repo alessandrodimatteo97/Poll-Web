@@ -15,6 +15,12 @@
     </properties>
     
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
+<dependency>
+    <groupId>com.sun.mail</groupId>
+    <artifactId>javax.mail</artifactId>
+    <version>1.5.5</version>
+</dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -33,7 +39,12 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.28</version>
          </dependency>
-         
+        <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.4</version>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -44,14 +55,8 @@
             <artifactId>json</artifactId>
             <version>20190722</version>
         </dependency>
-     
-
-
     </dependencies>
-    
-    
-
-    <build>
+<build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

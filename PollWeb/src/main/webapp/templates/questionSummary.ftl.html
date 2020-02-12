@@ -1,0 +1,43 @@
+<#if (questions?size>0)>
+<div class="container">
+
+
+    <div class="row">
+        <#list questions as question>
+        <div class="col-sm-3 mt-5">
+            <div class="card border border-dark">
+                <div class="card-body">
+                    <#if (question.textq?has_content)>
+
+                    <h5 class="card-title">${question.textq}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${question.typeP}</h6>
+                    <div class="card-body">
+                        <input type="hidden" name="qk"  value=${question.key}">
+                        <input type="hidden" name="k"  value=${poll.key}">
+
+                        <#if (question.possibleAnswer?has_content)>
+
+                        <#list question.possibleAnswer?eval as key, value>
+                        <p class="card-text">${key} ${value}</p>
+                    </#list>
+
+                </#if>
+            </div>
+        </#if>
+        <a href="CreateQuestion?qk=${question.key}&k=${poll.key}" value="modify" class="btn btn-primary">Modify</a>
+        <button name="delete" data-value="${question.key}" value="${poll.key}" class="btn btn-danger">Delete</button>
+    </div>
+
+</div>
+</div>
+
+</#list>
+
+</div>
+</div>
+<#else>
+non c'è proprio un cazzo da mostrare
+</#if>
+
+</br>
+</br>

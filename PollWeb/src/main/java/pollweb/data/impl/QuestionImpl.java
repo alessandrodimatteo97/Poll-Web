@@ -41,10 +41,17 @@ public class QuestionImpl implements Question {
     private List<String> answer;
     private int key;
     private Poll poll;
-
+    private int number;
    
     
     public QuestionImpl() {
+        this.textq = "";
+        this.note = "";
+        this.typeP = "shortText";
+        this.obbligated = false;
+        this.possibleAnswer = null;
+        this.answer = null;
+        this.poll = null;
     }
 
     public QuestionImpl(int key,String textq, String note, String typeP, boolean obbligated, JSONObject possibleAnswer, List<String> answer, Poll poll) {
@@ -141,6 +148,9 @@ public class QuestionImpl implements Question {
         return poll;
     }
 
-    
-    
+    @Override
+    public void setNumber(int number) { this.number = number;}
+
+    @Override
+    public int getNumber() { return this.number;}
 } 

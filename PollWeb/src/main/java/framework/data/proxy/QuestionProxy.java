@@ -79,6 +79,14 @@ public class QuestionProxy  extends QuestionImpl {
          }
          return super.getAnswer();
      }*/
+
+     
+     @Override
+     public void setNumber(int number){
+        super.setNumber(number);
+        this.dirty = true;
+     }
+
     @Override
     public void setKey(int key) {
         super.setKey(key);

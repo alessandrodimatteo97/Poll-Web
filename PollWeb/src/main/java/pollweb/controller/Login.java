@@ -120,11 +120,10 @@ public class Login extends PollBaseController {
     private void action_login(HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateManagerException, DataException {
         String username = request.getParameter("email");
         String password = request.getParameter("password");
-
         ResponsibleUserImpl ru = new ResponsibleUserImpl();
         ru.setEmail(username);
         ru.setPwd(password);
-    
+      //  ru.setKey(id);
 
         if (!username.isEmpty() && !password.isEmpty()) {
 

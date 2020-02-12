@@ -51,7 +51,7 @@ public class ReservedPollList extends PollBaseController {
             request.setAttribute("page_title", "Reserved Poll");
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getReservedPolls());
             List<Poll> p = new ArrayList<Poll>();
-            p.addAll(((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getOpenPolls());
+            p.addAll(((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getReservedPolls());
             ServletContext context = getServletContext( );
             context.log(p.toString());
             res.activate("home.ftl.html", request, response);

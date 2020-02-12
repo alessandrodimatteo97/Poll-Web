@@ -31,6 +31,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     private PreparedStatement setPollAsActive, setPollAsDeactive; /**settano le poll attive e disabilitate */
     private PreparedStatement setPollAlreadyActivated;
 
+    private PreparedStatement pollContainsQuestion; // controlla se la question appartiene al poll
     public PollDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -46,9 +47,11 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             searchPollByPollId = connection.prepareStatement("SELECT * FROM poll WHERE ID=?");
             searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='no' OR activated='yes' AND alreadyActivated='yes'");
             searchAlreadyActivatedPollsByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='yes'");
+
             searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open' AND activated='yes'");
             searchReservedPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='reserved'AND activated ='yes'");
             insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,alreadyActivated,idR) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+
             insertOpenPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,open,?,?,?)");
             updatePoll = connection.prepareStatement("UPDATE poll SET title=?,apertureText=?,closerText=?,typeP=?,url=?,activated=?,idR=? WHERE ID=?");
             deletePoll = connection.prepareStatement("DELETE FROM poll WHERE ID=?");
@@ -56,6 +59,9 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='no' WHERE ID=?");
             setPollAlreadyActivated = connection.prepareStatement("UPDATE poll SET alreadyActivated='yes' WHERE ID=?");
 
+            setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='1' WHERE ID=?");
+            setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='0' WHERE ID=?");
+            pollContainsQuestion = connection.prepareStatement("SELECT * FROM PollWeb.question where IDP = ? AND ID = ?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer", ex);
         }
@@ -82,6 +88,27 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public PollProxy createPoll() {
         return new PollProxy(getDataLayer());
+    }
+
+    @Override
+    public PollProxy createPoll(ResultSet rs) throws DataException {
+        PollProxy poll = createPoll();
+
+        try {
+            poll.setKey(rs.getInt("ID"));
+            poll.setRespUserKey(rs.getInt("idR"));
+            poll.setTitle(rs.getString("title"));
+            poll.setApertureText(rs.getString("apertureText"));
+            poll.setCloserText(rs.getString("closerText"));
+            poll.setType(rs.getString("typeP"));
+            poll.setUrl(rs.getString("url"));
+            poll.setActivated(rs.getString("activated"));
+            poll.setAlreadyActivated(rs.getString("alreadyActivated"));
+
+        } catch (SQLException ex) {
+            throw new DataException("Unable to create article object form ResultSet", ex);
+        }
+        return poll;
     }
 
     @Override
@@ -157,14 +184,13 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             
             try ( ResultSet rs = searchPollByPollId.executeQuery() ) {
                 if (rs.next()) {
-                    if(rs.getString("typeP").equals("open"))
-                     return createOpenPoll(rs);
-                   else {
-                       return createReservedPoll(rs);
-                   }
-                }
-            }
 
+                
+                        return createPoll(rs);
+                   
+
+                }
+            } 
         } catch (SQLException ex) {
             throw new DataException("Error from DataBase: ", ex);
         }
@@ -194,7 +220,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
         } catch (SQLException ex) {
             throw new DataException("Error from DataBase: ", ex);
         }
-        
+
         return result;
     }
 
@@ -278,7 +304,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
         } catch (SQLException ex) {
             throw new DataException("Non è andata bene pollDAO:  ", ex);
         }
-                
+
     }
 
     @Override
@@ -299,6 +325,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
         } catch (SQLException ex) {
             throw new DataException("Non è andata bene pollDAO:  ", ex);
         }
+                
     }
 
     @Override
@@ -338,7 +365,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
                 updatePoll.setString(5, poll.getUrl());
                 updatePoll.setInt(6, 1);
                 if (poll.getRespUser()!= null) {
-                    updatePoll.setInt(7, 3);
+                    updatePoll.setInt(7, poll.getRespUser().getKey());
                 } else {
                     updatePoll.setNull(7, java.sql.Types.INTEGER);
                 }
@@ -353,7 +380,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
                 insertPoll.setString(5, poll.getUrl());
                 insertPoll.setInt(6, 1);
                 if (poll.getRespUser()!= null) {
-                    insertPoll.setInt(7, 3);
+                    insertPoll.setInt(7, poll.getRespUser().getKey());
                 } else {
                     insertPoll.setNull(7, java.sql.Types.INTEGER);
                 }
@@ -430,4 +457,20 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
         }
         return poll;    }
     
+
+    @Override
+    public boolean pollContainsQuestion(int poll_key, int question_key) throws DataException {
+        try {
+            this.pollContainsQuestion.setInt(1, poll_key);
+            this.pollContainsQuestion.setInt(2, question_key);
+          ResultSet rs =   this.pollContainsQuestion.executeQuery();
+          if(rs.next()){
+              return true;
+          }
+          return false;
+        } catch (SQLException ex) {
+            throw new DataException("Unable to search question by poll", ex);
+        }
+    }
+
 }

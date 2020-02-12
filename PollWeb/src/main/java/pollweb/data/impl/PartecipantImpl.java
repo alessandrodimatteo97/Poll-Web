@@ -15,7 +15,13 @@ public class PartecipantImpl implements Partecipant {
     private String apiKey, nameP, email, pwd;
     private int key;
     
-    public PartecipantImpl(){};
+    public PartecipantImpl(){
+        this.apiKey =  "";
+        this.nameP =  "";
+        this.email =  "";
+        this.pwd =  "";
+        this.key = 0;
+    };
 
     public PartecipantImpl(int key,String apiKey, String nameP, String email, String pwd) {
         this.apiKey = apiKey;
@@ -74,9 +80,18 @@ public class PartecipantImpl implements Partecipant {
     public void setKey(int key) {
         this.key=key;
     }
-    
-    
-    
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (!(o instanceof Partecipant)){
+            return false;
+        }
+        Partecipant other = (Partecipant) o;
+        return (other.getKey() == this.key);
+    }
+
+
     
     
     

@@ -29,9 +29,9 @@ import pollweb.data.model.Poll;
  * @author davide
  */
 public class AdminController extends PollBaseController {
-    
+
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
-        try {    
+        try {
             if (request.getAttribute("exception").equals("invalid_session")) {
                 request.setAttribute("login_error", "Session errore");
                 response.sendRedirect("Login");

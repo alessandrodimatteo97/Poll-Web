@@ -48,6 +48,9 @@ public interface Question {
      
      Poll getPoll();
 
+     void setNumber(int number);
+
+     int getNumber();
     
     
 }

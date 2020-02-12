@@ -58,8 +58,10 @@ public class Poll extends PollBaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response ,int n) throws IOException, ServletException, TemplateManagerException, DataException {
             try{TemplateResult res = new TemplateResult(getServletContext());
+           ServletContext sc = getServletContext();
             request.setAttribute("page_title", "Poll name");
             pollweb.data.model.Poll p = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n);
+           sc.log(String.valueOf(p.isActivated()));
             if(p.isActivated()){
 
            String type = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n).getType();   
@@ -67,13 +69,13 @@ public class Poll extends PollBaseController {
            request.setAttribute("poll" ,((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(n));
            
            
-          if(type == "open"){
+          if(type.matches("open")){
             request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n));
             res.activate("poll.ftl.html", request, response);
           }else{
                res.activate("login.ftl.html",request,response);
            
-           }}res.activate("error.ftl.html", request, response);
+           }}//res.activate("error.ftl.html", request, response);
             }catch (DataException ex) {
            Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
        }

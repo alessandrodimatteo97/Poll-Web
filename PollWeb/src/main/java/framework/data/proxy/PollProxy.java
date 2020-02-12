@@ -161,6 +161,6 @@ public class PollProxy extends PollImpl{
        public void setRespUserKey(int userKey) {
         this.RespUserKey = userKey;
     }
-    
+
     
 }
