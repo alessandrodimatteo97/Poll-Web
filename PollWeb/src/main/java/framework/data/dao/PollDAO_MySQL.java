@@ -57,8 +57,8 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='no' WHERE ID=?");
             setPollAlreadyActivated = connection.prepareStatement("UPDATE poll SET alreadyActivated='yes' WHERE ID=?");
 
-            setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='1' WHERE ID=?");
-            setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='0' WHERE ID=?");
+            //setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='1' WHERE ID=?");
+            //setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='0' WHERE ID=?");
             pollContainsQuestion = connection.prepareStatement("SELECT * FROM PollWeb.question where IDP = ? AND ID = ?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer", ex);

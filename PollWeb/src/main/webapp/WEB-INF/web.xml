@@ -49,6 +49,10 @@
         <servlet-class>pollweb.controller.ReservedPollList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>LoginReserved</servlet-name>
+        <servlet-class>pollweb.controller.LoginReserved</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>OpenPollList</servlet-name>
         <servlet-class>pollweb.controller.OpenPollList</servlet-class>
     </servlet>
@@ -145,6 +149,10 @@
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginReserved</servlet-name>
+        <url-pattern>/Login-poll</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Admin</servlet-name>

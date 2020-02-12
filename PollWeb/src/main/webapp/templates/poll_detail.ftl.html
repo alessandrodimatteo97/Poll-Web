@@ -24,6 +24,9 @@
             <p>${poll.activated?string('yes', 'no')} e poi ${poll.alreadyActivated?string('yes', 'no')}</p>
         </#if>
     </div>
+    <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
+        <a  href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Order Question</a>
+        <a  href="admin" class="btn btn-primary">Finish</a>
 </section>
 
 <div class="album py-5 bg-light">

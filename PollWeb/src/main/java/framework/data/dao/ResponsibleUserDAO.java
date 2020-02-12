@@ -31,7 +31,7 @@ public interface ResponsibleUserDAO {
     
     boolean changeEmail(ResponsibleUser user) throws DataException;
     
-    boolean setAccepted(ResponsibleUser user) throws DataException;
+    boolean setAccepted(int user_key) throws DataException;
     
     List<ResponsibleUser> getResponsibleUsers() throws DataException;
     

@@ -15,12 +15,16 @@ import framework.result.TemplateResult;
 import framework.security.SecurityLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import pollweb.data.model.Question;
 
 /**
@@ -46,15 +50,32 @@ public class Poll extends PollBaseController {
         }
     }
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response ,int n) throws IOException, ServletException, TemplateManagerException, DataException {
+    private void action_open_poll(HttpServletRequest request, HttpServletResponse response) throws TemplateManagerException, DataException {
+        Object poll = request.getSession(false).getAttribute("which_poll");
+        int poll_id = SecurityLayer.checkNumeric(poll.toString());
+        try {
+            TemplateResult res = new TemplateResult((getServletContext()));
+            request.getSession(false).getAttribute("which_poll");
+            request.setAttribute("page_title", "Poll Reserved Name");
+            request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(poll_id));
+            res.activate("poll.ftl.html", request, response);
+        } catch (DataException ex) {
+            Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+        private void action_default(HttpServletRequest request, HttpServletResponse response ,int n) throws IOException, ServletException, TemplateManagerException, DataException {
             try{TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("page_title", "Poll name");
            String type = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n).getType();
-           if(type == "open"){
+           
+           
+           if(type.matches("open")){
             request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n));
             res.activate("poll.ftl.html", request, response);
            }else{
-               res.activate("login.ftl.html",request,response);
+               request.setAttribute("poll_id", n);
+
+               res.activate("login_poll.ftl.html", request, response);
            }
             }  catch (DataException ex) {
            Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,24 +83,27 @@ public class Poll extends PollBaseController {
     }
 
     @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-            int n=0;
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        int n=0;
+        
         try {
-            n = SecurityLayer.checkNumeric(request.getParameter("n"));
-            action_default(request, response ,n);
+                if(request.getParameterMap().containsKey("n")){
+                n = SecurityLayer.checkNumeric(request.getParameter("n"));
+                action_default(request, response ,n);
+                } else {
+                action_open_poll(request, response);
+                }
+                } catch (IOException ex) {
+                request.setAttribute("exception", ex);
+                action_error(request, response);
 
-        } catch (IOException ex) {
-            request.setAttribute("exception", ex);
-            action_error(request, response);
+                } catch (TemplateManagerException ex) {
+                request.setAttribute("exception", ex);
+                action_error(request, response);
 
-        } catch (TemplateManagerException ex) {
-            request.setAttribute("exception", ex);
-            action_error(request, response);
-
-        } catch (DataException ex) {
-           Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
-       }
+                } catch (DataException ex) {
+               Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

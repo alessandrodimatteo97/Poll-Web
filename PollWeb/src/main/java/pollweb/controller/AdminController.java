@@ -21,6 +21,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import pollweb.data.model.Partecipant;
 import pollweb.data.model.ResponsibleUser;
 import pollweb.data.model.Poll;
 
@@ -71,22 +72,19 @@ public class AdminController extends PollBaseController {
         request.setAttribute("page_title", "Admin");
         String [] array = request.getParameterValues("checkbox");
 
-        request.setAttribute("results", array);
+        //request.setAttribute("results", array);
         try {
-        for(int i = 0; i<array.length; i++) {
-            
-            ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(parseInt(array[i]));
-            
-            request.setAttribute("userLogged", rs);
-            Boolean result = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().setAccepted(rs); 
-            ServletContext context = getServletContext( );
-            if(result) {
-                context.log("si");
-            } else {
-                context.log("no");
-            }
+            for (String s : array) {
 
-         } 
+                ResponsibleUser ru = ((PollDataLayer) request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(SecurityLayer.checkNumeric(s));
+
+                request.setAttribute("userSelected", s);
+                boolean result = ((PollDataLayer) request.getAttribute("datalayer")).getResponsibleUserDAO().setAccepted(SecurityLayer.checkNumeric(s));
+                ServletContext context = getServletContext();
+                
+                SendEmail(ru);
+
+            }
         action_default(request, response);
 
 
@@ -109,7 +107,7 @@ public class AdminController extends PollBaseController {
 
             String id_poll = request.getParameter("poll_id");
 
-            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(parseInt(id_poll));
+            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(SecurityLayer.checkNumeric(id_poll));
             ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setDeactivated(pollRs);
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
             request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
@@ -128,7 +126,7 @@ public class AdminController extends PollBaseController {
             ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
             String id_poll = request.getParameter("poll_id");
 
-            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(parseInt(id_poll));
+            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(SecurityLayer.checkNumeric(id_poll));
             ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setActivated(pollRs);
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
             request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
@@ -139,6 +137,14 @@ public class AdminController extends PollBaseController {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
             action_error(request, response);
         }
+    }
+    
+    public void SendEmail(ResponsibleUser ru) throws ServletException {
+        String body = ru.getNameR()+
+                " ,congratulazioni sei diventato un responsabile.";
+
+        SecurityLayer.sendEmail(getServletContext().getInitParameter("user"), getServletContext().getInitParameter("pass"), ru.getEmail(), "Sei diventato un responsabile", body);
+
     }
     
     @Override
@@ -176,8 +182,8 @@ public class AdminController extends PollBaseController {
                 action_error(request, response);
 
             } catch (DataException ex) {
-                Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            request.setAttribute("exception", ex);
+            action_error(request, response);            }
     }
 
 

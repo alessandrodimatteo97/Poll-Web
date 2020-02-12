@@ -84,7 +84,6 @@ public class Login extends PollBaseController {
             request.setAttribute("page_title", "Login");
             
             res.activate("login.ftl.html", request, response);
-        
     }
     
 
