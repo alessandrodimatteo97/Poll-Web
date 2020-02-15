@@ -43,13 +43,15 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             super.init();
             
             /*   Qui scrivo gli statement precompilati   */
-            getAllPolls = connection.prepareStatement("SELECT * FROM poll");
+            getAllPolls = connection.prepareStatement("SELECT * FROM poll where activated='yes'");
             searchPollByPollId = connection.prepareStatement("SELECT * FROM poll WHERE ID=?");
             searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='no' OR activated='yes' AND alreadyActivated='yes'");
             searchAlreadyActivatedPollsByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='yes'");
-            searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open'");
-            searchReservedPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='reserved'");
-            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+
+            searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open' AND activated='yes'");
+            searchReservedPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='reserved'AND activated ='yes'");
+            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,alreadyActivated,idR) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+
             insertOpenPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,open,?,?,?)");
             updatePoll = connection.prepareStatement("UPDATE poll SET title=?,apertureText=?,closerText=?,typeP=?,url=?,activated=?,idR=? WHERE ID=?");
             deletePoll = connection.prepareStatement("DELETE FROM poll WHERE ID=?");
@@ -100,7 +102,8 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             poll.setCloserText(rs.getString("closerText"));
             poll.setType(rs.getString("typeP"));
             poll.setUrl(rs.getString("url"));
-            poll.setActivated(true);
+            poll.setActivated(rs.getString("activated"));
+            poll.setAlreadyActivated(rs.getString("alreadyActivated"));
 
         } catch (SQLException ex) {
             throw new DataException("Unable to create article object form ResultSet", ex);
@@ -181,15 +184,13 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             
             try ( ResultSet rs = searchPollByPollId.executeQuery() ) {
                 if (rs.next()) {
-                 //   if(rs.getString("typeP").equals("open")) {
-                      //  return createOpenPoll(rs);
-                  //  }
-                   // else {
-                        return createPoll(rs);
-                   // }
-                }
-            }
 
+                
+                        return createPoll(rs);
+                   
+
+                }
+            } 
         } catch (SQLException ex) {
             throw new DataException("Error from DataBase: ", ex);
         }

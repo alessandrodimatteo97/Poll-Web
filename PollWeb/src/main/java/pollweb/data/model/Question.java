@@ -38,9 +38,9 @@ public interface Question {
             
     void setTextq(String textq);
 
-     List<Answer> getAnswer();
+     List<String> getAnswer();
 
-     void setAnswer(List<Answer> answer);
+     void setAnswer(List<String> answer);
      
      void setKey(int key);
      

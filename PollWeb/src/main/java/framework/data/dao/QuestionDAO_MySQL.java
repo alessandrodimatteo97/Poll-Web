@@ -10,7 +10,6 @@ import framework.data.DAO;
 import framework.data.DataException;
 import framework.data.DataLayer;
 import framework.data.proxy.QuestionProxy;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +75,7 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
         try {
             question.setKey(rs.getInt("ID"));
             question.setNote(rs.getString("note"));
+
             if(rs.getString("possible_answer")!=null){
                JSONObject j = new JSONObject(rs.getString("possible_answer"));
                 question.setPossibleAnswer(j);
