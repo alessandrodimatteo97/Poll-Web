@@ -32,13 +32,22 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
 <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
 <div align="center"> <!-- parte centrale, gente nuova da aggiungere-->
 
-
+<!-- emailSended -->
 
     <h3>
         <span style="font-family: Arial"><strong>Add Participant</strong></span>
     </h3>
     </br>
+    <#if (emailSended?has_content && emailSended)>
 
+    <div class="alert alert-success" role="alert">
+        This is a success alert—check it out!
+    </div>
+    <#elseif (emailSended?has_content && !emailSended)>
+    <div class="alert alert-danger" role="alert">
+        This is a danger alert—check it out!
+    </div>
+</#if>
 
 
 

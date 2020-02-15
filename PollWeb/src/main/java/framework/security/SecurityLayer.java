@@ -108,7 +108,6 @@ public class SecurityLayer {
         String token = tokenGenerator(s);
       // Cookie cookie = new Cookie("token", token);
         s.setAttribute("token", token);
-        // todo scrivere una fuonzione in modo tale da capire se si è nel sito per riempire sondaggi oppure nella parte backend;
         try {
             ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().setToken(username, token);
             s.setAttribute("userid",((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(token).getKey());
@@ -118,6 +117,8 @@ public class SecurityLayer {
         }
         return s;
     }
+
+    // todo scrivere funzione per login, sessione utente che risponde alle domande;
     //SOLO PER CAPIRE SE FUNZIONA TUTTO
     public static String retrieveSession(HttpServletRequest request) {
         HttpSession s = checkSession(request);
@@ -216,7 +217,7 @@ public class SecurityLayer {
         }
     }
 
-    public static void sendEmail(final String fromEmail, final String password, String toEmail, String subject, String body) throws ServletException {
+    public static boolean sendEmail(final String fromEmail, final String password, String toEmail, String subject, String body) throws ServletException {
         try
         {
             Properties props = new Properties();
@@ -252,11 +253,11 @@ public class SecurityLayer {
 
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
             Transport.send(msg);
+            return true;
 
         }
         catch (Exception e) {
             throw new ServletException("Cannot send email"+e);
-
         }
     }
 

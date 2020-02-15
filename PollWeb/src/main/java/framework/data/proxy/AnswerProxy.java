@@ -24,6 +24,8 @@ public class AnswerProxy extends AnswerImpl{
         super();
         this.dirty= false;
         this.dataLayer= d;
+        this.partecipantKey = 0;
+        this.questionKey = 0;
     }
     
     @Override

@@ -21,7 +21,9 @@ public class AnswerImpl implements Answer {
     private JSONObject textA;
     private int key;
     
-    public AnswerImpl(){}
+    public AnswerImpl(){
+
+    }
     public AnswerImpl(int key,JSONObject textA){
         this.textA = new JSONObject(textA);
         this.key=key;

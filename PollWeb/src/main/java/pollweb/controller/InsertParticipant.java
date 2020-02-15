@@ -134,7 +134,7 @@ public class InsertParticipant extends PollBaseController {
                     p.setPwd(pa);
                     p.setNameP(na);
                     ((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().storePartecipant(p, poll_key);
-                    SendEmail(poll, p);
+                    if (SendEmail(poll, p)){ request.setAttribute("emailSended", true); } else request.setAttribute("emailSended", false);
                 } else {
                     request.setAttribute("message", "you have to insert at least one user");
                     action_error(request, response);
@@ -201,7 +201,8 @@ public class InsertParticipant extends PollBaseController {
                               pa.setEmail(participant[1]);
                               pa.setPwd(participant[2]);
                                 ((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().storePartecipant(pa, poll_key );
-                                SendEmail(poll, pa);
+                               if (SendEmail(poll, pa)){ request.setAttribute("emailSended", true); } else request.setAttribute("emailSended", false);
+
                             }
 
 
@@ -230,7 +231,7 @@ public class InsertParticipant extends PollBaseController {
     }
 
 
-   public void SendEmail(Poll poll, Partecipant p) throws ServletException {
+   public boolean SendEmail(Poll poll, Partecipant p) throws ServletException {
         String body = p.getNameP()+
                 " sei stato aggiunto in un nuovo sondaggio riservato. L'url per accedere è: "+
                 poll.getUrl()+
@@ -238,7 +239,7 @@ public class InsertParticipant extends PollBaseController {
                 p.getEmail()+ " e password: "+
                 p.getPwd();
 
-        SecurityLayer.sendEmail(getServletContext().getInitParameter("user"), getServletContext().getInitParameter("pass"), p.getEmail(), "Sei stato aggiunto in un poll riservato", body);
+       return SecurityLayer.sendEmail(getServletContext().getInitParameter("user"), getServletContext().getInitParameter("pass"), p.getEmail(), "Sei stato aggiunto in un poll riservato", body);
 
     }
 }
