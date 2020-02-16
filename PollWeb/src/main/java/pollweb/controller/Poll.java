@@ -18,6 +18,10 @@ import freemarker.template.utility.NumberUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +30,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.NumberUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import javax.servlet.http.HttpSession;
 
 import pollweb.data.model.Question;
@@ -85,14 +92,11 @@ public class Poll extends PollBaseController {
             request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n));
             res.activate("poll.ftl.html", request, response);
           }else{
-              request.setAttribute("poll_id", n);
-
-              res.activate("login_poll.ftl.html", request, response);
+               res.activate("login.ftl.html",request,response);
 
            }}//res.activate("error.ftl.html", request, response);
             }catch (DataException ex) {
-           Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
-       }
+          }
     }
 
 
@@ -197,11 +201,12 @@ public class Poll extends PollBaseController {
            Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
        }
 
+
     }
+
 
     @Override
     public String getServletInfo() {
         return "Main Newspaper servlet";
     }// </editor-fold>
-
 }
