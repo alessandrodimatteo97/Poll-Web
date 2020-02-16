@@ -53,6 +53,7 @@ public class PollDetailController extends PollBaseController {
         try {
             request.setAttribute("page_title", "Admin");
             request.setAttribute("poll", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(k));
+           
             request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(k));
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("poll_detail.ftl.html", request, response);

@@ -21,6 +21,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import pollweb.data.model.Partecipant;
 import pollweb.data.model.ResponsibleUser;
 import pollweb.data.model.Poll;
 
@@ -48,15 +49,16 @@ public class AdminController extends PollBaseController {
         try{
         TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("page_title", "Admin");
-        request.setAttribute("users", ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUsersNotAccepted());
-        //String active_one = SecurityLayer.retrieveSession(request);
-        //    ServletContext context = getServletContext( );
-        //        context.log(active_one);
-        ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
-        
-        request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
+        int userKey = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token")).getKey();
+        ResponsibleUser user_logged = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(userKey);
 
-        request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
+        if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkAdmin(user_logged)){
+            request.setAttribute("users", ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUsersNotAccepted());
+        }
+
+        //request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(userKey));
+
+        //request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(userKey));
         res.activate("adminPanel.ftl.html", request, response);
 
         } catch (DataException ex) {
@@ -70,24 +72,20 @@ public class AdminController extends PollBaseController {
         request.setAttribute("page_title", "Admin");
         String [] array = request.getParameterValues("checkbox");
 
-        request.setAttribute("results", array);
+        //request.setAttribute("results", array);
         try {
-        for(int i = 0; i<array.length; i++) {
-            
-            ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(parseInt(array[i]));
-            
-            request.setAttribute("userLogged", rs);
-            Boolean result = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().setAccepted(rs); 
-            ServletContext context = getServletContext( );
-            if(result) {
-                context.log("si");
-            } else {
-                context.log("no");
-            }
-                    
+            for (String s : array) {
 
+                ResponsibleUser ru = ((PollDataLayer) request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(SecurityLayer.checkNumeric(s));
+
+                request.setAttribute("userSelected", s);
+                
+                ((PollDataLayer) request.getAttribute("datalayer")).getResponsibleUserDAO().setAccepted(SecurityLayer.checkNumeric(s));
+                
+                SendEmail(ru);
+
+            }
             
-         } 
         action_default(request, response);
 
 
@@ -110,10 +108,10 @@ public class AdminController extends PollBaseController {
 
             String id_poll = request.getParameter("poll_id");
 
-            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(parseInt(id_poll));
+            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(SecurityLayer.checkNumeric(id_poll));
             ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setDeactivated(pollRs);
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
-            request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
+            // request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
             res.activate("mypolls_adminpanel.ftl.html", request, response, false);
         } catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
@@ -124,17 +122,25 @@ public class AdminController extends PollBaseController {
     private void action_activate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
+            
             request.setAttribute("page_title", "Admin");
 
             ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
+            
             String id_poll = request.getParameter("poll_id");
-
-            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(parseInt(id_poll));
+            
+            Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(SecurityLayer.checkNumeric(id_poll));
+            
             ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setActivated(pollRs);
+            
+
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
-            request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
+
+            // request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
 
             res.activate("mypolls_adminpanel.ftl.html", request, response, false);
+            
+            
 
         } catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
@@ -142,10 +148,19 @@ public class AdminController extends PollBaseController {
         }
     }
     
+    public void SendEmail(ResponsibleUser ru) throws ServletException {
+        String body = ru.getNameR()+
+                " ,congratulazioni sei diventato un responsabile.";
+
+        SecurityLayer.sendEmail(getServletContext().getInitParameter("user"), getServletContext().getInitParameter("pass"), ru.getEmail(), "Sei diventato un responsabile", body);
+
+    }
+    
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
        
         try {
+            
             if(request.getParameter("to_do") != null) {
                 if(request.getParameter("to_do").equals("activate")) {
                     action_activate(request, response);
@@ -162,6 +177,24 @@ public class AdminController extends PollBaseController {
                     if (request.getSession(false) == null) {
                         request.setAttribute("exception", "invalid_session");
                         action_error(request, response); //CASO SESSIONE NON VALIDA
+                    } 
+                    else if(request.getParameter("sec") != null) {
+                        switch(request.getParameter("sec")) 
+                        {   
+                            case "mine":
+                                action_my_polls(request, response);
+                                break;
+
+                            case "closed":
+                                action_my_closed_polls(request, response);
+                                break;
+
+                            case "info":
+                                action_information(request, response);
+                                break;
+
+                            default: action_default(request, response);
+                        }
                     } else {
                         action_default(request, response);
                     }
@@ -177,8 +210,53 @@ public class AdminController extends PollBaseController {
                 action_error(request, response);
 
             } catch (DataException ex) {
-                Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("exception", ex);
+            action_error(request, response);            
             }
+    }
+
+    private void action_my_polls(HttpServletRequest request, HttpServletResponse response) {
+        try{
+        TemplateResult res = new TemplateResult(getServletContext());
+        
+        request.setAttribute("page_title", "Admin");
+
+        int userKey = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token")).getKey();
+   
+        request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(userKey));
+        
+        res.activate("adminPanel.ftl.html", request, response);
+
+        } catch (DataException ex) {
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+}
+
+    private void action_my_closed_polls(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            
+            request.setAttribute("page_title", "Admin");
+
+            ResponsibleUser rs = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token"));
+               
+            request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
+
+            res.activate("adminPanel.ftl.html", request, response);
+
+        } catch (DataException ex) {
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void action_information(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

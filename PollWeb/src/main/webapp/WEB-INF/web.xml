@@ -46,6 +46,10 @@
         <servlet-class>pollweb.controller.ReservedPollList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>LoginReserved</servlet-name>
+        <servlet-class>pollweb.controller.LoginReserved</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>OpenPollList</servlet-name>
         <servlet-class>pollweb.controller.OpenPollList</servlet-class>
     </servlet>
@@ -76,6 +80,10 @@
     <servlet>
         <servlet-name>CreateQuestion</servlet-name>
         <servlet-class>pollweb.controller.CreateQuestion</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowAnswer</servlet-name>
+        <servlet-class>pollweb.controller.ShowAnswer</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>InsertParticipant</servlet-name>
@@ -143,6 +151,10 @@
         <url-pattern>/Login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>LoginReserved</servlet-name>
+        <url-pattern>/Login-poll</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>Admin</servlet-name>
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
@@ -161,6 +173,10 @@
     <servlet-mapping>
         <servlet-name>PollDetail</servlet-name>
         <url-pattern>/Poll_Detail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowAnswer</servlet-name>
+        <url-pattern>/ShowAnswer</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

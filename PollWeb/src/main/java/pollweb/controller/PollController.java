@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import pollweb.data.impl.AnswerImpl;
 import pollweb.data.model.Answer;
+import pollweb.data.model.Partecipant;
 import pollweb.data.model.Question;
 
 /**
@@ -83,7 +84,7 @@ public class PollController extends PollBaseController {
             request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n));
             res.activate("poll.ftl.html", request, response);
           }else{
-               res.activate("login.ftl.html",request,response);
+               res.activate("login_poll.ftl.html",request,response);
            
            }}//res.activate("error.ftl.html", request, response);
             }catch (DataException ex) {
@@ -107,7 +108,10 @@ public class PollController extends PollBaseController {
                   String str=request.getParameter(Integer.toString(q.getKey()));
                  
                   if(q.getTypeP().equalsIgnoreCase( "short text")){
-                     if(q.getObbligated() && str.isEmpty() ) sc.log("ERRORE è richiesta");
+                     if(q.getObbligated() && str.isEmpty() ){
+                         request.setAttribute("message", "devi rispondere alle domande obbligatorie");
+                         action_error(request, response);
+                     }
                      if(str.length()<= 65) answer.add(str);
                      else sc.log("TROPPO LUNGO");
                  
@@ -194,31 +198,53 @@ public class PollController extends PollBaseController {
    }
         
         
-    private void action_confirm(HttpServletRequest request, HttpServletResponse response, int n) throws DataException {
-      /*try{
+    private void action_confirm(HttpServletRequest request, HttpServletResponse response, int n) throws DataException, ParseException {
+      try{
                TemplateResult res = new TemplateResult(getServletContext());
                 // request.setAttribute("page_title", "Confirm Page");
               ServletContext sc = getServletContext();
                List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
                
                 
-                
+               ArrayList<Answer> answer = new ArrayList<>(); 
+               Partecipant p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserById(5);
           for(Question q : question){
-                 ArrayList<String> answer = new ArrayList<>();
+              if(q!= null){
+                 Answer a = ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().createAnswer();
                   String str=request.getParameter(Integer.toString(q.getKey()));
-                 
+                 sc.log(String.valueOf(q.getKey()));
                   if(q.getTypeP().equalsIgnoreCase( "short text")){
                      if(q.getObbligated() && str.isEmpty() ) sc.log("ERRORE è richiesta");
-                     if(str.length()<= 65) answer.add(str);
+                     if(str.length()<= 65) {
+                         sc.log(String.valueOf(q.getKey()));
+                  
+                         a.setQuestion(q);
+                         a.setPartecipant(p);
+                         JSONObject obj = new JSONObject();
+                         obj.put("1", str);
+                         a.setTextA(obj);
+                         
+                  }
                      else sc.log("TROPPO LUNGO");
                  
                   }else if(q.getTypeP().equalsIgnoreCase( "long text")){
                      if(q.getObbligated() && str.isEmpty() ) sc.log("ERRORE è richiesta");
-                   answer.add(request.getParameter(Integer.toString(q.getKey())));
+                         a.setQuestion(q);
+                         a.setPartecipant(p);
+                         JSONObject obj = new JSONObject();
+                         obj.put("1", str);
+                         a.setTextA(obj);
                  
                   }else if (q.getTypeP().equalsIgnoreCase("numeric")){
                       if(q.getObbligated() && str.isEmpty() ) sc.log("ERRORE è richiesta");
-                      if(NumberUtils.isDigits(str)) answer.add(request.getParameter(Integer.toString(q.getKey())));
+                      if(NumberUtils.isDigits(str)) {
+                           a.setQuestion(q);
+                         a.setPartecipant(p);
+                         JSONObject obj = new JSONObject();
+                         obj.put("1", str);
+                         a.setTextA(obj);
+                      }
+                          
                     //res.activate("error.ftl.html", request, response);
                 
                   }else if(q.getTypeP().equalsIgnoreCase("date")){
@@ -234,15 +260,18 @@ public class PollController extends PollBaseController {
                         if(!formatter.format(date).equals(str)){
                             sc.log("DATA NON NELLO GIUSTO FORMATO");
                         }else{
-                        sc.log(date.toString());
-                        answer.add(str);
+                         a.setQuestion(q);
+                         a.setPartecipant(p);
+                         JSONObject obj = new JSONObject();
+                         obj.put("1", str);
+                         a.setTextA(obj);
                         } 
                       }else sc.log("ERRORE ci sono pochi numeri");
                      }else sc.log("ERRORE DATA non corretta");
                 
                   }else if (q.getTypeP().equalsIgnoreCase("single choice")){
                      if(q.getObbligated() && str.isEmpty() ) sc.log("ERRORE");
-                     if(!q.getObbligated() && str.equals("-nessuna selezionata-")) answer.add(str);
+                     if(!q.getObbligated() && str.equals("-nessuna selezionata-")) ;
                      String respo=new String();
                      String letter = new String();
                      for(int i=0;i<str.length();i++){
@@ -254,16 +283,24 @@ public class PollController extends PollBaseController {
                             }sc.log("cazzi");
                          }else sc.log("c'è qualcosa che non va");
                      }
-                   if(respo.equals(str)){ answer.add(str);
+                   if(respo.equals(str)){ 
+                        a.setQuestion(q);
+                         a.setPartecipant(p);
+                         JSONObject obj = new JSONObject();
+                         obj.put(letter, q.getPossibleAnswer().getString(letter));
+                         a.setTextA(obj);
                    }else sc.log("cazzissimi");
                    
               }else if(q.getTypeP().equalsIgnoreCase( "multiple choice")){
                  
-                  String[] a = request.getParameterValues(Integer.toString(q.getKey()));
                   
-                  // if(a.length<1 && q.getObbligated() ) sc.log("ERRORE");                     
+                  String[] multi = request.getParameterValues(Integer.toString(q.getKey()));
+                  a.setQuestion(q);
+                         a.setPartecipant(p);
+                         JSONObject obj = new JSONObject();
+                 // if(multi.length<1 && q.getObbligated() ) sc.log("ERRORE");                     
                     //sc.log(String.valueOf(a.length));
-                 for (String s : a){
+                 for (String s : multi){
                       String respo=new String();
                      String letter = new String();
                      for(int i=0;i<s.length();i++){
@@ -276,21 +313,29 @@ public class PollController extends PollBaseController {
                             }sc.log("cazzi");
                          }else sc.log("c'è qualcosa che non va");
                      }
-                   if(respo.equals(s)){ answer.add(s);
+                   if(respo.equals(s)){ 
+                       obj.put(letter, q.getPossibleAnswer().getString(letter));
                    }else sc.log("cazzissimi"); 
-                  }
+                 
+                 }
+                 a.setTextA(obj);
                   
-              }
+              } answer.add(a);
                
-               q.setAnswer(answer);
+
           }
-            request.setAttribute("questions",question);
+                        for (Answer a : answer){
+                  sc.log(a.getQuestion().toString() + a.getTextA().toString());
+              }
+            /*request.setAttribute("questions",question);
             request.setAttribute("poll" ,((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(n));
-             res.activate("confirmPoll.ftl.html", request, response);
-            }catch(DataException ex){
+             res.activate("confirmPoll.ftl.html", request, response);*/
+            }
+            }
+                catch(DataException ex){
                 request.setAttribute("message", ex);
                 action_error(request, response);
-            }*/
+            }
    }
     /**
      * Returns a short description of the servlet.
@@ -321,9 +366,10 @@ public class PollController extends PollBaseController {
             action_error(request, response);
 
         } catch (DataException ex) {
-           Logger.getLogger(PollController.class.getName()).log(Level.SEVERE, null, ex);
+          request.setAttribute("mesage", ex);
+          this.action_error(request, response);
        } catch (ParseException ex) {
-           Logger.getLogger(PollController.class.getName()).log(Level.SEVERE, null, ex);
+          this.action_error(request, response);
        }
   
     }

@@ -44,7 +44,7 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         try {
             super.init();            
             insertResponsibleUser = connection.prepareStatement("INSERT INTO responsibleUser (nameR , surnameR, fiscalCode , email, pwd) values (?,?,?,?,?)");
-            //updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
+            updateResponsibleUser = connection.prepareStatement("UPDATE responsibleUser SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?");
             getAllResponsible = connection.prepareStatement("SELECT ID FROM responsibleUser");
             getResponsibleById = connection.prepareStatement("SELECT * FROM responsibleUser WHERE ID=?");
             getAllRespNotAccepted = connection.prepareCall("SELECT ID FROM responsibleUser WHERE accepted=0");
@@ -170,23 +170,21 @@ public class ResponsibleUserDAO_MySQL extends DAO implements ResponsibleUserDAO{
         }
         return result;
     }
-    @Override
-    public boolean setAccepted(ResponsibleUser user) throws DataException {
+    @Override// SET nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=? where ID=?
+    public boolean setAccepted(int key) throws DataException {
         try{
-            this.updateResponsibleUser.setString(1, user.getNameR());//nameR=?, surnameR=?, email=?,pwd=?,administrator=?, accepted=?
-            this.updateResponsibleUser.setString(2, user.getSurnameR());
-            this.updateResponsibleUser.setString(3, user.getEmail());
-            this.updateResponsibleUser.setString(4, user.getPwd());
-            this.updateResponsibleUser.setInt(5, user.getKey());
+            this.updateRespToAccepted.setInt(1, 1);
+            this.updateRespToAccepted.setInt(2, key);
 
-            int result = this.updateResponsibleUser.executeUpdate();
-            if (result == 1) {
+            
+            boolean result = this.updateRespToAccepted.execute();
+            if (result) {
             return true;
         }
         } catch (SQLException ex) {
-            throw new DataException("wwww", ex);
+            throw new DataException(Integer.toString(key), ex);
         }
-        
+
         return false;
     }
 

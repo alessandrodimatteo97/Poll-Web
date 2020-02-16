@@ -35,6 +35,7 @@ public interface PollDAO {
     Poll createHomePoll( ResultSet rs ) throws DataException;
 
     
+    
     Poll getPollById(int pollId) throws DataException;
     
     List<Poll> getPollsByUserId(int userId) throws DataException;
@@ -53,9 +54,7 @@ public interface PollDAO {
         
     void storePoll( Poll poll) throws DataException;
     
-      List<Poll> getAllPolls() throws DataException;
-  
-     boolean pollContainsQuestion(int poll_key, int question_key) throws DataException;
+    List<Poll> getAllPolls() throws DataException;
       
-    
+    boolean pollContainsQuestion(int poll_key, int question_key) throws DataException;
 }

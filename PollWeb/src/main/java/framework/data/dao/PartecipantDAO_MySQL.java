@@ -34,6 +34,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
     private PreparedStatement addPartecipantToPoll;
     private PreparedStatement addToken;
     private PreparedStatement deleteParticipantToPoll;
+    private PreparedStatement checkPartecipant;
     public PartecipantDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -43,6 +44,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
         
         try {
             super.init();
+            checkPartecipant = connection.prepareStatement("SELECT * FROM participant, participation WHERE participant.ID = participation.ID_part AND participant.email=? AND participant.pwd=? AND participation.ID_poll=? ");
             searchPartecipantById = connection.prepareStatement("SELECT * FROM participant WHERE ID=?");
             searchPartecipantByPollId = connection.prepareStatement("SELECT participant.id as id FROM participant, participation where participant.ID = participation.ID_part AND participation.ID_poll = ?");
             getPartecipants = connection.prepareStatement("SELECT ID FROM participant");
@@ -276,8 +278,20 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
         }
     }
 
+    @Override //checkPartecipant = connection.prepareStatement("SELECT * FROM participant, participation WHERE participant.ID = participation.ID_part AND participant.email=? AND participant.pwd=? participation.ID_poll=? ");
+    public boolean loginPartecipant(Partecipant p, int pollid) throws DataException {
+        try {
+            this.checkPartecipant.setString(1, p.getEmail());
+            this.checkPartecipant.setString(2, p.getPwd());
+            this.checkPartecipant.setInt(3, pollid);
+            try (ResultSet rs = this.checkPartecipant.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new DataException("login partecipant error", e);
+        }
 
-
+    }
 
 
 }

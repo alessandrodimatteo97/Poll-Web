@@ -78,7 +78,7 @@ public class Home extends PollBaseController {
      */
     @Override
     public String getServletInfo() {
-        return "Main Newspaper servlet";
+        return "Main poll servlet";
     }// </editor-fold>
 
 

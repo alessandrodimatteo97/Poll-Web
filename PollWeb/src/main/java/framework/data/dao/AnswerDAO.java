@@ -26,4 +26,6 @@ public interface AnswerDAO {
     Answer getAnswerById(int AnswerId) throws DataException;
 
     Answer getAnswerByQuestionIdParticipantId(int idp, int idq)throws DataException;
+    
+    
 }
