@@ -8,6 +8,9 @@ package framework.data.proxy;
 import framework.data.DataLayer;
 import org.json.JSONObject;
 import pollweb.data.impl.AnswerImpl;
+import pollweb.data.model.Partecipant;
+import pollweb.data.model.Poll;
+import pollweb.data.model.Question;
 
 
 /**
@@ -36,6 +39,21 @@ public class AnswerProxy extends AnswerImpl{
     public void setKey(int key){
         super.setKey(key);
         this.dirty= true;
+    }
+    
+    @Override
+    public void setQuestion(Question question){
+        super.setQuestion(question);
+        this.questionKey= question.getKey();
+        this.dirty=true;
+    }
+    
+    @Override
+    
+    public void setPartecipant(Partecipant partecipant){
+        super.setPartecipant(partecipant);
+        this.partecipantKey=partecipant.getKey();
+        this.dirty=true;
     }
 
     public void setPartecipantKey(int key){

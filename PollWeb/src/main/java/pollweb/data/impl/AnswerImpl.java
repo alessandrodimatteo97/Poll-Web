@@ -7,6 +7,8 @@ package pollweb.data.impl;
 
 import pollweb.data.model.Answer;
 import org.json.JSONObject;
+import pollweb.data.model.Partecipant;
+import pollweb.data.model.Question;
 /**
  *
  * @author achissimo
@@ -20,8 +22,16 @@ texta json not null,
 public class AnswerImpl implements Answer {
     private JSONObject textA;
     private int key;
+    private Question question;
+    private Partecipant partecipant;
     
-    public AnswerImpl(){}
+    public AnswerImpl(){
+    this.textA = null;
+    this.key=0;
+    this.question=null;
+    this.partecipant = null;
+    }
+    
     public AnswerImpl(int key,JSONObject textA){
         this.textA = new JSONObject(textA);
         this.key=key;
@@ -45,6 +55,26 @@ public class AnswerImpl implements Answer {
     @Override 
     public void setKey(int key){
         this.key= key;
+    }
+
+    @Override
+    public Question getQuestion() {
+        return question;
+    }
+
+    @Override
+    public Partecipant getPartecipant() {
+        return partecipant;
+    }
+
+    @Override
+    public void setQuestion(Question question) {
+        this.question=question;
+    }
+
+    @Override
+    public void setPartecipant(Partecipant partecipant) {
+        this.partecipant=partecipant;
     }
    
 }
