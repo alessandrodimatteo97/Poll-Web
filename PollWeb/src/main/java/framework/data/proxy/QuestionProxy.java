@@ -7,14 +7,12 @@ package framework.data.proxy;
 
 import framework.data.DataException;
 import framework.data.DataLayer;
-import framework.data.dao.AnswerDAO;
 import framework.data.dao.PollDAO;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONObject;
 import pollweb.data.impl.QuestionImpl;
-import pollweb.data.model.Answer;
 import pollweb.data.model.Poll;
 
 /**
@@ -65,13 +63,13 @@ public class QuestionProxy  extends QuestionImpl {
     }
     
     @Override 
-    public void setAnswer(List<Answer> answer) {
+    public void setAnswer(List<String> answer) {
         super.setAnswer(answer);
         this.dirty = true;
     }
     
-     @Override
-     public List<Answer> getAnswer(){
+   
+     /*public List<Answer> getAnswer(){
          if (super.getAnswer() == null){
              try {
                  super.setAnswer(((AnswerDAO) dataLayer.getDAO(Answer.class)).getAnswersByQuestionId(this.poll_key));
@@ -80,7 +78,9 @@ public class QuestionProxy  extends QuestionImpl {
              }
          }
          return super.getAnswer();
-     }
+     }*/
+
+     
      @Override
      public void setNumber(int number){
         super.setNumber(number);

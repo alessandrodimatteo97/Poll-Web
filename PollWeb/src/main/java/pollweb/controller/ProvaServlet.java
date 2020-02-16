@@ -56,12 +56,10 @@ public class ProvaServlet extends PollBaseController {
 
             for(Partecipant partecipant: participants){
              fstream.write("user: "+partecipant.getKey()+";");
-             for (Question question: questions){
+            for (Question question: questions){
                 fstream.write(((PollDataLayer) request.getAttribute("datalayer")).getAnswerDAO().getAnswerByQuestionIdParticipantId(partecipant.getKey(), question.getKey()).getTextA().toString()+";");
-
-             }
+            }
                 fstream.write("\n");
-
             }
             fstream.close();
             res.activate(temp, request, response);

@@ -1,12 +1,46 @@
-
+<br>
 <div class="container-fluid">
     <div class="row">
-<#if (users?size>0)>
-    <div class="col-md-7">
-        <div class="card">
-            <div class="header">
-                <h4 class="title">Tutti i nostri utenti che hanno richiesto l'utenza di tipo "Responsabile"</h4>
+        <nav class="col-md-3 d-none d-md-block sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="h4 nav-link active" href="admin">
+                  Richiedenti <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="h4 nav-link" href="admin?sec=mine">
+                  I miei sondaggi
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="h4 nav-link" href="admin?sec=closed">
+                  Sondaggi chiusi
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="h4 nav-link" href="admin?sec=info">
+                  Modifica le mie informazioni
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="h4 nav-link" href="logout">
+                    Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        
+<#if (users??)>
+    <div class="col-md-9">
+               
+        <div class="header bg-light">
+                <h4 class="h1 title">Tutti i nostri utenti che hanno richiesto l'utenza di tipo "Responsabile"</h4>
             </div>
+        <div class="card">
+            
             <div class="content table-responsive table-full-width">
                 <table class="table table-hover table-striped">
                     <form method="POST" action="" id="form1">
@@ -34,15 +68,21 @@
             </div>
         </div>
     </div>
-</#if>
-<#if (polls?size>0)>
+<#else>
 
-    <div class="col-md-5 my_polls">
-        <#include 'mypolls_adminpanel.ftl.html'>
-    </div>
+
+
+
+
+<#if (polls?has_content || closed_polls?has_content)>
+
+        <div class="col-md-9 my_polls">
+            <#include 'mypolls_adminpanel.ftl.html'>
+        </div>
 
 </#if>
 
 
         
+</#if>
 

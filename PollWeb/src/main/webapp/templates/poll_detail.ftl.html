@@ -15,6 +15,13 @@
                 <input type="hidden" name="purpose" value="activate">
                 <button type="submit" class="btn btn-primary" form="activate" value="Submit">Attiva</button>
             </form>
+        <br>
+        <div class="btn-group">
+        <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
+    </div>   
+    <div class="btn-group">
+        <a href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Order Question</a>
+    </div>
         <#elseif !poll.activated && poll.alreadyActivated>
             <p>Non puoi più attivare questo sondaggio!</p>
             <div class="btn-group">
@@ -24,9 +31,8 @@
             <p>${poll.activated?string('yes', 'no')} e poi ${poll.alreadyActivated?string('yes', 'no')}</p>
         </#if>
     </div>
-    <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
-        <a  href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Order Question</a>
-        <a  href="admin" class="btn btn-primary">Finish</a>
+    <br>
+    
 </section>
 
 <div class="album py-5 bg-light">
@@ -47,7 +53,7 @@
                             </div>
                             <#else>
                             <div class="btn-group">
-                                <a href="#" class="btn btn-sm btn-outline-secondary">Vedi le risposte ottenute</a>
+                                <a href="ShowAnswer?q=${question.key}" class="btn btn-sm btn-outline-secondary">Vedi le risposte ottenute</a>
                             </div>
                             </#if>
                         </div>

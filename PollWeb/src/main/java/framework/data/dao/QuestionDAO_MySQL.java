@@ -10,7 +10,6 @@ import framework.data.DAO;
 import framework.data.DataException;
 import framework.data.DataLayer;
 import framework.data.proxy.QuestionProxy;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
     private PreparedStatement getQuestionsByPollId, getQuestionById;
     private PreparedStatement updateQuestion, deleteQuestion;
     private PreparedStatement getNumberQuestion;
-    private PreparedStatement checkQuestionPoll;
+    private PreparedStatement checkQuestionPoll, checkQuestionUser;
     public QuestionDAO_MySQL(DataLayer d) {
         super(d);
     }
@@ -40,12 +39,14 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
         try {
             super.init();
             getNumberQuestion = connection.prepareStatement("SELECT COUNT(ID) AS number FROM question where IDP = ?");
-             getQuestionById = connection.prepareStatement("SELECT * FROM question  WHERE ID=? order by number");
-             getQuestionsByPollId = connection.prepareStatement("SELECT * FROM question JOIN poll ON question.IDP=poll.ID WHERE poll.ID=? order by number");
-             updateQuestion = connection.prepareStatement("UPDATE question SET textq=?,typeq=?,note=?,obbligation=?,possible_answer=?, number=? WHERE ID=?");
-             deleteQuestion = connection.prepareStatement("DELETE FROM question WHERE ID=?");
-             createQuestion = connection.prepareStatement("INSERT INTO question (textq, typeq,note,obbligation,IDP, possible_answer) VALUES(?,?,?,?,?, ?)", Statement.RETURN_GENERATED_KEYS);
-             checkQuestionPoll = connection.prepareStatement("SELECT  * FROM question WHERE ID=? AND IDP=?");
+            getQuestionById = connection.prepareStatement("SELECT * FROM question  WHERE ID=? order by number");
+            getQuestionsByPollId = connection.prepareStatement("SELECT * FROM question JOIN poll ON question.IDP=poll.ID WHERE poll.ID=? order by number");
+            updateQuestion = connection.prepareStatement("UPDATE question SET textq=?,typeq=?,note=?,obbligation=?,possible_answer=?, number=? WHERE ID=?");
+            deleteQuestion = connection.prepareStatement("DELETE FROM question WHERE ID=?");
+            createQuestion = connection.prepareStatement("INSERT INTO question (textq, typeq,note,obbligation,IDP, possible_answer) VALUES(?,?,?,?,?, ?)", Statement.RETURN_GENERATED_KEYS);
+            checkQuestionPoll = connection.prepareStatement("SELECT  * FROM question WHERE ID=? AND IDP=?");
+            checkQuestionUser = connection.prepareStatement("SELECT question.* FROM question, poll, responsibleUser WHERE question.IDP = poll.ID AND poll.idR = responsibleUser.ID and question.ID=? and responsibleUser.token=?");
+             
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer", ex);
         }
@@ -76,6 +77,7 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
         try {
             question.setKey(rs.getInt("ID"));
             question.setNote(rs.getString("note"));
+
             if(rs.getString("possible_answer")!=null){
                JSONObject j = new JSONObject(rs.getString("possible_answer"));
                 question.setPossibleAnswer(j);
@@ -321,6 +323,19 @@ catch (SQLException ex) {
             throw new DataException("question is not included in the poll, incorrect id_question or id_poll, ", ex);
 
         }
+    }
+
+    @Override
+    public boolean checkQuestionUser(int question_key, String token) throws DataException {
+        try {
+            checkQuestionUser.setInt(1, question_key);
+            checkQuestionUser.setString(2, token);
+            return checkQuestionUser.executeQuery().first();
+        }
+        catch(SQLException ex) {
+            throw new DataException(" ", ex);
+
+        }   
     }
 
 

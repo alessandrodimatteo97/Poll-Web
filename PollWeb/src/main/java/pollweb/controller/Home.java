@@ -11,6 +11,7 @@ import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +45,7 @@ public class Home extends PollBaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("page_title", "Home");
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getAllPolls());
-           
+        
             res.activate("home.ftl.html", request, response);
         } catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
@@ -77,7 +78,7 @@ public class Home extends PollBaseController {
      */
     @Override
     public String getServletInfo() {
-        return "Main Newspaper servlet";
+        return "Main poll servlet";
     }// </editor-fold>
 
 

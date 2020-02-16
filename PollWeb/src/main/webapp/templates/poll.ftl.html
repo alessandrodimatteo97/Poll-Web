@@ -4,31 +4,115 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-     <#if (questions?size>0)>
-        <div class="container">
-        <div class="row">
-          <#list questions as question>
-
-          <div class="col-sm-3 mt-5">
-    <div class="card">
-      <div class="card-body">
-               <#if (question.textq?has_content)>
-
-        <h5 class="card-title">${question.textq}</h5>
-         <div class="card-body"> 
              
-          <#if (question.possibleAnswer?has_content)>
-        <p class="card-text">${question.possibleAnswer}</p>
-            </#if>
-       </div>
-          </#if>
-        
-       
-      </div>
-    </div>
-  </div>
-               </#list>
 
-</div>
-        </div>
-        </#if>
+ <#if (questions?size>0)>
+ <form class="justify-content-center" action="Poll" method="post">
+     <div class="container">
+         <div class="row">         
+             <input type="hidden" name="n" value="${poll.key}"/>
+             
+             <#list questions as question> 
+               
+             <div class="col-sm-3 mt-5">                 
+                 <div class="card">                       
+                     <div class="card-body">                                    
+                         <#if (question.textq?has_content)>                              
+                         <h5 class="card-title">${question.textq}</h5>   
+                         <#if (question.note?has_content)>
+                         <h6> ${question.note}</h6>
+                         </#if>
+                         <div class="card-body">                                       
+                             <#if question.typeP == "short text" >                    
+                             <input name="${question.key}" class="form-control rounded-0" id="shortText" placeholder="Rispondere qui" <#if question.obbligated> required </#if>>
+                             <#elseif question.typeP == "long text">
+                               <textarea name="${question.key}" class="form-control rounded-0" id="shortText" placeholder="Rispondere qui" rows="6" <#if question.obbligated> required </#if>></textarea>
+                               <#elseif question.typeP == "numeric">
+                               <input type="number" id="inputNumber" name="${question.key}"  placeholder="Rispondere qui" <#if question.obbligated> required </#if>>   
+                               <#elseif question.typeP == "date">
+                                   <!--input name="date" class="form-control" type="date"  id="date"-->
+
+                                   <div class="form-group"> <!-- Date input -->
+                                    <label class="control-label" for="date">Data</label>
+                                    <input class="form-control" id="date" name="${question.key}" placeholder="MM/DD/YYY" type="text" <#if question.obbligated> required </#if>/>
+                                   </div>
+                                   
+                             <#elseif question.typeP == "single choice">                                       
+                             <#if (question.possibleAnswer?has_content)>                                   
+                             
+                             <div class="form-group"> 
+                                 
+                                 <select class="form-control" id="inlineFormCustomSelect" name="${question.key}" <#if question.obbligated> required </#if> >  
+                                      <#if !(question.obbligated)>
+                                         <option selected> - nessuna selezionata -</option>
+                                     </#if>
+                                     <#list question.possibleAnswer?eval as key, value>
+                                     <option >${key} ${value}</option>   
+                                     </#list>
+                                 </select>
+                                 </div> 
+                                
+                                </#if> 
+                               
+                                 <#elseif question.typeP == "multiple choice"> 
+                                  <#if (question.possibleAnswer?has_content)>                                   
+                             <#list question.possibleAnswer?eval as key, value>
+                                 <div class="form-check">
+                                     <input id="checkbox1" type="checkbox" name="${question.key}" value="${key} ${value}" <#if question.obbligated> required="required" class="required_group"</#if>>
+                                     <label for="checkbox1">${key} ${value}</label>
+                                 </div>
+                                 
+                                                                                                                   
+                             </#list>                                       
+                             </#if>                                      
+                             </#if>                             
+                         </div>                                
+                         </#if>                                       
+                     </div>                  
+                 </div>          
+             </div>                   
+             </#list>       
+         </div>             
+     </div>   
+     <div class="form-group " align="center">
+    <br/><br/>  
+    <button type="submit" value="showResume" name="showResume"> Mostra risposte </button>
+    </br>
+        </br>
+  </div>
+    
+ </form>
+ </#if>
+
+
+
+
+<!--  jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
+<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+
+<!-- Bootstrap Date-Picker Plugin -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'mm/dd/yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+</script>
+
+<script>
+    $('form').on('click', '.required_group', function(){
+    $('input.required_group').prop('required', $('input.required_group:checked').length === 0);
+});
+</script>
