@@ -45,7 +45,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             /*   Qui scrivo gli statement precompilati   */
             getAllPolls = connection.prepareStatement("SELECT * FROM poll where activated='yes'");
             searchPollByPollId = connection.prepareStatement("SELECT * FROM poll WHERE ID=?");
-            searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND ((activated='no' AND alreadyActivated='no') OR (activated='yes' AND alreadyActivated='yes'));");
+            searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND ((activated='no' AND alreadyActivated='no') OR (activated='yes' AND alreadyActivated='yes'))  order by alreadyActivated = 'yes';");
             searchAlreadyActivatedPollsByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='yes'");
 
             searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open' AND activated='yes'");
@@ -456,7 +456,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             poll.setActivated("yes");
             
         } catch (SQLException ex) {
-            throw new DataException("Unable to create article object form ResultSet", ex);
+            throw new DataException("Unable to create poll object form ResultSet", ex);
         }
         return poll;    }
     

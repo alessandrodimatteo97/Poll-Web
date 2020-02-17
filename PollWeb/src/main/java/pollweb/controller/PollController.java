@@ -187,7 +187,7 @@ public class PollController extends PollBaseController {
                          request.setAttribute("message", "errore, campo obbligatorio");
                          action_error(request, response);
                      }
-                     if(!q.getObbligated() && str.equals("-nessuna selezionata-")) answer.add(str);
+                     if(!q.getObbligated() && str.equals("- nessuna selezionata -")) answer.add(str);
                      String respo=new String();
                      String letter = new String();
                      for(int i=0;i<str.length();i++){
@@ -351,32 +351,33 @@ public class PollController extends PollBaseController {
                      if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message", "ERRORE");
                          action_error(request, response);}
-                     if(!q.getObbligated() && str.equals("- nessuna selezionata -")) ; // todo errore
-                     String respo=new String();
-                     String letter = new String(); // errore
-                     for(int i=0;i<str.length();i++){
-                         if(Character.isAlphabetic(str.charAt(i))){
-                             letter = letter+str.charAt(i);
-                            if(q.getPossibleAnswer().has(letter)) {
-                              respo=  letter + " " + q.getPossibleAnswer().getString(letter);
-                               break;
-                            }//sc.log("cazzi");
-                         }else {
-                             request.setAttribute("message", "c'è qualcosa che non va");
+                     if(!q.getObbligated() && !str.equals("- nessuna selezionata -")) { // todo errore
+                         String respo = new String();
+                         String letter = new String(); // errore
+                         for (int i = 0; i < str.length(); i++) {
+                             if (Character.isAlphabetic(str.charAt(i))) {
+                                 letter = letter + str.charAt(i);
+                                 if (q.getPossibleAnswer().has(letter)) {
+                                     respo = letter + " " + q.getPossibleAnswer().getString(letter);
+                                     break;
+                                 }
+                                 //sc.log("cazzi");
+                             } else {
+                                 request.setAttribute("message", "c'è qualcosa che non va");
+                                 action_error(request, response);
+                             }
+                         }
+                         if (respo.equals(str)) {
+                             a.setQuestion(q);
+                             a.setPartecipant(p);
+                             JSONObject obj = new JSONObject();
+                             obj.put(letter, q.getPossibleAnswer().getString(letter));
+                             a.setTextA(obj);
+                         } else {
+                             request.setAttribute("message", "error");
                              action_error(request, response);
                          }
                      }
-                   if(respo.equals(str)){
-                        a.setQuestion(q);
-                         a.setPartecipant(p);
-                         JSONObject obj = new JSONObject();
-                         obj.put(letter, q.getPossibleAnswer().getString(letter));
-                         a.setTextA(obj);
-                   }else {
-                       request.setAttribute("message", "error");
-                       action_error(request, response);
-                   }
-
               }else if(q.getTypeP().equalsIgnoreCase( "multiple choice")){
                  
                   
