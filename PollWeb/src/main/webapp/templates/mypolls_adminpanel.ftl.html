@@ -1,4 +1,4 @@
-    <#if polls?has_content>
+    <#if polls??>
     <br>
                 <h4 class="h1 title">I miei sondaggi</h4>
             <div class="card ">
@@ -55,7 +55,10 @@
                     </div>
                 </div>
             </div>
-    </#if>
+    
+            </#if>
+
+    
     <br>
     <#if closed_polls?has_content>
 <div class="col-md-9">
