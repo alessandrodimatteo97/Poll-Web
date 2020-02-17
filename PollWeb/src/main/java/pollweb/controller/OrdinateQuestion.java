@@ -73,10 +73,12 @@ public class OrdinateQuestion extends PollBaseController {
 
     private void action_update(HttpServletRequest request, HttpServletResponse response, int poll_key) {
        try {
+           //TemplateResult result = new TemplateResult(getServletContext());
            Poll poll = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(poll_key);
            Question question;
-           request.setAttribute("poll", poll);
-           request.setAttribute("questions", ((PollDataLayer) request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(poll_key));
+          // request.setAttribute("poll", poll);
+
+          // request.setAttribute("questions", ((PollDataLayer) request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(poll_key));
         String[] q = request.getParameterValues("question");
 
            for (int i=0; i< q.length ; i++){
@@ -84,7 +86,9 @@ public class OrdinateQuestion extends PollBaseController {
              question.setNumber(i+1);
               ((PollDataLayer) request.getAttribute("datalayer")).getQuestionDAO().store(question);
            }
-           action_write(request, response, poll_key);
+        //   result.activate();
+          // action_write(request, response, poll_key);
+           response.sendRedirect("Poll_Detail?k="+poll.getKey());
         }
        catch (Exception ex){
            request.setAttribute("message", ex);
@@ -119,7 +123,7 @@ public class OrdinateQuestion extends PollBaseController {
         try {
             idU = (((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(poll_key).getRespUser().getKey());
             if ((idU != Integer.parseInt(request.getSession().getAttribute("userid").toString()))) {
-                request.setAttribute("message", "it is not your poll asshole");
+                request.setAttribute("message", "it is not your poll");
                 action_error(request, response);
             }
         }

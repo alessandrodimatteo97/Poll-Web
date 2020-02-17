@@ -139,7 +139,6 @@ public class SecurityLayer {
         String token = tokenGenerator(s);
         // Cookie cookie = new Cookie("token", token);
         s.setAttribute("token", token);
-        // todo scrivere una fuonzione in modo tale da capire se si è nel sito per riempire sondaggi oppure nella parte backend;
         try {
             ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().setToken(username, token);
             s.setAttribute("part_id",((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(token).getKey());
