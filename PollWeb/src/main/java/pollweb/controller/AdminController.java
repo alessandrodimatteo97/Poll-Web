@@ -15,15 +15,18 @@ import framework.security.SecurityLayer;
 import java.io.IOException;
 import static java.lang.Integer.parseInt;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.inject.New;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import pollweb.data.model.Partecipant;
-import pollweb.data.model.ResponsibleUser;
 import pollweb.data.model.Poll;
+import pollweb.data.model.ResponsibleUser;
 
 /**
  *
@@ -135,12 +138,19 @@ public class AdminController extends PollBaseController {
             
             Poll pollRs = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(SecurityLayer.checkNumeric(id_poll));
             
+            
+            
             ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().setActivated(pollRs);
             
-
+            List<Partecipant> participants = new ArrayList<Partecipant>();
+            
+            participants.addAll(((PollDataLayer) request.getAttribute("datalayer")).getPartecipantDAO().getPartecipantsByPollId(SecurityLayer.checkNumeric(id_poll)));
+            
+            for (Partecipant p : participants) {
+                SendEmailParticipant(p, pollRs.getUrl());
+            }
+            
             request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(rs.getKey()));
-
-            // request.setAttribute("closed_polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsAlreadyActivatedAndClosedByUserId(rs.getKey()));
 
             res.activate("mypolls_adminpanel.ftl.html", request, response, false);
             
@@ -157,6 +167,14 @@ public class AdminController extends PollBaseController {
                 " ,congratulazioni sei diventato un responsabile.";
 
         SecurityLayer.sendEmail(getServletContext().getInitParameter("user"), getServletContext().getInitParameter("pass"), ru.getEmail(), "Sei diventato un responsabile", body);
+
+    }
+    
+    public void SendEmailParticipant(Partecipant p, String url) throws ServletException {
+        String body = p.getNameP() + 
+                " il sondaggio a cui sei stato invitato è stato attivato, clicca qui per accedere: " + url;
+
+        SecurityLayer.sendEmail(getServletContext().getInitParameter("user"), getServletContext().getInitParameter("pass"), p.getEmail(), "Sondaggio attivato", body);
 
     }
     

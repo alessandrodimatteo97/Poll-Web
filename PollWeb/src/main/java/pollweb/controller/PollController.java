@@ -6,44 +6,31 @@ package pollweb.controller;
  * and open the template in the editor.
  */
 
-import com.sun.xml.internal.fastinfoset.util.CharArray;
 import framework.data.DataException;
 import framework.data.dao.PollDataLayer;
-import framework.data.proxy.AnswerProxy;
-import framework.data.proxy.QuestionProxy;
 import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
 import framework.security.SecurityLayer;
-import static framework.security.SecurityLayer.checkNumeric;
-import freemarker.template.utility.NumberUtil;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.NumberUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import pollweb.data.impl.AnswerImpl;
 import pollweb.data.model.Answer;
 import pollweb.data.model.Partecipant;
 import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -450,8 +437,9 @@ public class PollController extends PollBaseController {
                  action_answer(request, response,n);
              }else if (request.getParameter("confirm")!= null) {
                  action_confirm(request, response, n);
-             }
+             } else {
                 action_default(request, response, n);
+             }
             }else {
                 action_open_poll(request, response);
             }

@@ -86,6 +86,10 @@
         <servlet-class>pollweb.controller.ShowAnswer</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>pollweb.controller.LogoutController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>InsertParticipant</servlet-name>
         <servlet-class>pollweb.controller.InsertParticipant</servlet-class>
         <multipart-config>
@@ -177,6 +181,10 @@
     <servlet-mapping>
         <servlet-name>ShowAnswer</servlet-name>
         <url-pattern>/ShowAnswer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

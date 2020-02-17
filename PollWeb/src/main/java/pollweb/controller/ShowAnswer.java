@@ -33,11 +33,15 @@ public class ShowAnswer extends PollBaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         HttpSession session_online = SecurityLayer.checkSession(request);
         String token = session_online.getAttribute("token").toString();   
-        
+        ServletContext sc = getServletContext();
+        sc.log(token);
         try {
             if(!request.getParameter("q").isEmpty()) {
                 int question_key = SecurityLayer.checkNumeric(request.getParameter("q"));
-                    if(((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().checkQuestionUser(question_key, token)) {
+                    if(
+                        ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().checkQuestionUser(question_key, token)
+                        /*|| QUESTION APERTA FA PARTE DELLA DOMANDA*/ )
+                    ) {
                         action_show_answers(request, response, question_key);
                     } else {
                   //      response.setStatus(401);
@@ -73,8 +77,8 @@ public class ShowAnswer extends PollBaseController {
         
     }
 
-    private void action_error(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect("Login");
+    private void action_error(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        throw new ServletException("This question is not yours! Change number of the question.");    
     }
 
 }

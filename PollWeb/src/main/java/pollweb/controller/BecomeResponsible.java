@@ -65,17 +65,19 @@ public class BecomeResponsible extends PollBaseController {
         try {
             if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(session_logged.getAttribute("token").toString()).getAccepted()) {
                 response.sendRedirect("admin");
-            }
-            request.setAttribute("ok", false);
-     
-            if(request.getParameter("register")!= null){
-                this.action_register(request, response);
-            }
-            
-            else{
-            action_default(request, response);
-            }
+            } 
+            else 
+            {
+                //request.setAttribute("ok", false);
 
+                if(request.getParameter("register")!= null){
+                    this.action_register(request, response);
+                } 
+                else 
+                {
+                    action_default(request, response);
+                }
+            }
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
             action_error(request, response);
