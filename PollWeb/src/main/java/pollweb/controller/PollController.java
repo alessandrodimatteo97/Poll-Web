@@ -42,6 +42,7 @@ import org.json.JSONObject;
 import pollweb.data.impl.AnswerImpl;
 import pollweb.data.model.Answer;
 import pollweb.data.model.Partecipant;
+import pollweb.data.model.Poll;
 import pollweb.data.model.Question;
 
 /**
@@ -68,12 +69,28 @@ public class PollController extends PollBaseController {
             (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
         }
     }
+    
+    
+    private void action_open_poll(HttpServletRequest request, HttpServletResponse response) throws TemplateManagerException, DataException {
+        Object poll = request.getSession(false).getAttribute("which_poll");
+        int poll_id = SecurityLayer.checkNumeric(poll.toString());
+        try {
+            TemplateResult res = new TemplateResult((getServletContext()));
+            request.getSession(false).getAttribute("which_poll");
+            request.setAttribute("page_title", "Poll Reserved Name");
+            request.setAttribute("poll" ,((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(poll_id));
+            request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(poll_id));
+            res.activate("poll.ftl.html", request, response);
+        } catch (DataException ex) {
+            Logger.getLogger(Poll.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
 
     private void action_default(HttpServletRequest request, HttpServletResponse response ,int n) throws IOException, ServletException, TemplateManagerException, DataException {
             try{TemplateResult res = new TemplateResult(getServletContext());
            ServletContext sc = getServletContext();
             request.setAttribute("page_title", "Poll name");
-            pollweb.data.model.Poll p = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n);
+            Poll p = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n);
            
             if(p.isActivated()){
 
@@ -425,13 +442,19 @@ public class PollController extends PollBaseController {
             throws ServletException {
             int n=0;
           
-        try {      
+            
+        try {
+            if(request.getParameterMap().containsKey("n")) {
             n = SecurityLayer.checkNumeric(request.getParameter("n"));
              if(request.getParameter("showResume")!= null){
                  action_answer(request, response,n);
-             }else if (request.getParameter("confirm")!= null){
-                action_confirm(request,response, n);
-            }else action_default(request, response, n);
+             }else if (request.getParameter("confirm")!= null) {
+                 action_confirm(request, response, n);
+             }
+                action_default(request, response, n);
+            }else {
+                action_open_poll(request, response);
+            }
              
         } catch (IOException | TemplateManagerException ex) {
             request.setAttribute("message", ex);
