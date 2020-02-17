@@ -1,0 +1,47 @@
+<section class="jumbotron text-center">
+    <h1>${question.textq}</h1>
+    <div class="container">
+        <h4 class="lead text-muted">Note della domanda: ${question.note}</h4>
+        <h4 class="lead text-muted">Tipo della domanda: ${question.typeP} </h4>
+    </div>
+    <br>
+</section>
+
+<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th class="th-sm">
+          Nome partecipante
+      </th>
+      <th class="th-sm">
+          Mail partecipante
+      </th>
+      <th class="th-sm">
+          Testo risposta
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+      <#list answers as answer>
+    <tr>
+      <td>Chiave risposta: ${answer.key}</td>
+      <td>Id Utente: ${answer.partecipantKey}</td>
+      <td>Rispostsa data: ${answer.textA}</td>
+
+    </tr>
+    </#list>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>
+          Nome partecipante
+      </th>
+      <th>
+          Mail partecipante
+      </th>
+      <th>
+          Testo risposta
+      </th>
+    </tr>
+  </tfoot>
+</table>

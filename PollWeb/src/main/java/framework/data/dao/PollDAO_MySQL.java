@@ -59,8 +59,8 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='no' WHERE ID=?");
             setPollAlreadyActivated = connection.prepareStatement("UPDATE poll SET alreadyActivated='yes' WHERE ID=?");
 
-            setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='1' WHERE ID=?");
-            setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='0' WHERE ID=?");
+            //setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='1' WHERE ID=?");
+            //setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='0' WHERE ID=?");
             pollContainsQuestion = connection.prepareStatement("SELECT * FROM PollWeb.question where IDP = ? AND ID = ?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing poll data layer", ex);
@@ -165,7 +165,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
 @Override
     public List<Poll> getAllPolls() throws DataException{
         
-        List<Poll> result = new ArrayList();
+        List<Poll> result = new ArrayList<>();
 
             try (ResultSet rs = getAllPolls.executeQuery()) {
                while(rs.next()) {
@@ -201,7 +201,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public List<Poll> getPollsByUserId(int userId) throws DataException {
         
-        List<Poll> result = new ArrayList();
+        ArrayList<Poll> result = new ArrayList<>();
 
         try {
             
@@ -227,7 +227,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
     public List<Poll> getPollsAlreadyActivatedAndClosedByUserId(int userId) throws DataException {
 
-        List<Poll> result = new ArrayList();
+        List<Poll> result = new ArrayList<>();
 
         try {
 
@@ -253,7 +253,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
     @Override
 
     public List<Poll> getOpenPolls() throws DataException {
-        List<Poll> result = new ArrayList();
+        List<Poll> result = new ArrayList<>();
         
         try (ResultSet rs = searchOpenPolls.executeQuery()) {
             while (rs.next()) {
@@ -272,7 +272,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
 
     @Override
     public List<Poll> getReservedPolls() throws DataException {
-        List<Poll> result = new ArrayList();
+        List<Poll> result = new ArrayList<>();
         try ( ResultSet rs = searchReservedPolls.executeQuery()) {
             while(rs.next()) {
                 result.add((Poll) getPollById(rs.getInt("ID")));

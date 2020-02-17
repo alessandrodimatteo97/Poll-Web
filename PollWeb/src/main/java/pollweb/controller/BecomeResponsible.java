@@ -11,6 +11,7 @@ import framework.data.dao.ResponsibleUserDAO;
 import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
+import framework.security.SecurityLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -20,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import pollweb.data.impl.ResponsibleUserImpl;
 import pollweb.data.model.ResponsibleUser;
 
@@ -58,9 +60,12 @@ public class BecomeResponsible extends PollBaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
+        HttpSession session_logged = SecurityLayer.checkSession(request);
         
         try {
-            
+            if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(session_logged.getAttribute("token").toString()).getAccepted()) {
+                response.sendRedirect("admin");
+            }
             request.setAttribute("ok", false);
      
             if(request.getParameter("register")!= null){
@@ -79,6 +84,8 @@ public class BecomeResponsible extends PollBaseController {
             request.setAttribute("exception", ex);
             action_error(request, response);
 
+        } catch (DataException ex) {
+            Logger.getLogger(BecomeResponsible.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

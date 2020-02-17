@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import pollweb.data.impl.ResponsibleUserImpl;
 import pollweb.data.model.ResponsibleUser;
 
@@ -44,33 +45,30 @@ public class Login extends PollBaseController {
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
         
         try {
-            if (request.getAttribute("error").equals("poll_detail_controller")) {
+            if (request.getAttribute("login_failed").equals("missing_data")) 
+            {
                 TemplateResult res = new TemplateResult(getServletContext());
                 this.ref = request.getHeader("referer");
                 request.setAttribute("page_title", "Login");
-                request.setAttribute("login_error", "errore nel poll detail controller");
-                res.activate("login.ftl.html", request, response);
+                request.setAttribute("login_error", "Campo mancante!");
+                res.activate("login.ftl.html", request, response);    
+            } 
+            
+            else if(request.getAttribute("login_failed").equals("wrong_data")) 
+            { 
+                TemplateResult res = new TemplateResult(getServletContext());
+                this.ref = request.getHeader("referer");
+                request.setAttribute("page_title", "Login");
+                request.setAttribute("login_error", "Username o password errati!");
+                res.activate("login.ftl.html", request, response);   
+                
+            } else if(request.getAttribute("session_error").equals("session_error")) {
+                TemplateResult res = new TemplateResult(getServletContext());
+                this.ref = request.getHeader("referer");
+                request.setAttribute("page_title", "Login");
+                request.setAttribute("login_error", "Sessione terminata effettuare il login!");
+                res.activate("login.ftl.html", request, response);   
             }
-
-
-            if (request.getAttribute("login_failed").equals("missing_data")) {
-            
-            TemplateResult res = new TemplateResult(getServletContext());
-            this.ref = request.getHeader("referer");
-            request.setAttribute("page_title", "Login");
-            request.setAttribute("login_error", "Campo mancante!");
-            res.activate("login.ftl.html", request, response);   
-            
-        } 
-            
-        if(request.getAttribute("login_failed").equals("wrong_data")) {
-            
-            TemplateResult res = new TemplateResult(getServletContext());
-            this.ref = request.getHeader("referer");
-            request.setAttribute("page_title", "Login");
-            request.setAttribute("login_error", "Username o password errati!");
-            res.activate("login.ftl.html", request, response);   
-        }
         } catch(TemplateManagerException ex){
             
         }
@@ -84,7 +82,6 @@ public class Login extends PollBaseController {
             request.setAttribute("page_title", "Login");
             
             res.activate("login.ftl.html", request, response);
-        
     }
     
 
@@ -92,6 +89,10 @@ public class Login extends PollBaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             
+            //FARE IL CONTROLLO SULLA SESSIONE
+            if(SecurityLayer.isValid(request)) {
+                action_logged_alredy(request, response);
+            }
             if(request.getParameter("login")!=null){
                 action_login(request, response);
             }
@@ -127,7 +128,7 @@ public class Login extends PollBaseController {
 
         if (!username.isEmpty() && !password.isEmpty()) {
 
-        if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkAdmin(ru)){
+            if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkAdmin(ru)){
 
             SecurityLayer.createSession(request, username);
             response.sendRedirect("admin");
@@ -135,7 +136,7 @@ public class Login extends PollBaseController {
             } else {
                 if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkResponsible(ru)){
                     SecurityLayer.createSession(request, username);
-                    response.sendRedirect("ResponsiblePage");
+                    response.sendRedirect("admin");
                 } else {
                     request.setAttribute("login_failed", "wrong_data");
                     action_error(request, response);
@@ -147,7 +148,30 @@ public class Login extends PollBaseController {
             action_error(request, response);
         }
     }
-
+    
+    private void action_logged_alredy (HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateManagerException, DataException {
+        HttpSession session_online = SecurityLayer.checkSession(request);
+        String token = session_online.getAttribute("token").toString();
+        
+        if(!token.isEmpty()){
+            
+            boolean isAdmin = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(token).getAdministrator();
+            
+            if(isAdmin) {
+                response.sendRedirect("admin");
+            } 
+            else if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(token).getAccepted()) {
+                response.sendRedirect("admin");
+            }
+            else {
+                request.setAttribute("session_error", "session_error");
+                action_error(request, response);
+            }
+        } else {
+            request.setAttribute("session_error", "session_error");
+            action_error(request, response);
+        }
+    }
  
     @Override
     public String getServletInfo() {

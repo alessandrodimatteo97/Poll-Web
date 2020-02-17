@@ -15,76 +15,26 @@
                 <input type="hidden" name="purpose" value="activate">
                 <button type="submit" class="btn btn-primary" form="activate" value="Submit">Attiva</button>
             </form>
+        <br>
+        <div class="btn-group">
+        <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
+    </div>   
+    <div class="btn-group">
+        <a href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Order Question</a>
+    </div>
         <#elseif !poll.activated && poll.alreadyActivated>
             <p>Non puoi più attivare questo sondaggio!</p>
+            <div class="btn-group">
+                <a href="prova?k=${poll.key}" class="btn btn-sm btn-outline-secondary">Download CSV file</a>
+            </div>
         <#else>
-            <p>Errore grave nel sistema</p>
+            <p>${poll.activated?string('yes', 'no')} e poi ${poll.alreadyActivated?string('yes', 'no')}</p>
         </#if>
     </div>
+    <br>
+    
 </section>
 
-<#if s_question?? && !poll.activated>
-<div class="container">
-    <form>
-    <div class="form-group">
-        <label for="exampleFormControlSelect1">Example select</label>
-        <select class="form-control" id="exampleFormControlSelect1" >
-            <option value="short_text">short text</option>
-            <option value="long_text">long text</option>
-            <option value="numeric">numeric</option>
-            <option value="date">date</option>
-            <option value="single_choice">single choice</option>
-            <option value="multiple_choice">multiple choice</option>
-        </select>
-    </div>
-        <div class="form-group">
-            <label for="question_text">Testo domanda</label>
-            <input type="text" class="form-control" id="question_text" value="${s_question.textq}" placeholder="Inserisci la domanda che vuoi porre.">
-        </div>
-        <label for="exampleFormControlSelect2">Obbligatorio</label>
-        <#if s_question.obbligated>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="obbligated" id="yesRadio" value="yes" checked>
-            <label class="form-check-label" for="yesRadio">
-                Si
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="obbligated" id="noRadio" value="no">
-            <label class="form-check-label" for="noRadio">
-                No
-            </label>
-        </div>
-        <#else>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="obbligated" id="yesRadio" value="yes" >
-            <label class="form-check-label" for="yesRadio">
-                Si
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="obbligated" id="noRadio" value="no" checked>
-            <label class="form-check-label" for="noRadio">
-                No
-            </label>
-        </div>
-        </#if>
-
-        <#if s_question.possibleAnswer??>
-        <div class="form-group">
-            <label >Possibili risposte</label>
-            <#list s_question.possibleAnswer?eval as key, value>
-            <div class="form-group">
-                <label for="possible_answer">${key}</label>
-                <input type="text" class="form-control" id="possible_answer" value="${value}" placeholder="Inserisci la risposta.">
-                <button type="button" class="btn btn-danger float-right">Danger</button>
-            </div>
-            </#list>
-        </div>
-        </#if>
-    </form>
-</div>
-<#else>
 <div class="album py-5 bg-light">
     <div class="container">
         <div class="row">
@@ -99,11 +49,11 @@
                             </div>
                             <#if !poll.alreadyActivated >
                             <div class="btn-group">
-                                <a href="Poll_Detail?k=${poll.key}&question=${question.key}" class="btn btn-sm btn-outline-secondary">Modifica</a>
+                                <a href="CreateQuestion?k=${poll.key}&qk=${question.key}" class="btn btn-sm btn-outline-secondary">Modifica</a>
                             </div>
                             <#else>
                             <div class="btn-group">
-                                <a href="#" class="btn btn-sm btn-outline-secondary">Vedi le risposte ottenute</a>
+                                <a href="ShowAnswer?q=${question.key}" class="btn btn-sm btn-outline-secondary">Vedi le risposte ottenute</a>
                             </div>
                             </#if>
                         </div>
@@ -114,7 +64,7 @@
     <#if !poll.alreadyActivated >
     <div class="col-md-4 align-self-center">
                 <div class="btn-group">
-                    <a href="#" class="btn btn-sm btn-outline-secondary">Aggiungi una domanda</a>
+                    <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-sm btn-outline-secondary">Aggiungi una domanda</a>
                 </div>
             </div>
     </#if>
@@ -122,4 +72,3 @@
 </div>
     </div>
 </div>
-</#if>

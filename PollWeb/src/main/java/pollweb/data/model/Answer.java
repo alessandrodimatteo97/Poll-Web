@@ -15,8 +15,16 @@ public interface Answer {
     JSONObject getTextA();
     
     int getKey();
+    
+   Question getQuestion();
+    
+    Partecipant getPartecipant();
 
     void setTextA(JSONObject textA);
     
     void setKey(int key);
+    
+    void setQuestion(Question question);
+    
+    void setPartecipant(Partecipant partecipant);
 }

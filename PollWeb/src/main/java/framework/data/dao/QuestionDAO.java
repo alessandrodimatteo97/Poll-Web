@@ -49,4 +49,6 @@ public interface QuestionDAO {
     void store(Question question) throws DataException;
 
     boolean checkQuestionPoll(int poll_key, int question_key) throws DataException;
+    
+    boolean checkQuestionUser(int question_key, String token) throws DataException;
 }
