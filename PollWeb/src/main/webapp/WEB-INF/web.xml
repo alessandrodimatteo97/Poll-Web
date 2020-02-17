@@ -25,17 +25,14 @@
         <param-name>host</param-name>
         <param-value>smtp.gmail.com</param-value>
     </context-param>
-
     <context-param>
         <param-name>port</param-name>
         <param-value>587</param-value>
     </context-param>
-
     <context-param>
         <param-name>user</param-name>
         <param-value>assistenza.pollweb@gmail.com</param-value>
     </context-param>
-
     <context-param>
         <param-name>pass</param-name>
         <param-value>Alessandro1997</param-value>
@@ -58,7 +55,7 @@
     </servlet>
     <servlet>
         <servlet-name>Poll</servlet-name>
-        <servlet-class>pollweb.controller.Poll</servlet-class>
+        <servlet-class>pollweb.controller.PollController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>BecomeResponsible</servlet-name>
@@ -114,7 +111,6 @@
         <servlet-name>OrdinateQuestion</servlet-name>
         <servlet-class>pollweb.controller.OrdinateQuestion</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -174,7 +170,6 @@
         <servlet-name>SummaryPollController</servlet-name>
         <url-pattern>/SummaryPoll</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>PollDetail</servlet-name>
         <url-pattern>/Poll_Detail</url-pattern>

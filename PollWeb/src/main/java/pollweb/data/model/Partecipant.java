@@ -21,6 +21,7 @@ public interface Partecipant {
 
     String getPwd();
     
+    
     int getKey();
 
     void setApiKey(String apiKey);
@@ -32,5 +33,6 @@ public interface Partecipant {
     void setPwd(String pwd);
     
     void setKey(int key);
+  
     
 }

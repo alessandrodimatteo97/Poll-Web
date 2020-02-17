@@ -38,7 +38,7 @@ and open the template in the editor.
                 <label for="inputPassword" class="col-sm-2 col-form-label"><strong>Password</strong></label>
                 <div class="form-group col-md-4">
                     <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
-                    <input type="hidden" name="poll_id" class="form-control" value="${poll_id}">
+                    <input type="hidden" name="poll_id" class="form-control" value="${poll.key}">
 
                 </div>
                 <#if (login_error??)>
