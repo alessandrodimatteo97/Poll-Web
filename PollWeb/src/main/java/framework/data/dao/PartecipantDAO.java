@@ -53,4 +53,6 @@ public interface PartecipantDAO {
     boolean deleteParticipantToPoll(Partecipant p, int pollid) throws DataException;
 
     boolean loginPartecipant(Partecipant p, int pollid) throws DataException ;
+    
+    void openPartecipant(String token) throws DataException ;
 }

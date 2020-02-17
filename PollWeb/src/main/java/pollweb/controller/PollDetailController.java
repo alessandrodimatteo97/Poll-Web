@@ -2,6 +2,7 @@ package pollweb.controller;
 
 import framework.data.DataException;
 import framework.data.dao.PollDataLayer;
+import framework.result.FailureResult;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
 import framework.security.SecurityLayer;
@@ -48,12 +49,29 @@ public class PollDetailController extends PollBaseController {
         }
 
     }
+    private void action_error(HttpServletRequest request, HttpServletResponse response, boolean error) {
+
+
+            request.setAttribute("page_title", "expection");
+
+            if (request.getAttribute("exception") != null) {
+                (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
+            } else {
+                (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
+            }
+
+
+    }
 
     private void action_default(HttpServletRequest request, HttpServletResponse response, int k) throws ServletException, IOException, TemplateManagerException {
         try {
             request.setAttribute("page_title", "Admin");
             request.setAttribute("poll", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(k));
-           
+          int  idU = (((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(k).getRespUser().getKey());
+            if ((idU != Integer.parseInt(request.getSession().getAttribute("userid").toString()))) {
+                request.setAttribute("message", "it is not your poll ");
+                action_error(request, response, false);
+            }
             request.setAttribute("questions", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(k));
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("poll_detail.ftl.html", request, response);
@@ -103,6 +121,26 @@ public class PollDetailController extends PollBaseController {
             e.printStackTrace();
         }
     }
+    private void action_deleteQuestion(HttpServletRequest request, HttpServletResponse response, int poll_key, int question_key) throws TemplateManagerException {
+        try {
+            ((PollDataLayer) request.getAttribute("datalayer")).getQuestionDAO().deleteQuestion(question_key);
+            TemplateResult res = new TemplateResult(getServletContext());
+            Poll poll = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(poll_key);
+            if (poll != null) {
+                request.setAttribute("questions", ((PollDataLayer) request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(poll_key));
+                request.setAttribute("poll", poll);
+                res.activate("questions.ftl.html", request, response, false);
+            }
+            else {
+                request.setAttribute("message", "poll not exists");
+                action_error(request, response);
+            }
+        }
+        catch(DataException ex){
+            request.setAttribute("message", "Data access exception: " + ex.getMessage());
+            action_error(request, response);
+        }
+    }
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -113,8 +151,12 @@ public class PollDetailController extends PollBaseController {
             k = SecurityLayer.checkNumeric(request.getParameter("k"));
             if (request.getParameter("question") != null) {
                 q = parseInt(request.getParameter("question"));
-                action_question(request, response, k, q);
-            } else {if (k > 0 && request.getParameter("purpose") == null) {
+
+                    if (request.getParameter("deleteQuestion") != null) action_deleteQuestion(request, response, k, q);
+
+              else   action_question(request, response, k, q);
+            }
+            else {if (k > 0 && request.getParameter("purpose") == null) {
                 action_default(request, response, k);
             } else {
                 if (request.getParameter("purpose").equals("deactivate")) {
@@ -122,7 +164,9 @@ public class PollDetailController extends PollBaseController {
                 } else {
                     if (request.getParameter("purpose").equals("activate")) {
                         action_activate(request, response, k);
-                    } else {
+                    }
+
+                    else {
                         action_error(request, response);
                     }
                 }

@@ -45,14 +45,14 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             /*   Qui scrivo gli statement precompilati   */
             getAllPolls = connection.prepareStatement("SELECT * FROM poll where activated='yes'");
             searchPollByPollId = connection.prepareStatement("SELECT * FROM poll WHERE ID=?");
-            searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='no' OR activated='yes' AND alreadyActivated='yes'");
+            searchPollByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND ((activated='no' AND alreadyActivated='no') OR (activated='yes' AND alreadyActivated='yes'))  order by alreadyActivated = 'yes';");
             searchAlreadyActivatedPollsByUserId = connection.prepareStatement("SELECT * FROM poll WHERE idR=? AND activated='no' AND alreadyActivated='yes'");
 
             searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open' AND activated='yes'");
             searchReservedPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='reserved'AND activated ='yes'");
-            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,alreadyActivated,idR) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-            insertOpenPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,open,?,?,?)");
+            insertOpenPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,'open',?,?,?)");
             updatePoll = connection.prepareStatement("UPDATE poll SET title=?,apertureText=?,closerText=?,typeP=?,url=?,activated=?,idR=? WHERE ID=?");
             deletePoll = connection.prepareStatement("DELETE FROM poll WHERE ID=?");
             setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='yes' WHERE ID=?");
@@ -364,6 +364,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
                 updatePoll.setString(4, poll.getType());
                 updatePoll.setString(5, poll.getUrl());
                 updatePoll.setInt(6, 1);
+
                 if (poll.getRespUser()!= null) {
                     updatePoll.setInt(7, poll.getRespUser().getKey());
                 } else {
@@ -379,11 +380,13 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
                 insertPoll.setString(4, poll.getType());
                 insertPoll.setString(5, poll.getUrl());
                 insertPoll.setInt(6, 1);
+
                 if (poll.getRespUser()!= null) {
                     insertPoll.setInt(7, poll.getRespUser().getKey());
                 } else {
                     insertPoll.setNull(7, java.sql.Types.INTEGER);
                 }
+               // insertPoll.setInt(8, poll);
 
                 if (insertPoll.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database
@@ -453,7 +456,7 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
             poll.setActivated("yes");
             
         } catch (SQLException ex) {
-            throw new DataException("Unable to create article object form ResultSet", ex);
+            throw new DataException("Unable to create poll object form ResultSet", ex);
         }
         return poll;    }
     

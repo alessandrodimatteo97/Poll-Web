@@ -116,6 +116,19 @@ public class SecurityLayer {
            // ServletContext sc = get
         }
         return s;
+    } 
+    
+     public static HttpSession createSession(HttpServletRequest request) throws DataException {
+        HttpSession s = request.getSession(true);
+        
+        s.setAttribute("ip", request.getRemoteHost());
+        s.setAttribute("inizio-sessione", Calendar.getInstance());
+        String token = tokenGenerator(s);
+      // Cookie cookie = new Cookie("token", token);
+        s.setAttribute("token", token);
+       ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().openPartecipant(token);
+              
+        return s;
     }
 
     public static HttpSession createSession(HttpServletRequest request, String username, int poll_id) {
@@ -126,7 +139,6 @@ public class SecurityLayer {
         String token = tokenGenerator(s);
         // Cookie cookie = new Cookie("token", token);
         s.setAttribute("token", token);
-        // todo scrivere una fuonzione in modo tale da capire se si è nel sito per riempire sondaggi oppure nella parte backend;
         try {
             ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().setToken(username, token);
             s.setAttribute("part_id",((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(token).getKey());

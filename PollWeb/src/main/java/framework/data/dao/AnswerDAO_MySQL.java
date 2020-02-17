@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
+import pollweb.controller.InsertParticipant;
 import pollweb.data.model.Answer;
 import pollweb.data.model.Question;
 
@@ -139,6 +140,20 @@ public class AnswerDAO_MySQL extends DAO implements AnswerDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public void storeAnswer(Answer answer) throws DataException {
+        
+        try {
+            insertAnswer.setInt(1, answer.getQuestion().getKey());
+            insertAnswer.setInt(2,answer.getPartecipant().getKey());
+            insertAnswer.setString(3, answer.getTextA().toString());
+               insertAnswer.executeUpdate();
+        } catch (SQLException ex) {
+             throw new DataException("Error from DataBase: ", ex);
+        }
+         
     }
 
 

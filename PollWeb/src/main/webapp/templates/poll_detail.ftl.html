@@ -17,6 +17,9 @@
             </form>
         <br>
         <div class="btn-group">
+        <a href="CreatePoll?k=${poll.key}"  class="btn btn-primary">Modify</a>
+        </div>
+        <div class="btn-group">
         <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
     </div>   
     <div class="btn-group">
@@ -34,41 +37,6 @@
     <br>
     
 </section>
-
-<div class="album py-5 bg-light">
-    <div class="container">
-        <div class="row">
-            <#list questions as question>
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <p class="card-text">${question.textq}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <p class="">${question.typeP}</p>
-                            </div>
-                            <#if !poll.alreadyActivated >
-                            <div class="btn-group">
-                                <a href="CreateQuestion?k=${poll.key}&qk=${question.key}" class="btn btn-sm btn-outline-secondary">Modifica</a>
-                            </div>
-                            <#else>
-                            <div class="btn-group">
-                                <a href="ShowAnswer?q=${question.key}" class="btn btn-sm btn-outline-secondary">Vedi le risposte ottenute</a>
-                            </div>
-                            </#if>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </#list>
-    <#if !poll.alreadyActivated >
-    <div class="col-md-4 align-self-center">
-                <div class="btn-group">
-                    <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-sm btn-outline-secondary">Aggiungi una domanda</a>
-                </div>
-            </div>
-    </#if>
-
-</div>
-    </div>
+<div id="QuestionPage">
+    <#include 'questions.ftl.html'>
 </div>

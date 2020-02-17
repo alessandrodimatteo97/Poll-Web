@@ -133,9 +133,9 @@ public class Login extends PollBaseController {
             SecurityLayer.createSession(request, username);
             response.sendRedirect("admin");
             HttpSession session_online = SecurityLayer.checkSession(request);
-        String token = session_online.getAttribute("token").toString();   
-        ServletContext sc = getServletContext();
-        sc.log(token);
+            String token = session_online.getAttribute("token").toString();   
+            ServletContext sc = getServletContext();
+            sc.log(token);
 
             } else {
                 if(((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().checkResponsible(ru)){
