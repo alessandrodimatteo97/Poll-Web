@@ -256,6 +256,7 @@ public class AdminController extends PollBaseController {
         request.setAttribute("is_admin", is_admin);
 
 
+
         request.setAttribute("polls", ((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollsByUserId(userKey));
         
         res.activate("adminPanel.ftl.html", request, response);
