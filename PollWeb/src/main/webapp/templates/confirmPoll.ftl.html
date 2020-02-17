@@ -63,8 +63,8 @@ and open the template in the editor.
                                      <#assign choice = key + " " + value >
                                      <#if choice != answer>
                                      <option > ${choice}</option>
-                                     <#if !question.obbligated && answer != "- nessuna selezionata -">
-                                      <option> - nessuna selezionata -</option>
+                                     <#if !question.obbligated && answer != "-nessuna selezionata-">
+                                      <option>-nessuna selezionata-</option>
                                       </#if>
                                      </#if>
                                      </#list>
@@ -109,7 +109,7 @@ and open the template in the editor.
      </div>   
      <div class="form-group " align="center">
     <br/><br/>  
-    <button type="submit" value="showResume" name="confirm"> Conferma </button>
+    <button type="submit" value="confirm" name="confirm"> Conferma </button>
     </br>
         </br>
   </div>

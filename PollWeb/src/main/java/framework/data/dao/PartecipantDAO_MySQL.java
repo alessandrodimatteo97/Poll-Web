@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import framework.data.proxy.PollProxy;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pollweb.data.model.Partecipant;
 
 /**
@@ -28,7 +30,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
 
     private PreparedStatement searchPartecipantById, searchPartecipantByPollId, searchPartecipantByApiKey;
     private PreparedStatement deletePartecipant;
-    private PreparedStatement createFullPartecipant, createHalfPartecipant, getPartecipants;
+    private PreparedStatement createFullPartecipant, createHalfPartecipant, getPartecipants,insertByToken;
     private PreparedStatement insertPartecipant;
     private PreparedStatement updatePartecipant;
     private PreparedStatement addPartecipantToPoll;
@@ -57,6 +59,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
             addPartecipantToPoll = connection.prepareStatement("INSERT INTO participation(id_poll, id_part) values (?,?)");
             updatePartecipant = connection.prepareStatement("UPDATE participant SET email=?, pwd=?, nameP=? where ID=?");
             deleteParticipantToPoll = connection.prepareStatement("DELETE FROM participation WHERE ID_part=? AND ID_poll=?");
+            insertByToken = connection.prepareStatement("INSERT INTO participant (apiKey) VALUES (?)");
         } catch (SQLException ex) {
             throw new DataException("Error initializing partecipant data layer", ex);
         }
@@ -72,6 +75,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
             deletePartecipant.close();
             createFullPartecipant.close();
             createHalfPartecipant.close();
+            insertByToken.close();
         } catch (SQLException ex) {
             System.out.println("Errore nel chiudere gli statement" + ex); 
         }
@@ -291,6 +295,16 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
             throw new DataException("login partecipant error", e);
         }
 
+    }
+
+    @Override
+    public void openPartecipant(String token) throws DataException {
+        try {
+            insertByToken.setString(1, token);
+            insertByToken.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(PartecipantDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 

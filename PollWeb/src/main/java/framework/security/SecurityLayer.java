@@ -116,6 +116,19 @@ public class SecurityLayer {
            // ServletContext sc = get
         }
         return s;
+    } 
+    
+     public static HttpSession createSession(HttpServletRequest request) throws DataException {
+        HttpSession s = request.getSession(true);
+        
+        s.setAttribute("ip", request.getRemoteHost());
+        s.setAttribute("inizio-sessione", Calendar.getInstance());
+        String token = tokenGenerator(s);
+      // Cookie cookie = new Cookie("token", token);
+        s.setAttribute("token", token);
+       ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().openPartecipant(token);
+              
+        return s;
     }
 
     public static HttpSession createSession(HttpServletRequest request, String username, int poll_id) {

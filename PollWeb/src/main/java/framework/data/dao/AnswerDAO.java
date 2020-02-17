@@ -27,5 +27,6 @@ public interface AnswerDAO {
 
     Answer getAnswerByQuestionIdParticipantId(int idp, int idq)throws DataException;
     
+    void storeAnswer(Answer answer) throws DataException;
     
 }
