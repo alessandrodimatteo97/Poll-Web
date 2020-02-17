@@ -122,7 +122,7 @@ public class PollController extends PollBaseController {
                List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
                
                 
-                
+                sc.log("coglione");
           for(Question q : question){
                  ArrayList<String> answer = new ArrayList<>();
                   String str=request.getParameter(Integer.toString(q.getKey()));
@@ -170,7 +170,7 @@ public class PollController extends PollBaseController {
                             request.setAttribute("message", "DATA NON NELLO GIUSTO FORMATO");
                            action_error(request, response);
                         }else{
-                        sc.log(date.toString());
+                     //   sc.log(date.toString());
                         answer.add(str);
                         } 
                       }else {
@@ -196,7 +196,7 @@ public class PollController extends PollBaseController {
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
                                break;
-                            }sc.log("cazzi");
+                            }//sc.log("cazzi");
                          }else {
                              request.setAttribute("message", "c'è qualcosa che non va");
                              action_error(request, response);
@@ -222,9 +222,9 @@ public class PollController extends PollBaseController {
                              letter = letter+s.charAt(i);
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
-                              sc.log(respo) ;
+                       //       sc.log(respo) ;
                               break;
-                            }sc.log("cazzi");
+                            }//sc.log("cazzi");
                          }else {
                              request.setAttribute("message", "c'è qualcosa che non va");
                              action_error(request, response);
@@ -263,10 +263,10 @@ public class PollController extends PollBaseController {
                ArrayList<Answer> answer = new ArrayList<>(); 
                Partecipant p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserById(5);
           for(Question q : question){
-              if(q!= null){
+
                  Answer a = ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().createAnswer();
                   String str=request.getParameter(Integer.toString(q.getKey()));
-                 sc.log(String.valueOf(q.getKey()));
+             //    sc.log(String.valueOf(q.getKey()));
                   if(q.getTypeP().equalsIgnoreCase( "short text")){
                      if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message", "Errore, risposta obbligatoria");
@@ -274,7 +274,7 @@ public class PollController extends PollBaseController {
                      }
 
                      if(str.length()<= 65) {
-                         sc.log(String.valueOf(q.getKey()));
+                      //   sc.log(String.valueOf(q.getKey()));
                   
                          a.setQuestion(q);
                          a.setPartecipant(p);
@@ -360,7 +360,7 @@ public class PollController extends PollBaseController {
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
                                break;
-                            }sc.log("cazzi");
+                            }//sc.log("cazzi");
                          }else {
                              request.setAttribute("message", "c'è qualcosa che non va");
                              action_error(request, response);
@@ -394,9 +394,9 @@ public class PollController extends PollBaseController {
                              letter = letter+s.charAt(i);
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
-                              sc.log(respo) ;
+                           //   sc.log(respo) ;
                               break;
-                            }sc.log("cazzi");
+                            }//sc.log("cazzi");
                          }else {
                              request.setAttribute("message", "c'è qualcosa che non va");
                              action_error(request, response);
@@ -423,7 +423,7 @@ public class PollController extends PollBaseController {
             /*request.setAttribute("questions",question);
             request.setAttribute("poll" ,((PollDataLayer)request.getAttribute("datalayer")).getPollDAO().getPollById(n));
              res.activate("confirmPoll.ftl.html", request, response);*/
-            }
+
             }
                 catch(DataException ex){
                 request.setAttribute("message", ex);
@@ -451,8 +451,9 @@ public class PollController extends PollBaseController {
              }else if (request.getParameter("confirm")!= null) {
                  action_confirm(request, response, n);
              }
-                action_default(request, response, n);
-            }else {
+             else action_default(request, response, n);
+            }
+            else {
                 action_open_poll(request, response);
             }
              
