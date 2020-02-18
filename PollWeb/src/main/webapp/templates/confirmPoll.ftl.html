@@ -93,13 +93,12 @@ and open the template in the editor.
 <#assign choice = key + " " + value>
 <div class="form-check">
 
-    <input type="checkbox" name="${question.key}" value="${choice}"
-    <#if (question.answer?has_content)>
-
+    <input id="checkbox1" type="checkbox" name="${question.key}" value="${choice}"
     <#list question.answer as answer>
+    <#if answer?has_content>
     <#if choice == answer>  checked </#if>
-</#list>
-</#if>>
+</#if>
+</#list>>
 <label>${choice}</label>
 
 
@@ -133,9 +132,6 @@ and open the template in the editor.
 </form>
 
 </#if>
-
-
-
 
 
 

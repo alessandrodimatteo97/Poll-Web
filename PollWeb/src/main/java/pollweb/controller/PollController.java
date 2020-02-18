@@ -17,6 +17,7 @@ import framework.result.TemplateResult;
 import framework.security.SecurityLayer;
 import static framework.security.SecurityLayer.checkNumeric;
 import freemarker.template.utility.NumberUtil;
+import freemarker.template.utility.StringUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -38,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.NumberUtils;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pollweb.data.impl.AnswerImpl;
@@ -88,10 +90,11 @@ public class PollController extends PollBaseController {
    }
 
     private void action_default(HttpServletRequest request, HttpServletResponse response ,int n) throws IOException, ServletException, TemplateManagerException, DataException {
-            try{TemplateResult res = new TemplateResult(getServletContext());
-           ServletContext sc = getServletContext();
-            request.setAttribute("page_title", "Poll name");
-            Poll p = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n);
+            try{
+                TemplateResult res = new TemplateResult(getServletContext());
+                ServletContext sc = getServletContext();
+                request.setAttribute("page_title", "Poll name");
+                 Poll p = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n);
            
             if(p.isActivated()){
 
@@ -106,7 +109,8 @@ public class PollController extends PollBaseController {
           }else{
                res.activate("login_poll.ftl.html",request,response);
            
-           }}//res.activate("error.ftl.html", request, response);
+           }
+            }//res.activate("error.ftl.html", request, response);
             }catch (DataException ex) {
             request.setAttribute("message", ex);
             action_error(request, response);
@@ -117,82 +121,98 @@ public class PollController extends PollBaseController {
 
         private void action_answer(HttpServletRequest request, HttpServletResponse response, int n) throws TemplateManagerException, ParseException {
             try{
+                //CONTROLLARE PRIMA SE C'È UNA SESSIONE ATTIVA E SE QUELLA SESSIONE HA GIÀ RISPOSTO A QUESTO SONDAGGIO
+                /*if(SecurityLayer.isValid(request)) {
+                    request.getSession(false).getAttribute("token"); //DA TERMINARE
+                }*/
+
                 TemplateResult res = new TemplateResult(getServletContext());
-                 request.setAttribute("page_title", "Confirm Page");
-              ServletContext sc = getServletContext();
-               List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
+                request.setAttribute("page_title", "Confirm Page");
+                ServletContext sc = getServletContext();
+                List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
                
-                
-                sc.log("coglione");
+
           for(Question q : question){
                  ArrayList<String> answerList = new ArrayList<>();
-                  String str=request.getParameter(Integer.toString(q.getKey()));
-                 
+
+                 //controlli per risposte di tipo short
                   if(q.getTypeP().equalsIgnoreCase( "short text")){
+                      String str=request.getParameter(Integer.toString(q.getKey()));
                      if(q.getObbligated() && str.isEmpty() ){
                          request.setAttribute("message", "devi rispondere alle domande obbligatorie");
                          action_error(request, response);
                      }
-                     if(str.length()<= 65) answerList.add(str);
-                     else {
+                       else if(str.length()<= 65) {answerList.add(str);
+                     }else {
                          request.setAttribute("message", "CAMPO TROPPO LUNGO");
                          action_error(request, response);
                      }
-                 
+                 //controlli per risposte di tipo long
                   }else if(q.getTypeP().equalsIgnoreCase( "long text")){
+                      String str=request.getParameter(Integer.toString(q.getKey()));
                      if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message", "Errore domanda obbligatoria");
                          action_error(request, response);
-                     }
+                     }else {
                    answerList.add(request.getParameter(Integer.toString(q.getKey())));
-                 
+                    }
+                   //controlli per risposte di tipo numerico
                   }else if (q.getTypeP().equalsIgnoreCase("numeric")){
+                      String str=request.getParameter(Integer.toString(q.getKey()));
                       if(q.getObbligated() && str.isEmpty() ){
                           request.setAttribute("message","Errore domanda obbligatoria" );
                          action_error(request, response);
+                      }else if(StringUtils.isNumeric(str)){
+                          answerList.add(str);
+                      }else{
+                          request.setAttribute("message", "Il valore inserito non è numerico");
+                         action_error(request, response);
                       }
-                      if(NumberUtils.isDigits(str)) answerList.add(request.getParameter(Integer.toString(q.getKey())));
-                    //res.activate("error.ftl.html", request, response);
-                
+                //controlli per risposte di tipo data
                   }else if(q.getTypeP().equalsIgnoreCase("date")){
+                      String str=request.getParameter(Integer.toString(q.getKey()));
+                       String test = new String();
                       if(q.getObbligated() && str.isEmpty() ) {
                           request.setAttribute("message", "Errore, domanda obbligatoria");
                           action_error(request, response);
-                      }
-                      String test = new String();
-                     if (str.length()== 10) {
+                      }else if(!q.getObbligated() && !str.isEmpty()){
+                          if (str.length()== 10) {
                       for (int i=0; i< str.length(); i++){
-                          if (Character.isDigit(str.charAt(i))) test = test+str.charAt(i);
+                          if (Character.isDigit(str.charAt(i))) {
+                              test = test+str.charAt(i);
+                          }
                       }
                       if(test.length()== 8){
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                          sc.log(test);
+                       SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         Date date = formatter.parse(str);
-                        if(!formatter.format(date).equals(str)){
-                            request.setAttribute("message", "DATA NON NELLO GIUSTO FORMATO");
-                           action_error(request, response);
+
+                        if(formatter.format(date).equals(str)){
+                           answerList.add(str);
                         }else{
-
-                        answerList.add(str);
-
+                              request.setAttribute("message", "DATA NON NELLO GIUSTO FORMATO");
+                            action_error(request, response);
                         } 
                       }else {
-                          request.setAttribute("message", "ERRORE ci sono pochi numeri");
+                          request.setAttribute("message", "ERRORE data errata");
                           action_error(request, response);
                       }
                      }else {
                          request.setAttribute("message","ERRORE DATA non corretta" );
                          action_error(request, response);
                      }
-                
+                      }else{
+                      answerList.add(str);
+                      }
+                    //controlli per risposte di tipo scelta singola
                   }else if (q.getTypeP().equalsIgnoreCase("single choice")){
+                      String str=request.getParameter(Integer.toString(q.getKey()));
                      if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message", "errore, campo obbligatorio");
                          action_error(request, response);
-                     }
-                     if(!q.getObbligated() && str.equals("-nessuna selezionata-")) 
-                     {answerList.add(str);
+                     }else if(!q.getObbligated() && str.equals("-nessuna selezionata-"))  {
+                        answerList.add(str);
                      }else{
-
                      String respo=new String();
                      String letter = new String();
                      for(int i=0;i<str.length();i++){
@@ -201,27 +221,29 @@ public class PollController extends PollBaseController {
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
                                break;
-
                             }
-
-                         }else {
-                             request.setAttribute("message", "c'è qualcosa che non va");
-                             action_error(request, response);
                          }
                      }
-                   if(respo.equals(str)){ answerList.add(str);
+                    if(respo.equals(str)){
+                       answerList.add(str);
                    }else {
-                      request.setAttribute("message", "error");
+                      request.setAttribute("message", "errore la risposta inserita non corrisponde alle scele possibili");
                       action_error(request, response);
                    }
-                     }  
+                     }
+               //controlli per risposte di tipo scelta  multipla
               }else if(q.getTypeP().equalsIgnoreCase( "multiple choice")){
                  
-                  String[] a = request.getParameterValues(Integer.toString(q.getKey()));
+                 String[] a = request.getParameterValues(Integer.toString(q.getKey()));
                   
-                  // if(a.length<1 && q.getObbligated() ) sc.log("ERRORE");                     
-                    //sc.log(String.valueOf(a.length));
-                 for (String s : a){
+                  if( q.getObbligated() && a == null) {
+                       request.setAttribute("message", "non ci sono risposte");
+                       action_error(request, response);
+                  }else if (!q.getObbligated() && a == null){
+                     answerList.add(null);
+                  }else {
+
+                    for (String s : a){
                       String respo=new String();
                      String letter = new String();
                      for(int i=0;i<s.length();i++){
@@ -229,21 +251,20 @@ public class PollController extends PollBaseController {
                              letter = letter+s.charAt(i);
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
-                  
                               break;
                             }
-
-                         }else {
-                             request.setAttribute("message", "c'è qualcosa che non va");
-                             action_error(request, response);
                          }
                      }
-                   if(respo.equals(s)){ answerList.add(s);
+
+                   if(respo.equals(s)){
+                       answerList.add(s);
                    }else {
-                       request.setAttribute("message", "error");
+                       request.setAttribute("message", "errore la risposta che hai provato ad inserire non coincide con le possibile risposte");
                        action_error(request, response);
                    }
                   }
+
+              }
                   
               }
                
@@ -261,114 +282,130 @@ public class PollController extends PollBaseController {
         
         
     private void action_confirm(HttpServletRequest request, HttpServletResponse response, int n) throws DataException, ParseException, TemplateManagerException {
-      try{
-              SecurityLayer.createSession(request);
+      Partecipant p = null;
+      String token;
+
+      try {
+        if(SecurityLayer.isValid(request)) {
+
+            if(request.getSession(false).getAttribute("which_poll") != null){
+                token = request.getSession(false).getAttribute("token").toString();
+                p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(token);
+                // SONDAGGIO PRIVATO ALLORA MI POSSO RIPRENDERE L'UTENTE CHE SO ESSERE UN PARTECIPANTE AD UN SONDAGGIO PRIVATO
+                // DALLA SESSIONE E CREARMELO
+
+            } else if( request.getSession(false).getAttribute("user_id") != null  ) {
+                //CASO IN CUI STO CONFERMANDO UN POLL APERTO E ALLO STESSO TEMPO SONO IN SESSIONE PERCHÈ SONO UN RESPONSIBLE O UN ADMIN
+                token = request.getSession(false).getAttribute("token").toString();
+                //
+                ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().openPartecipant(token);
+                p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(token);
+
+            } else {
+                action_error(request, response);
+            }
+        } else {
+            //CASO IN CUI SONO UN PARTECIPANTE AD UN POLL APERO E NON SONO NÈ ADMIN NÈ RESPONSIBLE
+            SecurityLayer.createSession(request);
+            token = request.getSession(false).getAttribute("token").toString();
+            p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(token);
+        }
               
               ServletContext sc = getServletContext();
-             //  List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
-               
-                
+               List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
+               ArrayList<Answer> answers = new ArrayList<Answer>();
 
-              // ArrayList<Answer> answers = new ArrayList<Answer>(); 
-               //HttpSession session_online = SecurityLayer.checkSession(request);
-              //String token = session_online.getAttribute("token").toString();
-              //Partecipant p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(SecurityLayer.checkSession(request).getAttribute("token").toString());
-            //  HttpSession session_online = SecurityLayer.checkSession(request);
-
-            String token = request.getSession().getAttribute("token").toString();
-            //ServletContext sc = getServletContext();
-            sc.log(token);
-             /* for(Question q : question){
+              for(Question q : question){
               
                  Answer a = ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().createAnswer();
-                  //String str=request.getParameter(Integer.toString(q.getKey()));
                         a.setQuestion(q);
                          a.setPartecipant(p);
                          JSONObject obj = new JSONObject();
-
+                         //controlli per le domande di tipo short
+            if(request.getParameter(Integer.toString(q.getKey())) != null) {
+                             
+                         
                   if(q.getTypeP().equalsIgnoreCase( "short text")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
                      if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message", "Errore, risposta obbligatoria");
                          action_error(request, response);
-                     }
-
-                     if(str.length()<= 65) {
-
+                        }else if(str.length()<= 65) {
                          obj.put("1", str);
                          a.setTextA(obj);
                          if(a.getTextA()!= null) answers.add(a);
-                  }
-                     else {
+                        }else{
                          request.setAttribute("message", "errore, risposta troppo lunga");
                          action_error(request, response);
-                     }
-                 
+                        }
+                 //controlli per le domande di tipo long
                   }else if(q.getTypeP().equalsIgnoreCase( "long text")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
+                      
                      if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message", "errore, domanda obbligatoria");
                          action_error(request, response);
-                     }
-                         
+                     }else{
                          obj.put("1", str);
                          a.setTextA(obj);
                          if(a.getTextA()!= null) answers.add(a);
+                         }
+                    //controlli per le domande di tipo nuerico
                   }else if (q.getTypeP().equalsIgnoreCase("numeric")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
                       if(q.getObbligated() && str.isEmpty() ) {
                           request.setAttribute("message", "errore, domanda obbligatoria");
                           action_error(request, response);
-                      }
-                      if (!str.isEmpty() && str!= null){
-                      if(NumberUtils.isDigits(str)) {
-                          
+                      }else if(StringUtils.isNumeric(str)) {
                          obj.put("1", str);
                          a.setTextA(obj);
                          if(a.getTextA()!= null) answers.add(a);
-                      }}
-                          
-                    //res.activate("error.ftl.html", request, response);
-                
-                  }else if(q.getTypeP().equalsIgnoreCase("date")){
-                      String str=request.getParameter(Integer.toString(q.getKey()));
-                      if(q.getObbligated() && str.isEmpty() ) {
-                         request.setAttribute("message","ERRORE è richiesta" );
+                      }else {
+                      request.setAttribute("message", "il vlore inserito non è numerico");
                           action_error(request, response);
                       }
+                      //controlli per le domande di tipo data
+                 }else if(q.getTypeP().equalsIgnoreCase("date")){
+                      String str=request.getParameter(Integer.toString(q.getKey()));
                       String test = new String();
-                     if (str.length()== 10) {
-                      for (int i=0; i< str.length(); i++){
-                          if (Character.isDigit(str.charAt(i))) test = test+str.charAt(i);
-                      }
-                      if(test.length()== 8){
+                      if(q.getObbligated() && str.isEmpty() ) {
+                         request.setAttribute("message","errore, domanda obbligatoria" );
+                          action_error(request, response);
+                      }else {
+                          if (str.length()== 10) {
+                        for (int i=0; i< str.length(); i++){
+                          if (Character.isDigit(str.charAt(i))){
+                              test = test+str.charAt(i);
+                          }
+                        }
+                        if(test.length()== 8){
                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         Date date = formatter.parse(str);
-                        if(!formatter.format(date).equals(str)){
-                           request.setAttribute("message", "DATA NON NELLO GIUSTO FORMATO");
-                            action_error(request, response);
-                        }else{
-                       
-                         obj.put("1", str);
+                        if(formatter.format(date).equals(str)){
+                            obj.put("1", str);
                          a.setTextA(obj);
                          if(a.getTextA()!= null) answers.add(a);
-                        } 
-                      }else {
-                          request.setAttribute("message", "ERRORE ci sono pochi numeri");
+                           }else{
+                         request.setAttribute("message", "errore, la data non è nello giusto formato");
+                            action_error(request, response);
+                        }
+                         }else {
+                          request.setAttribute("message", "errore la data non è completa");
                           action_error(request, response);
-                      }
-                     }else {
-                         request.setAttribute("message", "ERRORE DATA non corretta");
+                        }
+                        }else {
+                         request.setAttribute("message", "errore non corretta");
                          action_error(request, response);
-                     }
-                
-                  }else if (q.getTypeP().equalsIgnoreCase("single choice")){
+                        }
+                      }
+                    //controlli per le domande di tipo scelta singola
+                 }else if (q.getTypeP().equalsIgnoreCase("single choice")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
                      if(q.getObbligated() && str.isEmpty() ) {
-                         request.setAttribute("message", "ERRORE");
-                         action_error(request, response);}
+                         request.setAttribute("message", "errore, la data è obbligatoria");
+                         action_error(request, response);
 
-                     if(!q.getObbligated() && !str.equals("-nessuna selezionata-")){
+                     }else if(!q.getObbligated() && !str.equals("-nessuna selezionata-")){
                      String respo=new String();
                      String letter = new String(); 
                      for(int i=0;i<str.length();i++){
@@ -378,13 +415,9 @@ public class PollController extends PollBaseController {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
                                break;
                             }
-                         }else {
-                             request.setAttribute("message", "AAAAHHHH");
-                             action_error(request, response);
                          }
                      }
                    if(respo.equals(str)){
-                      
                          obj.put(letter, q.getPossibleAnswer().getString(letter));
                          a.setTextA(obj);
                          if(a.getTextA()!= null) answers.add(a);
@@ -393,31 +426,27 @@ public class PollController extends PollBaseController {
                        action_error(request, response);
                    }
                      }
-                    
-
-
+                 }
+                     //controlli per le domande di tipo scelta multipla
               }else if(q.getTypeP().equalsIgnoreCase( "multiple choice")){
-                 
-                  
                   String[] multi = request.getParameterValues(Integer.toString(q.getKey()));
-                 
-                 // if(multi.length<1 && q.getObbligated() ) sc.log("ERRORE");                     
-                    //sc.log(String.valueOf(a.length));
-                 for (String s : multi){
-                      String respo=new String();
-                     String letter = new String();
-                     for(int i=0;i<s.length();i++){
-                         if(Character.isAlphabetic(s.charAt(i))){
+                  if( q.getObbligated() && multi == null) {
+                       request.setAttribute("message", "non ci sono risposte");
+                       action_error(request, response);
+                  }else if(!q.getObbligated() && multi == null){
+                       a.setTextA(null);
+                  if(a.getTextA()!= null) answers.add(a);
+                  }else{
+                    for (String s : multi){
+                        String respo=new String();
+                        String letter = new String();
+                        for(int i=0;i<s.length();i++){
+                            if(Character.isAlphabetic(s.charAt(i))){
                              letter = letter+s.charAt(i);
-                            if(q.getPossibleAnswer().has(letter)) {
+                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
-
                               break;
                             }
-
-                         }else {
-                             request.setAttribute("message", "CCCCHHHHHH");
-                             action_error(request, response);
                          }
                      }
                    if(respo.equals(s)){ 
@@ -432,15 +461,59 @@ public class PollController extends PollBaseController {
                   if(a.getTextA()!= null) answers.add(a);
               } 
                
-
+              } else {
+                   a.setTextA(null);
+                  if(a.getTextA()!= null) answers.add(a);
+              }
           }
 
-                      for (Answer a : answers){
+                 /*     for (Answer a : answers){
                           sc.log(a.getPartecipant().getEmail() + a.getTextA().toString());
                   ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().storeAnswer(a);
-                   
+
               }*/
-          
+
+                      //Controllare il tipo di sessione e se è da closed poll distruggerla.
+                      if(request.getSession().getAttribute("which_poll") != null) {
+                          TemplateResult res = new TemplateResult((getServletContext()));
+
+                          //CANCELLARE EMAIL E PASSWORD E CREARE LA PAGINA DI TERMINATO SONDAGGIO.
+                          int part_id_to_delete = SecurityLayer.checkNumeric(request.getSession().getAttribute("part_id").toString());
+
+                          if(((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().disposeCredetential(part_id_to_delete)){
+                            for (Answer a : answers){
+                                sc.log(a.getPartecipant().getEmail() + a.getTextA().toString());
+                                ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().storeAnswer(a);
+                            }
+                              //((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().addPartecipantToPoll(p, n);
+                            SecurityLayer.disposeSession(request);
+                            request.setAttribute("page_title", "Home");
+
+                            request.setAttribute("message", "E' andato tutto come previsto, "
+                              + "clicca il bottone per tornare alla home! Le tue credenziali non saranno più valide.");
+
+                            res.activate("terminatePoll.ftl.html", request, response);
+
+                          } else {
+                              request.setAttribute("message", "Qualcosa è andato storto, non sappiamo cosa, speriamo vada meglio"
+                                      + "la prossima volta.");
+                                request.setAttribute("page_title", "Home");
+
+                                res.activate("terminatePoll.ftl.html", request, response);
+                          }
+
+                      } else {
+                          TemplateResult res = new TemplateResult((getServletContext()));
+                            for (Answer a : answers){
+                                sc.log(a.getPartecipant().getEmail() + a.getTextA().toString());
+                                ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().storeAnswer(a);
+                            }
+                            ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().addPartecipantToPoll(p, n);
+                            request.setAttribute("message", "E' andato tutto come previsto, "
+                                    + "clicca il bottone per tornare alla home!");
+                            request.setAttribute("page_title", "Home");
+                            res.activate("terminatePoll.ftl.html", request, response);
+                      }
             
 
             }
@@ -449,11 +522,6 @@ public class PollController extends PollBaseController {
                 action_error(request, response);
             }
    }
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
    
     
     @Override
