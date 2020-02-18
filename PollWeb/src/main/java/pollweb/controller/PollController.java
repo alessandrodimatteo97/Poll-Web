@@ -216,7 +216,7 @@ public class PollController extends PollBaseController {
                      String respo=new String();
                      String letter = new String();
                      for(int i=0;i<str.length();i++){
-                         if(Character.isAlphabetic(str.charAt(i))){
+                         if(Character.isDigit(str.charAt(i))){
                              letter = letter+str.charAt(i);
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
@@ -247,7 +247,7 @@ public class PollController extends PollBaseController {
                       String respo=new String();
                      String letter = new String();
                      for(int i=0;i<s.length();i++){
-                         if(Character.isAlphabetic(s.charAt(i))){
+                         if(Character.isDigit(s.charAt(i))){
                              letter = letter+s.charAt(i);
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
@@ -423,7 +423,7 @@ public class PollController extends PollBaseController {
                      String respo=new String();
                      String letter = new String(); 
                      for(int i=0;i<str.length();i++){
-                         if(Character.isAlphabetic(str.charAt(i))){
+                         if(Character.isDigit(str.charAt(i))){
                              letter = letter+str.charAt(i);
                             if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);
@@ -455,7 +455,7 @@ public class PollController extends PollBaseController {
                         String respo=new String();
                         String letter = new String();
                         for(int i=0;i<s.length();i++){
-                            if(Character.isAlphabetic(s.charAt(i))){
+                            if(Character.isDigit(s.charAt(i))){
                              letter = letter+s.charAt(i);
                              if(q.getPossibleAnswer().has(letter)) {
                               respo=  letter + " " + q.getPossibleAnswer().getString(letter);

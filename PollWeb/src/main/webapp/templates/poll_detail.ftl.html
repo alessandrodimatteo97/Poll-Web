@@ -19,9 +19,11 @@
         <div class="btn-group">
         <a href="CreatePoll?k=${poll.key}"  class="btn btn-primary">Modifica</a>
         </div>
+        <#if poll.type == "reserved">
         <div class="btn-group">
         <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Inserisci partecipante</a>
     </div>   
+        </#if>
     <div class="btn-group">
         <a href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Ordina domande</a>
     </div>

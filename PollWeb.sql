@@ -10,10 +10,14 @@ surnameR varchar(100),
 fiscalCode varchar(16) unique,
 email varchar(100) not null,
 pwd varchar(16) not null,
+token varchar(255) default null,
 administrator enum('yes', 'no') not null default 'no',
-accepted boolean not null default 0
+accepted tinyint(1) not null default 0
 );
 
+
+  
+  
 create table poll (
 ID integer unsigned not null primary key auto_increment,
 title varchar(100) unique not null,
@@ -21,10 +25,12 @@ apertureText varchar(500),
 closerText varchar(200),
 typeP enum('open','reserved') default 'open',
 url varchar(100) unique,
-activated enum('0','1') not null default '0',
+activated enum('yes','no') not null default 'no',
+alreadyActivated enum('yes','no') not null default 'no',
 idR integer unsigned not null,
 foreign key (idR) references responsibleUser(ID) 
 );
+ 
 
 create table participant (
 ID integer unsigned not null primary key auto_increment,
@@ -48,11 +54,12 @@ typeq enum('short text', 'long text', 'numeric', 'date' , 'single choice' , 'mul
 textq varchar(500) not null,
 note varchar(200),
 obbligation enum('yes', 'no') not null default 'no',
-possible_answer json,
+possible_answer json default null,
+number integer not null default '0',
 IDP integer unsigned not null,
 foreign key (IDP) references poll(ID)
 );
-
+ 
 create table answer (
 ID integer unsigned not null primary key auto_increment,
 IDQ integer unsigned not null,
@@ -61,6 +68,5 @@ texta json not null,
 foreign key (IDQ) references question(ID) on delete cascade on update cascade,
 foreign key (ID_P) references participant(ID) on delete cascade on update cascade
 );
-
 
 
