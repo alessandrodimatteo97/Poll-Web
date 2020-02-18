@@ -322,6 +322,9 @@ public class PollController extends PollBaseController {
                          a.setPartecipant(p);
                          JSONObject obj = new JSONObject();
                          //controlli per le domande di tipo short
+            if(request.getParameter(Integer.toString(q.getKey())) != null) {
+                             
+                         
                   if(q.getTypeP().equalsIgnoreCase( "short text")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
                      if(q.getObbligated() && str.isEmpty() ) {
@@ -338,6 +341,7 @@ public class PollController extends PollBaseController {
                  //controlli per le domande di tipo long
                   }else if(q.getTypeP().equalsIgnoreCase( "long text")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
+                      
                      if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message", "errore, domanda obbligatoria");
                          action_error(request, response);
@@ -422,13 +426,14 @@ public class PollController extends PollBaseController {
                        action_error(request, response);
                    }
                      }
+                 }
                      //controlli per le domande di tipo scelta multipla
               }else if(q.getTypeP().equalsIgnoreCase( "multiple choice")){
                   String[] multi = request.getParameterValues(Integer.toString(q.getKey()));
                   if( q.getObbligated() && multi == null) {
                        request.setAttribute("message", "non ci sono risposte");
                        action_error(request, response);
-                  }else if(!q.getObbligated() && a == null){
+                  }else if(!q.getObbligated() && multi == null){
                        a.setTextA(null);
                   if(a.getTextA()!= null) answers.add(a);
                   }else{
@@ -456,6 +461,9 @@ public class PollController extends PollBaseController {
                   if(a.getTextA()!= null) answers.add(a);
               } 
                
+              } else {
+                   a.setTextA(null);
+                  if(a.getTextA()!= null) answers.add(a);
               }
           }
 
