@@ -115,9 +115,17 @@
         <servlet-name>OrdinateQuestion</servlet-name>
         <servlet-class>pollweb.controller.OrdinateQuestion</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SliderProvaServlet</servlet-name>
+        <servlet-class>pollweb.controller.SliderProvaServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SliderProvaServlet</servlet-name>
+        <url-pattern>/SliderProvaServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>OrdinateQuestion</servlet-name>
