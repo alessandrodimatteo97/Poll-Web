@@ -11,8 +11,11 @@ import framework.data.dao.PollDataLayer;
 import framework.result.TemplateManagerException;
 import framework.result.TemplateResult;
 import framework.security.SecurityLayer;
+import pollweb.data.model.Answer;
+
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -42,7 +45,7 @@ public class ShowAnswer extends PollBaseController {
                     if(
                         ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().checkQuestionUser(question_key, token)
                         /*|| QUESTION APERTA FA PARTE DELLA DOMANDA*/ )
-                    {
+                     {
                         action_show_answers(request, response, question_key);
                     } else {
                   //      response.setStatus(401);
@@ -67,7 +70,11 @@ public class ShowAnswer extends PollBaseController {
 
     private void action_show_answers(HttpServletRequest request, HttpServletResponse response, int question_key) throws IOException, TemplateManagerException, DataException {
         TemplateResult res = new TemplateResult(getServletContext());
-        
+        List<Answer> answerList = ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().getAnswersByQuestionId(question_key);
+        ServletContext sc = getServletContext();
+        for(Answer a : answerList) {
+            sc.log(a.getPartecipant().getNameP());
+        }
         request.setAttribute("question", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionById(question_key));
         
         request.setAttribute("answers", ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().getAnswersByQuestionId(question_key));

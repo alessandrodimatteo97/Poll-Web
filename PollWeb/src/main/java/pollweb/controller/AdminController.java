@@ -247,7 +247,10 @@ public class AdminController extends PollBaseController {
         TemplateResult res = new TemplateResult(getServletContext());
         
         request.setAttribute("page_title", "Admin");
-
+        if(request.getSession().getAttribute("which_poll") != null || request.getSession().getAttribute("username") == null) {
+            request.setAttribute("exception", "invalid_session");
+            action_error(request, response);
+        } else {
         int userKey = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser((String)request.getSession(false).getAttribute("token")).getKey();
 
         ResponsibleUser user_logged = ((PollDataLayer)request.getAttribute("datalayer")).getResponsibleUserDAO().getResponsibleUser(userKey);
@@ -261,12 +264,12 @@ public class AdminController extends PollBaseController {
         
         res.activate("adminPanel.ftl.html", request, response);
 
-        } catch (DataException ex) {
+        
+        }} catch (DataException ex) {
             request.setAttribute("message", "Data access exception: " + ex.getMessage());
             action_error(request, response);
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);} 
 }
 
     private void action_my_closed_polls(HttpServletRequest request, HttpServletResponse response) {

@@ -90,10 +90,11 @@ public class PollController extends PollBaseController {
    }
 
     private void action_default(HttpServletRequest request, HttpServletResponse response ,int n) throws IOException, ServletException, TemplateManagerException, DataException {
-            try{TemplateResult res = new TemplateResult(getServletContext());
-           ServletContext sc = getServletContext();
-            request.setAttribute("page_title", "Poll name");
-            Poll p = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n);
+            try{
+                TemplateResult res = new TemplateResult(getServletContext());
+                ServletContext sc = getServletContext();
+                request.setAttribute("page_title", "Poll name");
+                 Poll p = ((PollDataLayer) request.getAttribute("datalayer")).getPollDAO().getPollById(n);
            
             if(p.isActivated()){
 
@@ -108,7 +109,8 @@ public class PollController extends PollBaseController {
           }else{
                res.activate("login_poll.ftl.html",request,response);
            
-           }}//res.activate("error.ftl.html", request, response);
+           }
+            }//res.activate("error.ftl.html", request, response);
             }catch (DataException ex) {
             request.setAttribute("message", ex);
             action_error(request, response);
@@ -119,15 +121,20 @@ public class PollController extends PollBaseController {
 
         private void action_answer(HttpServletRequest request, HttpServletResponse response, int n) throws TemplateManagerException, ParseException {
             try{
+                //CONTROLLARE PRIMA SE C'È UNA SESSIONE ATTIVA E SE QUELLA SESSIONE HA GIÀ RISPOSTO A QUESTO SONDAGGIO
+                /*if(SecurityLayer.isValid(request)) {
+                    request.getSession(false).getAttribute("token"); //DA TERMINARE
+                }*/
+
                 TemplateResult res = new TemplateResult(getServletContext());
-                 request.setAttribute("page_title", "Confirm Page");
-              ServletContext sc = getServletContext();
-               List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
+                request.setAttribute("page_title", "Confirm Page");
+                ServletContext sc = getServletContext();
+                List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
                
-              
+
           for(Question q : question){
                  ArrayList<String> answerList = new ArrayList<>();
-                  
+
                  //controlli per risposte di tipo short
                   if(q.getTypeP().equalsIgnoreCase( "short text")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
@@ -149,7 +156,7 @@ public class PollController extends PollBaseController {
                      }else {
                    answerList.add(request.getParameter(Integer.toString(q.getKey())));
                     }
-                   //controlli per risposte di tipo numerico  
+                   //controlli per risposte di tipo numerico
                   }else if (q.getTypeP().equalsIgnoreCase("numeric")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
                       if(q.getObbligated() && str.isEmpty() ){
@@ -179,7 +186,7 @@ public class PollController extends PollBaseController {
                           sc.log(test);
                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         Date date = formatter.parse(str);
-                       
+
                         if(formatter.format(date).equals(str)){
                            answerList.add(str);
                         }else{
@@ -197,7 +204,7 @@ public class PollController extends PollBaseController {
                       }else{
                       answerList.add(str);
                       }
-                    //controlli per risposte di tipo scelta singola  
+                    //controlli per risposte di tipo scelta singola
                   }else if (q.getTypeP().equalsIgnoreCase("single choice")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
                      if(q.getObbligated() && str.isEmpty() ) {
@@ -217,14 +224,14 @@ public class PollController extends PollBaseController {
                             }
                          }
                      }
-                    if(respo.equals(str)){ 
+                    if(respo.equals(str)){
                        answerList.add(str);
                    }else {
                       request.setAttribute("message", "errore la risposta inserita non corrisponde alle scele possibili");
                       action_error(request, response);
                    }
                      }
-               //controlli per risposte di tipo scelta  multipla      
+               //controlli per risposte di tipo scelta  multipla
               }else if(q.getTypeP().equalsIgnoreCase( "multiple choice")){
                  
                  String[] a = request.getParameterValues(Integer.toString(q.getKey()));
@@ -235,7 +242,7 @@ public class PollController extends PollBaseController {
                   }else if (!q.getObbligated() && a == null){
                      answerList.add(null);
                   }else {
-                  
+
                     for (String s : a){
                       String respo=new String();
                      String letter = new String();
@@ -248,15 +255,15 @@ public class PollController extends PollBaseController {
                             }
                          }
                      }
-                    
-                   if(respo.equals(s)){ 
+
+                   if(respo.equals(s)){
                        answerList.add(s);
                    }else {
                        request.setAttribute("message", "errore la risposta che hai provato ad inserire non coincide con le possibile risposte");
                        action_error(request, response);
                    }
                   }
-                  
+
               }
                   
               }
@@ -275,25 +282,40 @@ public class PollController extends PollBaseController {
         
         
     private void action_confirm(HttpServletRequest request, HttpServletResponse response, int n) throws DataException, ParseException, TemplateManagerException {
-      try{
-                TemplateResult res = new TemplateResult(getServletContext());
-                 request.setAttribute("page_title", "Confirm Page");
-                 SecurityLayer.createSession(request);
+      Partecipant p = null;
+      String token;
+
+      try {
+        if(SecurityLayer.isValid(request)) {
+
+            if(request.getSession(false).getAttribute("which_poll") != null){
+                token = request.getSession(false).getAttribute("token").toString();
+                p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(token);
+                // SONDAGGIO PRIVATO ALLORA MI POSSO RIPRENDERE L'UTENTE CHE SO ESSERE UN PARTECIPANTE AD UN SONDAGGIO PRIVATO
+                // DALLA SESSIONE E CREARMELO
+
+            } else if( request.getSession(false).getAttribute("user_id") != null  ) {
+                //CASO IN CUI STO CONFERMANDO UN POLL APERTO E ALLO STESSO TEMPO SONO IN SESSIONE PERCHÈ SONO UN RESPONSIBLE O UN ADMIN
+                token = request.getSession(false).getAttribute("token").toString();
+                //
+                ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().openPartecipant(token);
+                p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(token);
+
+            } else {
+                action_error(request, response);
+            }
+        } else {
+            //CASO IN CUI SONO UN PARTECIPANTE AD UN POLL APERO E NON SONO NÈ ADMIN NÈ RESPONSIBLE
+            SecurityLayer.createSession(request);
+            token = request.getSession(false).getAttribute("token").toString();
+            p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey(token);
+        }
               
               ServletContext sc = getServletContext();
-             List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
-               
-                
+               List<Question> question = ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionsByPollId(n);
+               ArrayList<Answer> answers = new ArrayList<Answer>();
 
-              ArrayList<Answer> answers = new ArrayList<Answer>(); 
-               
-              String token = request.getSession().getAttribute("token").toString();
-              Partecipant p = ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().getUserByApiKey("token");
-            
-            
-           
-            sc.log(token);
-             for(Question q : question){
+              for(Question q : question){
               
                  Answer a = ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().createAnswer();
                         a.setQuestion(q);
@@ -348,7 +370,7 @@ public class PollController extends PollBaseController {
                       }else {
                           if (str.length()== 10) {
                         for (int i=0; i< str.length(); i++){
-                          if (Character.isDigit(str.charAt(i))){ 
+                          if (Character.isDigit(str.charAt(i))){
                               test = test+str.charAt(i);
                           }
                         }
@@ -362,7 +384,7 @@ public class PollController extends PollBaseController {
                            }else{
                          request.setAttribute("message", "errore, la data non è nello giusto formato");
                             action_error(request, response);
-                        } 
+                        }
                          }else {
                           request.setAttribute("message", "errore la data non è completa");
                           action_error(request, response);
@@ -372,7 +394,7 @@ public class PollController extends PollBaseController {
                          action_error(request, response);
                         }
                       }
-                    //controlli per le domande di tipo scelta singola  
+                    //controlli per le domande di tipo scelta singola
                  }else if (q.getTypeP().equalsIgnoreCase("single choice")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
                      if(q.getObbligated() && str.isEmpty() ) {
@@ -436,14 +458,55 @@ public class PollController extends PollBaseController {
                
               }
           }
-                
-                      for (Answer a : answers){
+
+                 /*     for (Answer a : answers){
                           sc.log(a.getPartecipant().getEmail() + a.getTextA().toString());
                   ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().storeAnswer(a);
-                   
-              }
-                     
-               
+
+              }*/
+
+                      //Controllare il tipo di sessione e se è da closed poll distruggerla.
+                      if(request.getSession().getAttribute("which_poll") != null) {
+                          TemplateResult res = new TemplateResult((getServletContext()));
+
+                          //CANCELLARE EMAIL E PASSWORD E CREARE LA PAGINA DI TERMINATO SONDAGGIO.
+                          int part_id_to_delete = SecurityLayer.checkNumeric(request.getSession().getAttribute("part_id").toString());
+
+                          if(((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().disposeCredetential(part_id_to_delete)){
+                            for (Answer a : answers){
+                                sc.log(a.getPartecipant().getEmail() + a.getTextA().toString());
+                                ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().storeAnswer(a);
+                            }
+                              //((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().addPartecipantToPoll(p, n);
+                            SecurityLayer.disposeSession(request);
+                            request.setAttribute("page_title", "Home");
+
+                            request.setAttribute("message", "E' andato tutto come previsto, "
+                              + "clicca il bottone per tornare alla home! Le tue credenziali non saranno più valide.");
+
+                            res.activate("terminatePoll.ftl.html", request, response);
+
+                          } else {
+                              request.setAttribute("message", "Qualcosa è andato storto, non sappiamo cosa, speriamo vada meglio"
+                                      + "la prossima volta.");
+                                request.setAttribute("page_title", "Home");
+
+                                res.activate("terminatePoll.ftl.html", request, response);
+                          }
+
+                      } else {
+                          TemplateResult res = new TemplateResult((getServletContext()));
+                            for (Answer a : answers){
+                                sc.log(a.getPartecipant().getEmail() + a.getTextA().toString());
+                                ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().storeAnswer(a);
+                            }
+                            ((PollDataLayer)request.getAttribute("datalayer")).getPartecipantDAO().addPartecipantToPoll(p, n);
+                            request.setAttribute("message", "E' andato tutto come previsto, "
+                                    + "clicca il bottone per tornare alla home!");
+                            request.setAttribute("page_title", "Home");
+                            res.activate("terminatePoll.ftl.html", request, response);
+                      }
+            
 
             }
                 catch(DataException ex){
@@ -465,7 +528,8 @@ public class PollController extends PollBaseController {
              if(request.getParameter("showResume")!= null){
                  action_answer(request, response,n);
              }else if (request.getParameter("confirm")!= null) {
-                   action_confirm(request, response, n);
+                 action_confirm(request, response, n);
+
              }else action_default(request, response, n);
             }else {
 
