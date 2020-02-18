@@ -55,4 +55,6 @@ public interface PartecipantDAO {
     boolean loginPartecipant(Partecipant p, int pollid) throws DataException ;
     
     void openPartecipant(String token) throws DataException ;
+    
+    boolean disposeCredetential(int id_participant) throws DataException;
 }

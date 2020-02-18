@@ -35,7 +35,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
     private PreparedStatement updatePartecipant;
     private PreparedStatement addPartecipantToPoll;
     private PreparedStatement addToken;
-    private PreparedStatement deleteParticipantToPoll;
+    private PreparedStatement deleteParticipantToPoll, deleteCredentials;
     private PreparedStatement checkPartecipant;
     public PartecipantDAO_MySQL(DataLayer d) {
         super(d);
@@ -60,6 +60,7 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
             updatePartecipant = connection.prepareStatement("UPDATE participant SET email=?, pwd=?, nameP=? where ID=?");
             deleteParticipantToPoll = connection.prepareStatement("DELETE FROM participation WHERE ID_part=? AND ID_poll=?");
             insertByToken = connection.prepareStatement("INSERT INTO participant (apiKey) VALUES (?)");
+            deleteCredentials = connection.prepareCall("UPDATE participant SET nameP=NULL, email=NULL, pwd=NULL WHERE ID=?");
         } catch (SQLException ex) {
             throw new DataException("Error initializing partecipant data layer", ex);
         }
@@ -307,5 +308,14 @@ public class PartecipantDAO_MySQL extends DAO implements PartecipantDAO{
         }
     }
 
-
+    @Override
+    public boolean disposeCredetential(int id_participant) throws DataException {
+        try {
+            deleteCredentials.setInt(1, id_participant);
+            deleteCredentials.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(PartecipantDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+        return true;
+    }
 }
