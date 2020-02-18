@@ -50,10 +50,10 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
 
             searchOpenPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='open' AND activated='yes'");
             searchReservedPolls = connection.prepareStatement("SELECT * FROM poll WHERE typeP='reserved'AND activated ='yes'");
-            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            insertPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,idR) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
             insertOpenPoll = connection.prepareStatement("INSERT INTO poll (title,apertureText,closerText,typeP,url,activated,idR) VALUES(?,?,?,'open',?,?,?)");
-            updatePoll = connection.prepareStatement("UPDATE poll SET title=?,apertureText=?,closerText=?,typeP=?,url=?,activated=?,idR=? WHERE ID=?");
+            updatePoll = connection.prepareStatement("UPDATE poll SET title=?,apertureText=?,closerText=?,typeP=?,url=?,idR=? WHERE ID=?");
             deletePoll = connection.prepareStatement("DELETE FROM poll WHERE ID=?");
             setPollAsActive = connection.prepareStatement("UPDATE poll SET activated='yes' WHERE ID=?");
             setPollAsDeactive = connection.prepareStatement("UPDATE poll SET activated='no' WHERE ID=?");
@@ -363,14 +363,13 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
                 updatePoll.setString(3, poll.getCloserText());
                 updatePoll.setString(4, poll.getType());
                 updatePoll.setString(5, poll.getUrl());
-                updatePoll.setInt(6, 1);
 
                 if (poll.getRespUser()!= null) {
-                    updatePoll.setInt(7, poll.getRespUser().getKey());
+                    updatePoll.setInt(6, poll.getRespUser().getKey());
                 } else {
-                    updatePoll.setNull(7, java.sql.Types.INTEGER);
+                    updatePoll.setNull(6, java.sql.Types.INTEGER);
                 }
-                updatePoll.setInt(8, poll.getKey());
+                updatePoll.setInt(7, poll.getKey());
               
                 updatePoll.executeUpdate();
             } else { //insert
@@ -379,12 +378,12 @@ public class PollDAO_MySQL extends DAO implements PollDAO {
                 insertPoll.setString(3, poll.getCloserText());
                 insertPoll.setString(4, poll.getType());
                 insertPoll.setString(5, poll.getUrl());
-                insertPoll.setInt(6, 1);
+
 
                 if (poll.getRespUser()!= null) {
-                    insertPoll.setInt(7, poll.getRespUser().getKey());
+                    insertPoll.setInt(6, poll.getRespUser().getKey());
                 } else {
-                    insertPoll.setNull(7, java.sql.Types.INTEGER);
+                    insertPoll.setNull(6, java.sql.Types.INTEGER);
                 }
                // insertPoll.setInt(8, poll);
 
