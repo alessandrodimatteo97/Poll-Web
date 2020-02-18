@@ -322,7 +322,7 @@ public class PollController extends PollBaseController {
                          a.setPartecipant(p);
                          JSONObject obj = new JSONObject();
                          //controlli per le domande di tipo short
-            if(request.getParameter(Integer.toString(q.getKey())) != null) {
+            
                              
                          
                   if(q.getTypeP().equalsIgnoreCase( "short text")){
@@ -334,6 +334,9 @@ public class PollController extends PollBaseController {
                          obj.put("1", str);
                          a.setTextA(obj);
                          if(a.getTextA()!= null) answers.add(a);
+                        }else if(str.isEmpty()){
+                          a.setTextA(null);
+                         if(a.getTextA()!= null) answers.add(a);
                         }else{
                          request.setAttribute("message", "errore, risposta troppo lunga");
                          action_error(request, response);
@@ -341,11 +344,13 @@ public class PollController extends PollBaseController {
                  //controlli per le domande di tipo long
                   }else if(q.getTypeP().equalsIgnoreCase( "long text")){
                       String str=request.getParameter(Integer.toString(q.getKey()));
-                      
                      if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message", "errore, domanda obbligatoria");
                          action_error(request, response);
-                     }else{
+                     }else if(str.isEmpty()){
+                          a.setTextA(null);
+                         if(a.getTextA()!= null) answers.add(a);
+                        }else{
                          obj.put("1", str);
                          a.setTextA(obj);
                          if(a.getTextA()!= null) answers.add(a);
@@ -356,7 +361,10 @@ public class PollController extends PollBaseController {
                       if(q.getObbligated() && str.isEmpty() ) {
                           request.setAttribute("message", "errore, domanda obbligatoria");
                           action_error(request, response);
-                      }else if(StringUtils.isNumeric(str)) {
+                      }else if(str.isEmpty()){
+                          a.setTextA(null);
+                         if(a.getTextA()!= null) answers.add(a);
+                        }else if(StringUtils.isNumeric(str)) {
                          obj.put("1", str);
                          a.setTextA(obj);
                          if(a.getTextA()!= null) answers.add(a);
@@ -371,7 +379,10 @@ public class PollController extends PollBaseController {
                       if(q.getObbligated() && str.isEmpty() ) {
                          request.setAttribute("message","errore, domanda obbligatoria" );
                           action_error(request, response);
-                      }else {
+                      }else if(str.isEmpty()){
+                          a.setTextA(null);
+                         if(a.getTextA()!= null) answers.add(a);
+                        }else {
                           if (str.length()== 10) {
                         for (int i=0; i< str.length(); i++){
                           if (Character.isDigit(str.charAt(i))){
@@ -405,7 +416,10 @@ public class PollController extends PollBaseController {
                          request.setAttribute("message", "errore, la data è obbligatoria");
                          action_error(request, response);
 
-                     }else if(!q.getObbligated() && !str.equals("-nessuna selezionata-")){
+                     }else if(str.equals("-nessuna selezionata")){
+                          a.setTextA(null);
+                         if(a.getTextA()!= null) answers.add(a);
+                        }else if(!q.getObbligated() && !str.equals("-nessuna selezionata-")){
                      String respo=new String();
                      String letter = new String(); 
                      for(int i=0;i<str.length();i++){
@@ -426,7 +440,7 @@ public class PollController extends PollBaseController {
                        action_error(request, response);
                    }
                      }
-                 }
+                 
                      //controlli per le domande di tipo scelta multipla
               }else if(q.getTypeP().equalsIgnoreCase( "multiple choice")){
                   String[] multi = request.getParameterValues(Integer.toString(q.getKey()));
@@ -461,9 +475,6 @@ public class PollController extends PollBaseController {
                   if(a.getTextA()!= null) answers.add(a);
               } 
                
-              } else {
-                   a.setTextA(null);
-                  if(a.getTextA()!= null) answers.add(a);
               }
           }
 
