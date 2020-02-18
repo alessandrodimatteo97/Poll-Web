@@ -76,7 +76,7 @@ and open the template in the editor.
                                 </#if> 
                                
                                  <#elseif question.typeP == "multiple choice"> 
-                                
+                                 <#if question.answer?has_content> 
                                      <#if (question.possibleAnswer?has_content)>                                   
                              <#list question.possibleAnswer?eval as key, value>
                              
@@ -84,20 +84,24 @@ and open the template in the editor.
                                  <div class="form-check">
                                        
                                      <input id="checkbox1" type="checkbox" name="${question.key}" value="${choice}" 
-                                            <#if (question.answer?has_content)> 
-                                
                                             <#list question.answer as answer>
+                                            <#if answer?has_content>
                                             <#if choice == answer>  checked </#if>
-                                            </#list>                                       
-                                             </#if>>
+                                            </#if>
+                                            </#list>>                                     
+                                             
                                      <label for="checkbox1">${choice}</label>
-                                                                           
-                              
-                               </div>
+                                     </div>
+                                     </#list>    
+                                       </#if> 
+
+
+                                                                                                              
+                               </#if>              
+                               
                              
                                                                                                                                                     
-                             </#list>                                       
-                             </#if>                                      
+                                                                  
                              </#if>                             
                          </div>                                
                          </#if>                                       

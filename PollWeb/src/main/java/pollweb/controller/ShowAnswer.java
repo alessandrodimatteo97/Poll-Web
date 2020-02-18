@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +42,7 @@ public class ShowAnswer extends PollBaseController {
                     if(
                         ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().checkQuestionUser(question_key, token)
                         /*|| QUESTION APERTA FA PARTE DELLA DOMANDA*/ )
-                    ) {
+                    {
                         action_show_answers(request, response, question_key);
                     } else {
                   //      response.setStatus(401);
