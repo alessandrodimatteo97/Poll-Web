@@ -1,121 +1,111 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-             
+<#if (questions?size>0)>
 
- <#if (questions?size>0)>
- <br>
- <div class="justify-content-center" align="center" style="font-family: sans-serif">
-     <h1><b>${poll.title}</b></h1>
-             <br>
-            
-             <p>${poll.apertureText}</p>
-             <br>
-             <br>  </div>
- <form class="justify-content-center" action="Poll" method="post">
-     <div class="container">
-         <div class="row">         
-             <input type="hidden" name="n" value="${poll.key}"/>
-             
-             <#list questions as question> 
-               
-             <div class="col-sm-3 mt-5">                 
-                 <div class="card">                       
-                     <div class="card-body">                                    
-                         <#if (question.textq?has_content)>
-                         
-                         <h5 class="card-title">${question.textq}</h5> <#if question.obbligated><p>*</p> </#if>
-                          
-                         
-                        
-                         <#if (question.note?has_content)>
-                         <h6> ${question.note}</h6>
-                         </#if>
-                         <div class="card-body">                                       
-                             <#if question.typeP == "short text" >                    
-                             <input name="${question.key}" class="form-control rounded-0" id="shortText" placeholder="Rispondere qui" <#if question.obbligated> required </#if>>
-                             <#elseif question.typeP == "long text">
-                               <textarea name="${question.key}" class="form-control rounded-0" id="shortText" placeholder="Rispondere qui" rows="6" <#if question.obbligated> required </#if>></textarea>
-                               <#elseif question.typeP == "numeric">
-                               <input type="number" id="inputNumber" name="${question.key}"  placeholder="Rispondere qui" <#if question.obbligated> required </#if>>   
-                               <#elseif question.typeP == "date">
-                                   <!--input name="date" class="form-control" type="date"  id="date"-->
+<div class="carousel">
+    <div class="justify-content-center" align="center" style="font-family: sans-serif">
+        <br/>
 
-                                   <div class="form-group"> <!-- Date input -->
-                                    <label class="control-label" for="date">Data</label>
-                                    <input class="form-control" id="date" name="${question.key}" placeholder="DD/MM/YYYY" type="text" <#if question.obbligated> required </#if>/>
-                                   </div>
-                                   
-                             <#elseif question.typeP == "single choice">                                       
-                             <#if (question.possibleAnswer?has_content)>                                   
-                             
-                             <div class="form-group"> 
-                                 
-                                 <select class="form-control" id="inlineFormCustomSelect" name="${question.key}" <#if question.obbligated> required </#if> >  
-                                      <#if !(question.obbligated)>
-                                         <option selected>-nessuna selezionata-</option>
-                                     </#if>
-                                     <#list question.possibleAnswer?eval as key, value>
-                                     <option >${key} ${value}</option>   
-                                     </#list>
-                                 </select>
-                                 </div> 
-                                
-                                </#if> 
-                               
-                                 <#elseif question.typeP == "multiple choice"> 
-                                  <#if (question.possibleAnswer?has_content)>                                   
-                             <#list question.possibleAnswer?eval as key, value>
-                                 <div class="form-check">
-                                     <input id="checkbox1" type="checkbox" name="${question.key}" value="${key} ${value}" <#if question.obbligated> required="required" class="required_group"</#if>>
-                                     <label for="checkbox1">${key} ${value}</label>
-                                 </div>
-                                 
-                                                                                                                   
-                             </#list>                                       
-                             </#if>                                      
-                             </#if>                             
-                         </div>                                
-                         </#if>                                       
-                     </div>                  
-                 </div>          
-             </div>                   
-             </#list>       
-         </div>             
-     </div>   
-     <div class="form-group " align="center">
-    <br/><br/> 
-    <div align="center">
-         <p> <em><b>NOTA BENE:</b></em> le domande che presentano l'asterisco (*) sono obbligatorie </p>
-          <br/><br/> 
-    <h6>${poll.closerText}</h6>
+
+
+        <h1> <b>${poll.title}</b> </h1>
+        <h3>${poll.apertureText}</h3>
+        <form class="justify-content-center" action="Poll" method="post">
+            <input type="hidden" name="n" value="${poll.key}"/>
+
+            <#list questions as question>
+
+            <div class="item slide-in col mt-5" id="item${question?index+1}">
+                <div class="jumbotron jumbotronSlider jumbotron-fluid mt-5">
+                    <div class="text-center">
+                        <#if (question.textq?has_content)>
+
+                        <h2 ><b> ${question?index+1}) </b>${question.textq} <#if question.obbligated><b>*</b> </#if> </h2>
+
+
+
+                        <#if (question.note?has_content)>
+                        <h5> ${question.note}</h5>
+                    </#if>
+                    <div class="card-body">
+                        <#if question.typeP == "short text" >
+                        <input name="${question.key}" class="form-control rounded-0"  placeholder="Rispondere qui" <#if question.obbligated> required </#if>>
+                    <#elseif question.typeP == "long text">
+                    <textarea name="${question.key}" class="form-control rounded-0"  placeholder="Rispondere qui" rows="6" <#if question.obbligated> required </#if>></textarea>
+                <#elseif question.typeP == "numeric">
+                <input type="number" name="${question.key}" class="form-control rounded-0" min="0"  placeholder="Rispondere qui" <#if question.obbligated> required </#if>>
+            <#elseif question.typeP == "date">
+            <!--input name="date" class="form-control" type="date"  id="date"-->
+
+            <div class="form-group"> <!-- Date input -->
+                <label class="control-label" >Data</label>
+                <input class="form-control" name="${question.key}" placeholder="DD/MM/YYYY" type="text" <#if question.obbligated> required </#if>/>
     </div>
+
+    <#elseif question.typeP == "single choice">
+    <#if (question.possibleAnswer?has_content)>
+
+    <div class="form-group">
+
+        <select class="form-control"  name="${question.key}" <#if question.obbligated> required </#if> >
+    <#if !(question.obbligated)>
+    <option selected>-nessuna selezionata-</option>
+</#if>
+<#list question.possibleAnswer?eval as key, value>
+<option >${key} ${value}</option>
+</#list>
+</select>
+</div>
+
+</#if>
+
+<#elseif question.typeP == "multiple choice">
+<#if (question.possibleAnswer?has_content)>
+
+<#list question.possibleAnswer?eval as key, value>
+<div class="row justify-content-end">
+
+    <div class="col-8  form-inline ">
+        <input type="checkbox" name="${question.key}" value="${key} ${value}" <#if question.obbligated> required="required" class="required_group"</#if>>
+    <label >${key} ${value}</label>
+</div>
+
+</div>
+
+</#list>
+</#if>
+</#if>
+</div>
+</#if>
+</div>
+<#if !(question_has_next)>
+<h5><b>${poll.closerText}</b></h5>
+<button type="submit" class="btn btn-sm btn-outline-secondary  " value="showResume" name="showResume"> Mostra risposte </button>
+</#if>
+</div>
+
+
+
+</div>
+
+</#list>
+
+
+<div class="form-group " >
     <br/><br/>
-    <button type="submit" value="showResume" name="showResume"> Mostra risposte </button>
-    </br>
-        </br>
-  </div>
-     
- </form>
- 
- </#if>
+    <div align="center">
+        <p> <em><b>NOTA BENE:</b></em> le domande che presentano l'asterisco (*) sono obbligatorie </p>
 
 
+    </div>
 
+</div>
+<div class="controls">
 
-<!--  jQuery -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <#list questions as question>
+    <a href="#item${question?index+1}" class="btn">${question?index+1}</a>
 
-<!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
-<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+</#list>
 
-
-
-<script>
-    $('form').on('click', '.required_group', function(){
-    $('input.required_group').prop('required', $('input.required_group:checked').length === 0);
-});
-</script>
+</form>
+</div>
+</div>
+</#if>
