@@ -11,7 +11,7 @@ title, apertureText, closerText, typeP, url, activated, idR
         </br>
 
      <h3>
-        <span style="font-family: Arial"><strong>Create Poll</strong></span>
+        <span style="font-family: Arial"><strong>Crea Sondaggio</strong></span>
      </h3>
           </br>
   
@@ -21,7 +21,7 @@ title, apertureText, closerText, typeP, url, activated, idR
     <form class="justify-content-center" action="CreatePoll" method="post">
     <div align="center">
      <div class="form-group ">
-         <label for="title" class="col-sm-2 col-form-label"><strong>Title</strong></label>
+         <label for="title" class="col-sm-2 col-form-label"><strong>Titolo</strong></label>
     <div class="form-group col-md-4">
         <input name="title" type="text" class="form-control" id="title" placeholder="Title" value="${poll.title}">
     </div>
@@ -32,14 +32,14 @@ title, apertureText, closerText, typeP, url, activated, idR
                         <input type="hidden" name="qk" value="0"/>
 
   <div class="form-group ">
-    <label class="col-sm-2 col-form-label"><strong>Aperture Text</strong></label>
+    <label class="col-sm-2 col-form-label"><strong>Testo di Apertura</strong></label>
     <div class="form-group col-md-4">
         <textarea class="form-control" name="apertureText"  rows="3" >${poll.apertureText}</textarea>
     </div>
   </div>
 
       <div class="form-group ">
-          <label class="col-sm-2 col-form-label"><strong>Closer Text</strong></label>
+          <label class="col-sm-2 col-form-label"><strong>Testo di chiusura</strong></label>
     <div class="form-group col-md-4">
     <textarea class="form-control" name="closerText"  rows="3" >${poll.closerText}</textarea>
     </div>
@@ -52,8 +52,8 @@ title, apertureText, closerText, typeP, url, activated, idR
         <div class="form-group col-md-4">
 
       <select class="form-control" name="type" id="Type">
-      <option value="open" <#if (poll.type == "open" )> selected="selected"</#if>>public</option>
-      <option value="reserved" <#if (poll.type == "reserved")> selected="selected"</#if>>reserved</option>
+      <option value="open" <#if (poll.type == "open" )> selected="selected"</#if>>publico</option>
+      <option value="reserved" <#if (poll.type == "reserved")> selected="selected"</#if>>riservato</option>
       
     </select>
         </div>
@@ -75,7 +75,7 @@ title, apertureText, closerText, typeP, url, activated, idR
         
   <div class="form-group " align="center">
     <div class="form-group col-md-4">
-              <button type="submit" class="btn btn-primary btn-lg btn-block" name="update" value="update">update</button>
+              <button type="submit" class="btn btn-primary btn-lg btn-block" name="update" value="update">Aggiorna</button>
 
                      
     </div> 
@@ -83,7 +83,7 @@ title, apertureText, closerText, typeP, url, activated, idR
         <#if (poll.key!=0)>
         <div class="form-group " align="center">
     <div class="form-group col-md-4">
-                     <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-primary btn-lg btn-block" >add Questions</a>
+                     <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-primary btn-lg btn-block" >Aggiungi domande</a>
 
                      
     </div> 
@@ -93,7 +93,7 @@ title, apertureText, closerText, typeP, url, activated, idR
         <#if (numberQuestion?? && numberQuestion!=0)>
         <div class="form-group " align="center">
     <div class="form-group col-md-4">
-                     <a href="Poll_Detail?k=${poll.key}" class="btn btn-primary btn-lg btn-block">Check Questions (${numberQuestion})</a>
+                     <a href="Poll_Detail?k=${poll.key}" class="btn btn-primary btn-lg btn-block">Controlla domanda (${numberQuestion})</a>
 
                      
     </div> 

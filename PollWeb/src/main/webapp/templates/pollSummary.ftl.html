@@ -25,7 +25,7 @@ and open the template in the editor.
             <div class="col-md-6 col-xs-8">
                 <div class="row border border-dark">
                     <div class="col-md-6 col-xs-4 col-sm-4 col-6">
-                        <p style="white-space: nowrap; font-weight: bold">Aperture Text:</p>
+                        <p style="white-space: nowrap; font-weight: bold">Testo di Apertura:</p>
                     </div>
                     <div class="col-md-5 col-5 col-xs-3">
                         <span >${poll.apertureText}</span>
@@ -37,7 +37,7 @@ and open the template in the editor.
                 <div class="row">
 
                     <div class="col-md-6 col-xs-4 col-sm-4 col-6">
-                        <p style="white-space: nowrap; font-weight: bold">Closer Text:</p>
+                        <p style="white-space: nowrap; font-weight: bold">Testo di chiusura:</p>
                     </div>
                     <div class="col-md-5 col-5 col-xs-3">
                         <span >${poll.apertureText}</span>
@@ -49,7 +49,7 @@ and open the template in the editor.
                 <div class="row">
 
                     <div class="col-md-6 col-xs-4 col-sm-4 col-6">
-                        <p style="font-weight: bold">Type:</p>
+                        <p style="font-weight: bold">Tipo:</p>
                     </div>
                     <div class="col-md-5 col-5 col-xs-3">
                         <span >${poll.type}</span>
@@ -72,13 +72,13 @@ and open the template in the editor.
         </div>
 
 <br/>
-        <a href="CreatePoll?k=${poll.key}"  class="btn btn-primary">Modify</a>
-            <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-primary ">Create another Question</a>
+        <a href="CreatePoll?k=${poll.key}"  class="btn btn-primary">Modifica</a>
+            <a href="CreateQuestion?k=${poll.key}&qk=0" class="btn btn-primary ">Crea un'altra domanda</a>
              <#if (poll.type == "reserved" )>
-            <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Insert participants</a>
+            <a href="InsertParticipant?k=${poll.key}" class="btn btn-primary">Inserisci partecipanti</a>
         </#if>
-        <a  href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Order Question</a>
-        <a  href="admin" class="btn btn-primary">Finish</a>
+        <a  href="OrdinateQuestion?k=${poll.key}" class="btn btn-primary">Riordina le domande</a>
+        <a  href="admin" class="btn btn-primary">Finisci</a>
         </form>
     </div>
 </div>

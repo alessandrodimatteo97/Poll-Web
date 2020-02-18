@@ -11,7 +11,7 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
 <div class="col-12 col-md-3 col-xl-2 bd-sidebar">
     <br>
     <h4>
-       Add in the Poll by Csv File
+       Aggiungi al sondaggio da file csv
     </h4>
     <br>
     <div class="form-group">
@@ -35,17 +35,17 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
 <!-- emailSended -->
 
     <h3>
-        <span style="font-family: Arial"><strong>Add Participant</strong></span>
+        <span style="font-family: Arial"><strong>Aggiungi partecipante</strong></span>
     </h3>
     </br>
     <#if (emailSended?has_content && emailSended)>
 
     <div class="alert alert-success" role="alert">
-        This is a success alert—check it out!
+        Mail inviata con successo
     </div>
     <#elseif (emailSended?has_content && !emailSended)>
     <div class="alert alert-danger" role="alert">
-        This is a danger alert—check it out!
+        Mail non inviata. Ritenta
     </div>
 </#if>
 
@@ -61,7 +61,7 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
 
 
 <div class="container" >
-    <label class="col-sm-2 col-form-label"><strong>Add </strong><img alt="plus" id="addParticipant" src="images/p.png"></label>
+    <label class="col-sm-2 col-form-label"><strong>Aggiungi </strong><img alt="plus" id="addParticipant" src="images/p.png"></label>
 
 
 

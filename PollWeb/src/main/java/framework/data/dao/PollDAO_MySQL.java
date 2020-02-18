@@ -27,7 +27,7 @@ import pollweb.data.model.Poll;
 public class PollDAO_MySQL extends DAO implements PollDAO {
     private PreparedStatement getAllPolls;
     private PreparedStatement searchPollByPollId, searchPollByUserId, searchOpenPolls, searchReservedPolls, searchAlreadyActivatedPollsByUserId; /** Ricerche */
-    private PreparedStatement insertPoll, insertOpenPoll, updatePoll, deletePoll; /** insert update and delete polls*/
+    private PreparedStatement insertPoll, insertOpenPoll, updatePoll, deletePoll; /* insert update and delete polls*/
     private PreparedStatement setPollAsActive, setPollAsDeactive; /**settano le poll attive e disabilitate */
     private PreparedStatement setPollAlreadyActivated;
 

@@ -17,7 +17,7 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
         </br>
 
      <h3>
-        <span style="font-family: Arial"><strong>Create Question</strong></span>
+        <span style="font-family: Arial"><strong>Crea Domanda</strong></span>
      </h3>
           </br>
 
@@ -27,9 +27,9 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
     <form class="justify-content-center" action="CreateQuestion" method="post">
     <div align="center">
      <div class="form-group ">
-         <label for="title" class="col-sm-2 col-form-label"><strong>Title</strong></label>
+         <label for="title" class="col-sm-2 col-form-label"><strong>Titolo</strong></label>
     <div class="form-group col-md-4">
-        <input name="title" type="text" class="form-control" id="title" placeholder="Title" value="${question.textq}">
+        <input name="title" type="text" class="form-control" id="title" placeholder="Titolo" value="${question.textq}">
     </div>
 
 
@@ -50,33 +50,33 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
             <input type="hidden" name="k" value="${poll.key}"/>
             <input type="hidden" name="qk" value="${question.key}"/>
   <div class="form-group">
-      <label  class="col-sm-2 col-form-label"><strong>Type</strong></label>
+      <label  class="col-sm-2 col-form-label"><strong>Tipo</strong></label>
         <div class="form-group col-md-4">
 
       <select class="form-control" name="Type" id="Type">
-          <option value="short text" <#if (question.typeP == "short text" )> selected="selected"</#if>>short text</option>
-      <option value="long text"  <#if (question.typeP == "long text" )> selected="selected"</#if>>long text</option>
-      <option value="numeric"  <#if (question.typeP == "numeric" )> selected="selected"</#if>>numeric</option>
-      <option value="date"  <#if (question.typeP == "date" )> selected="selected"</#if>>date</option>
-      <option value="single choice"  <#if (question.typeP == "single choice" )> selected="selected"</#if>>single choice</option>
-      <option value="multiple choice"  <#if (question.typeP == "multiple choice" )> selected="selected"</#if>>multiple choice</option>
+          <option value="short text" <#if (question.typeP == "short text" )> selected="selected"</#if>>risposta breve</option>
+      <option value="long text"  <#if (question.typeP == "long text" )> selected="selected"</#if>>risposta lunga</option>
+      <option value="numeric"  <#if (question.typeP == "numeric" )> selected="selected"</#if>>numerico</option>
+      <option value="date"  <#if (question.typeP == "date" )> selected="selected"</#if>>data</option>
+      <option value="single choice"  <#if (question.typeP == "single choice" )> selected="selected"</#if>>scelta singola</option>
+      <option value="multiple choice"  <#if (question.typeP == "multiple choice" )> selected="selected"</#if>>scelta multipla</option>
     </select>
         </div>
   </div>
         
          <div class="form-group">
-      <label  class="col-sm-2 col-form-label"><strong>Obbligated</strong></label>
+      <label  class="col-sm-2 col-form-label"><strong>Obbligatoria</strong></label>
         <div class="form-group col-md-4">
 
       <select class="form-control" name="obbligated" >
-          <option value="yes"  <#if question.obbligated == false > selected="selected"</#if>>yes</option>
+          <option value="yes"  <#if question.obbligated == false > selected="selected"</#if>>sì</option>
       <option value="no" <#if question.obbligated == true > selected="selected"</#if>>no</option>
     </select>
         </div>
   </div>
   
         <div id="prova1" style="display: none">
-            <label for="title" class="col-sm-2 col-form-label"><strong>Choices </strong><img alt="plus" id="plus" src="images/p.png"></label>
+            <label for="title" class="col-sm-2 col-form-label"><strong>Scelte </strong><img alt="plus" id="plus" src="images/p.png"></label>
      
             <div id="sortable">
 
@@ -103,7 +103,7 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
 
                 <div class="input-group mb-3 form-group col-md-4">
 
-                <input name="fieldName" type="text" class="form-control" placeholder="Choice 1">
+                <input name="fieldName" type="text" class="form-control" placeholder="scelta">
                     <div class="input-group-prepend">
                     <span class="input-group-text"><img src="images/sort.png" ></span>
                     <span class="input-group-text cazzi" id="prova"><img alt="delete" id="delete" src="images/wrong.png"></span>
@@ -134,13 +134,13 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
         <br/>
         <div class="form-group " align="center">
                 <div class="form-group col-md-4">
-                <button type="submit" class="btn btn-primary btn-lg btn-block" name="nextQuestion" value="nextQuestion">update</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block" name="nextQuestion" value="nextQuestion">Aggiorna</button>
 
             </div>
             </div>
                 <div class="form-group " align="center">
              <div class="form-group col-md-4">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="addQuestion" value="addQuestion">Create another Question</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="addQuestion" value="addQuestion">Crea un'altra domanda</button>
 
             </div>
             </div>
@@ -148,7 +148,7 @@ ID, typeq, textq, note, obbligation, possible_answer, IDP
       
                 <div class="form-group " align="center">
                  <div class="form-group col-md-4">
-                <a href="Poll_Detail?k=${poll.key}" class="btn btn-primary btn-lg btn-block" >Finish</a>
+                <a href="Poll_Detail?k=${poll.key}" class="btn btn-primary btn-lg btn-block" >Fine</a>
                  </div>
                 </div>
 

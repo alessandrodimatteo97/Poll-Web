@@ -25,11 +25,6 @@
              <#else>
              </#if>
               <li class="nav-item">
-                <a class="h4 nav-link" href="admin?sec=info">
-                  Modifica le mie informazioni
-                </a>
-              </li>
-              <li class="nav-item">
                 <a class="h4 nav-link" href="CreatePoll?k=0">
                     Crea un nuovo sondaggio
                 </a>
@@ -55,10 +50,10 @@
                         <form method="POST" action="" id="form1">
                         <thead class="thead-dark">
                             <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Surname</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Cognome</th>
                             <th scope="col">Mail</th>
-                            <th scope="col">Set Responsible</th>
+                            <th scope="col">Rendi Responsabile</th>
                         </thead>
                         <tbody>
                             <#list users as user>
@@ -72,7 +67,7 @@
                             </#list>
                         </tbody>
                     </table>
-                    <button type="submit" class="btn btn-dark" form="form1" value="Submit">Submit</button>
+                    <button type="submit" class="btn btn-dark" form="form1" value="Submit">Accetta</button>
                        </form>
                 </div>
             </div>
