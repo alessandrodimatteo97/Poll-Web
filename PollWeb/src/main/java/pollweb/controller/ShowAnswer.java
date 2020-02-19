@@ -72,9 +72,7 @@ public class ShowAnswer extends PollBaseController {
         TemplateResult res = new TemplateResult(getServletContext());
         List<Answer> answerList = ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().getAnswersByQuestionId(question_key);
         ServletContext sc = getServletContext();
-        for(Answer a : answerList) {
-            sc.log(a.getPartecipant().getNameP());
-        }
+
         request.setAttribute("question", ((PollDataLayer)request.getAttribute("datalayer")).getQuestionDAO().getQuestionById(question_key));
         
         request.setAttribute("answers", ((PollDataLayer)request.getAttribute("datalayer")).getAnswerDAO().getAnswersByQuestionId(question_key));

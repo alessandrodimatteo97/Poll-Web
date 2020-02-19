@@ -237,7 +237,8 @@ public class QuestionDAO_MySQL extends DAO implements QuestionDAO {
                     createQuestion.setString(1, question.getTextq());
                     createQuestion.setString(2, question.getTypeP());
                     createQuestion.setString(3, question.getNote());
-                    createQuestion.setString(4, "no");
+                    if (question.getObbligated()) createQuestion.setString(4, "yes");
+                    else createQuestion.setString(4, "no");
                 if(question.getPossibleAnswer()!=null) createQuestion.setString(6, question.getPossibleAnswer().toString());
                 else createQuestion.setNull(6, Types.VARCHAR);
 
